@@ -11,7 +11,7 @@ Description: This package contains several functions to calculate the split
     provide a better reliability estimate. The current functions target the dot-
     probe task, however, can be modified for other tasks..
 Depends: R (>= 3.3.2)
-Imports: 
+Imports:
     plyr,
     stats
 License: GPL-3
@@ -20,4 +20,4 @@ LazyData: true
 RoxygenNote: 6.0.1.9000
 URL: http://github.com/sdparsons/splithalf
 BugReports: http://github.com/sdparsons/splithalf
-
+Suggests: testthat
