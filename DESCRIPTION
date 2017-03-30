@@ -18,4 +18,6 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1.9000
+URL: http://github.com/sdparsons/splithalf
+BugReports: http://github.com/sdparsons/splithalf
 
