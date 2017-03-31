@@ -21,7 +21,13 @@
 #' @examples
 #' ## split half estimates for the bias index in two blocks
 #' ## using 5000 iterations of the random split method
-#' DPsplithalf(DPdata, conditionlist = c("block1","block2"), halftype = "random", no.iterations = 5000)
+#' DPsplithalf(DPdata, conditionlist = c("block1","block2"),
+#' halftype = "random", no.iterations = 5000)
+#' ## In datasets with missing data an additional output is generated
+#' ## the console will return a list of participants/blocks
+#' ## the output will also include a full dataframe of missing values
+#' DPsplithalf(DPdata_missing, conditionlist = c("block1","block2"),
+#' halftype = "random", no.iterations = 5000)
 #' @import plyr
 #' @import stats
 #' @export
@@ -300,8 +306,8 @@ plist <- sort(unique(dataset$participant))
     print("the following are participants/conditions with missing data")
     omitted <- finData[!complete.cases(finData), ]
     print(unique(omitted[c("condition", "participant")]))
-    print("note: these iterations will be removed from the split half reliability
-        calculations, in that condition")
+    print("note: these iterations will be removed from the split half
+          reliability calculations, in that condition")
   warning("Bias indices missing:
           at least one participant has missing data from at one condition
           These cases are removed from calculating reliability estimates

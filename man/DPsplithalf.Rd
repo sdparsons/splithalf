@@ -52,5 +52,11 @@ This function calculates split half reliability estimates for Dot Probe data
 \examples{
 ## split half estimates for the bias index in two blocks
 ## using 5000 iterations of the random split method
-DPsplithalf(DPdata, conditionlist = c("block1","block2"), halftype = "random", no.iterations = 5000)
+DPsplithalf(DPdata, conditionlist = c("block1","block2"),
+halftype = "random", no.iterations = 5000)
+## In datasets with missing data an additional output is generated
+## the console will return a list of participants/blocks
+## the output will also include a full dataframe of missing values
+DPsplithalf(DPdata_missing, conditionlist = c("block1","block2"),
+halftype = "random", no.iterations = 5000)
 }

@@ -51,5 +51,11 @@ This function calculates split half reliability estimates
 \examples{
 ## split half estimates for two blocks of the task
 ## using 5000 iterations of the random split method
-splithalf(DPdata, conditionlist = c("block1","block2"), halftype = "random", no.iterations = 5000)
+splithalf(DPdata, conditionlist = c("block1","block2"), halftype = "random",
+no.iterations = 5000)
+## In datasets with missing data an additional output is generated
+## the console will return a list of participants/blocks
+## the output will also include a full dataframe of missing values
+splithalf(DPdata_missing, conditionlist = c("block1","block2"),
+halftype = "random", no.iterations = 5000)
 }
