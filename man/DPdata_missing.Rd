@@ -17,6 +17,14 @@
 DPdata_missing
 }
 \description{
+The data is adapted from the DPdata set using the following code
+}
+\details{
+DPdata_missing <- DPdata
+DPdata_missing$correct <- ifelse(DPdata_missing$subject == 15 &
+                                 DPdata_missing$blockcode == "block2",
+                                 0,1)
+
 A dataset containing data necessary to run examples of each function
 including missing data
 }

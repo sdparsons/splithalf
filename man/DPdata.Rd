@@ -19,4 +19,14 @@ DPdata
 \description{
 A dataset containing data necessary to run examples of each function
 }
+\details{
+The following code was used to generate the data
+
+DPdata <- data.frame(subject = rep(1:20, each = (96*2)),
+blockcode = rep(c("block1","block2"), each = 96, length.out = 20*2*96),
+trialnum = rep(1:96, length.out = 20*2*96),
+congruency = rep(c("Congruent","Incongruent"), length.out = 20*2*96),
+latency = rep(rnorm(100,25), length.out = 20*2*96),
+correct = rep(1, length.out = 20*2*96))
+}
 \keyword{datasets}
