@@ -14,8 +14,8 @@
 #' @param var.correct specifies the accuracy variable name in data
 #' @param removelist specifies a list of participants to be removed
 #' @return Returns a data frame containing split-half reliability estimates for each condition specified.
-#'     splithalf returns the raw estimate
-#'     spearmanbrown returns the spearman-brown corrected estimate
+#' @return splithalf returns the raw estimate
+#' @return spearmanbrown returns the spearman-brown corrected estimate
 #' @import plyr
 #' @import stats
 #' @export
