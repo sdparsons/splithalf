@@ -34,6 +34,11 @@ DPsplithalf(data, RTmintrim, RTmaxtrim, incErrors = FALSE, conditionlist,
 
 \item{removelist}{specifies a list of participants to be removed}
 }
+\value{
+Returns a data frame containing split-half reliability estimates for each condition specified.
+    splithalf returns the raw estimate
+    spearmanbrown returns the spearman-brown corrected estimate
+}
 \description{
 This function calculates split half reliability estimates for Dot Probe data
 }
