@@ -4,10 +4,10 @@
 \alias{splithalf}
 \title{Dot-Probe Split Half}
 \usage{
-splithalf(data, RTmintrim, RTmaxtrim, incErrors = FALSE, conditionlist,
-  halftype, no.iterations = 1, var.RT = "latency",
+splithalf(data, RTmintrim = "none", RTmaxtrim = "none", incErrors = FALSE,
+  conditionlist, halftype, no.iterations = 1, var.RT = "latency",
   var.condition = "blockcode", var.participant = "subject",
-  var.correct = "correct", removelist = "")
+  var.correct = "correct", var.trialnum = "trialnum", removelist = "")
 }
 \arguments{
 \item{data}{specifies the raw dataset to be processed}
@@ -32,8 +32,24 @@ splithalf(data, RTmintrim, RTmaxtrim, incErrors = FALSE, conditionlist,
 
 \item{var.correct}{specifies the accuracy variable name in data}
 
+\item{var.trialnum}{specifies the trial number variable}
+
 \item{removelist}{specifies a list of participants to be removed}
+}
+\value{
+Returns a data frame containing split-half reliability estimates for each condition specified.
+
+splithalf returns the raw estimate
+
+spearmanbrown returns the spearman-brown corrected estimate
+
+Warning: If there are missing data (e.g one condition data missing for one participant) output will include details of the missing data and return a dataframe containing the NA data. Warnings will be displayed in the console.
 }
 \description{
 This function calculates split half reliability estimates
+}
+\examples{
+## split half estimates for two blocks of the task
+## using 5000 iterations of the random split method
+splithalf(DPdata, conditionlist = c("block1","block2"), halftype = "random", no.iterations = 5000)
 }

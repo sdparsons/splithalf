@@ -1,9 +1,6 @@
 #' Dot-Probe Split Half
 #'
 #' This function calculates split half reliability estimates for Dot Probe data
-#' @export
-#' @import plyr
-#' @import stats
 #' @param data specifies the raw dataset to be processed
 #' @param RTmintrim specifies the lower cut-off point for RTs
 #' @param RTmaxtrim specifies the maximum cut-off point for RTs
@@ -15,14 +12,32 @@
 #' @param var.condition specifies the condition variable name in data
 #' @param var.participant specifies the subject variable name in data
 #' @param var.correct specifies the accuracy variable name in data
+#' @param var.trialnum specifies the trial number variable
 #' @param removelist specifies a list of participants to be removed
+#' @return Returns a data frame containing split-half reliability estimates for the bias index in each condition specified. Also returns split half reliability estimates for congruent and incongruent trials separately.
+#' @return splithalf returns the raw estimate of the bias index
+#' @return spearmanbrown returns the spearman-brown corrected estimate of the bias index
+#' @return CONsplithalf returns the raw estimate of congruent trials
+#' @return CONspearmanbrown returns the spearman-brown corrected estimate of congruent trials
+#' @return INCONsplithalf returns the raw estimate of incongruent trials
+#' @return INCONspearmanbrown returns the spearman-brown corrected estimate of incongruent trials
+#' @return Warning: If there are missing data (e.g one condition data missing for one participant) output will include details of the missing data and return a dataframe containing the NA data. Warnings will be displayed in the console.
+#' @examples
+#' ## split half estimates for the bias index and congruent/incongruent trials in two blocks
+#' ## using 5000 iterations of the random split method
+#' DPsplithalf.all(DPdata, conditionlist = c("block1","block2"),
+#' halftype = "random", no.iterations = 5000)
+#' @import plyr
+#' @import stats
+#' @export
 
-
-DPsplithalf.all <- function(data, RTmintrim, RTmaxtrim, incErrors = FALSE,
-                        conditionlist, halftype, no.iterations = 1,
-                        var.RT = "latency", var.condition = "blockcode",
-                        var.participant = "subject", var.correct = "correct",
-                        removelist = "")
+DPsplithalf.all <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
+                            incErrors = FALSE, conditionlist, halftype,
+                            no.iterations = 1, var.RT = "latency",
+                            var.condition = "blockcode",
+                            var.participant = "subject",
+                            var.correct = "correct", var.trialnum = 'trialnum',
+                            removelist = "")
 {
   # create empty objects for the purposes of binding global variables
   RT <- 0
@@ -31,6 +46,12 @@ DPsplithalf.all <- function(data, RTmintrim, RTmaxtrim, incErrors = FALSE,
   condition <- 0
   half1bias <- 0
   half2bias <- 0
+  bias1 <- 0
+  bias2 <- 0
+  h1con <- 0
+  h1incon <- 0
+  h2con <- 0
+  h2incon <- 0
   iteration <- 0
   N <- 0
   CONsplithalf <- 0
@@ -44,12 +65,24 @@ DPsplithalf.all <- function(data, RTmintrim, RTmaxtrim, incErrors = FALSE,
   data$condition <- data[, var.condition]
   data$participant <- data[, var.participant]
   data$correct <- data[, var.correct]
+  data$trialnum <- data[, var.trialnum]
+
 
   # for randdom samples, the number of samples drawn
   iterations <- 1:no.iterations
 
+  # loads data into dataset
+  dataset <- data
+
   # removes trials below the minimum cutoff and above the maximum cutoff
-  dataset <- subset(data, RT > RTmintrim & RT < RTmaxtrim)
+  if (is.integer(RTmintrim) == TRUE)
+  {
+    dataset <- subset(data, RT > RTmintrim)
+  }
+  if (is.integer(RTmaxtrim) == TRUE)
+  {
+    dataset <- subset(data, RT < RTmaxtrim)
+  }
 
   # removes participants specified to be removed in removelist
   dataset <- dataset[!dataset$participant %in% removelist, ]
@@ -159,14 +192,12 @@ DPsplithalf.all <- function(data, RTmintrim, RTmaxtrim, incErrors = FALSE,
     names(finalData)[1] <- "participant"
     names(finalData)[2] <- "condition"
 
-    if (sum(is.na(finalData$half1.congruent)) +
-        sum(is.na(finalData$half1.incongruent)) +
-        sum(is.na(finalData$half2.congruent)) +
-        sum(is.na(finalData$half2.incongruent)) > 0)
+    if (sum(is.na(finData$bias1)) +
+        sum(is.na(finData$bias2)) > 0)
     {
-      print("the following is a dataset with participants with missing data")
-      omitted <- finalData[!complete.cases(finalData), ]
-      print(omitted)
+      print("the following are participants/conditions with missing data")
+      omitted <- finData[!complete.cases(finData), ]
+      print(unique(omitted[c("condition", "participant")]))
       print("note: these particpants will be removed from the split half
             reliability calculations, in that condition")
       warning("Bias indices missing:
@@ -211,12 +242,8 @@ DPsplithalf.all <- function(data, RTmintrim, RTmaxtrim, incErrors = FALSE,
                        (1 + (2 - 1) * cor(half1bias, half2bias,
                                           use = "pairwise.complete")))
 
-    print(SplitHalf)
-
-    if (sum(is.na(finalData$half1.congruent)) +
-        sum(is.na(finalData$half1.incongruent)) +
-        sum(is.na(finalData$half2.congruent)) +
-        sum(is.na(finalData$half2.incongruent)) > 0)
+    if (sum(is.na(finData$bias1)) +
+        sum(is.na(finData$bias2)) > 0)
     {
       return(list(Estimates = SplitHalf, omitted = omitted))
     } else {
@@ -233,11 +260,22 @@ DPsplithalf.all <- function(data, RTmintrim, RTmaxtrim, incErrors = FALSE,
                           i = rep(plist, each = length(iterations)),
                           h = rep(iterations, times = (length(conditionlist) *
                                                          length(plist))),
+                          h1con = NA, h1incon = NA,
+                          h2con = NA, h2incon = NA,
                           bias1 = NA, bias2 = NA)
     # loop counter
     l <- 1
 
     # create vectors to contain both halfs to be compared
+
+    h1conv   <- vector(length = (length(conditionlist) * length(plist) *
+                                   length(iterations)))
+    h1inconv <- vector(length = (length(conditionlist) * length(plist) *
+                                   length(iterations)))
+    h2conv   <- vector(length = (length(conditionlist) * length(plist) *
+                                   length(iterations)))
+    h2inconv <- vector(length = (length(conditionlist) * length(plist) *
+                                   length(iterations)))
     bias1v <- vector(length = (length(conditionlist) * length(plist) *
                                  length(iterations)))
     bias2v <- vector(length = (length(conditionlist) * length(plist) *
@@ -280,11 +318,13 @@ DPsplithalf.all <- function(data, RTmintrim, RTmaxtrim, incErrors = FALSE,
   h2.congruent <- temp.con[ind2.con]
   h2.incongruent <- temp.incon[ind2.incon]
 
-  bias1 <- mean(h1.incongruent) - mean(h1.congruent)
-  bias2 <- mean(h2.incongruent) - mean(h2.congruent)
+  h1conv[l]   <- mean(h1.congruent)
+  h1inconv[l] <- mean(h1.incongruent)
+  h2conv[l]   <- mean(h2.congruent)
+  h2inconv[l] <- mean(h2.incongruent)
 
-  bias1v[l] <- bias1
-  bias2v[l] <- bias2
+  bias1v[l] <- mean(h1.incongruent) - mean(h1.congruent)
+  bias2v[l] <- mean(h2.incongruent) - mean(h2.congruent)
 
   l <- l + 1
   }
@@ -294,21 +334,23 @@ DPsplithalf.all <- function(data, RTmintrim, RTmaxtrim, incErrors = FALSE,
 
     print("Calculating split half estimates")
 
-    finData$bias1 <- bias1v
-    finData$bias2 <- bias2v
+    finData$h1con   <- h1conv
+    finData$h1incon <- h1inconv
+    finData$h2con   <- h2conv
+    finData$h2incon <- h2inconv
+    finData$bias1   <- bias1v
+    finData$bias2   <- bias2v
 
     names(finData)[1] <- "condition"
     names(finData)[2] <- "participant"
     names(finData)[3] <- "iteration"
 
-    if (sum(is.na(finData$half1.congruent)) +
-        sum(is.na(finData$half1.incongruent)) +
-        sum(is.na(finData$half2.congruent)) +
-        sum(is.na(finData$half2.incongruent)) > 0)
+    if (sum(is.na(finData$bias1)) +
+        sum(is.na(finData$bias2)) > 0)
     {
-      print("the following is a dataset with iterations with missing data")
+      print("the following are participants/conditions with missing data")
       omitted <- finData[!complete.cases(finData), ]
-      print(omitted)
+      print(unique(omitted[c("condition", "participant")]))
       print("note: these iterations will be removed from the split half
             reliability calculations, in that condition")
       warning("Bias indices missing:
@@ -323,23 +365,17 @@ DPsplithalf.all <- function(data, RTmintrim, RTmaxtrim, incErrors = FALSE,
     # calculate correlations per condition and iteration
     SplitHalf <- plyr::ddply(finData2, .(iteration, condition), summarise,
                     N = sum(!is.na(bias1)),
-                    CONsplithalf = cor(half1.congruent,
-                                       half2.congruent,
+                    CONsplithalf = cor(h1con, h2con,
                                        use = "pairwise.complete"),
-                    CONspearmanbrown = (2 * cor(half1.congruent,
-                                                half2.congruent,
+                    CONspearmanbrown = (2 * cor(h1con, h2con,
                                                 use = "pairwise.complete"))/
-                             (1 + (2 - 1) * cor(half1.congruent,
-                                                half2.congruent,
+                             (1 + (2 - 1) * cor(h1con, h2con,
                                                 use = "pairwise.complete")),
-                    INCONsplithalf = cor(half1.incongruent,
-                                         half2.incongruent,
+                    INCONsplithalf = cor(h1incon, h2incon,
                                          use = "pairwise.complete"),
-                    INCONspearmanbrown = (2 * cor(half1.incongruent,
-                                                  half2.incongruent,
+                    INCONspearmanbrown = (2 * cor(h1incon, h2incon,
                                                   use = "pairwise.complete"))/
-                               (1 + (2 - 1) * cor(half1.incongruent,
-                                                  half2.incongruent,
+                               (1 + (2 - 1) * cor(h1incon, h2incon,
                                                   use = "pairwise.complete")),
                              splithalf = cor(bias1, bias2, use = "complete"),
                              spearmanbrown = (2 * cor(bias1, bias2,
@@ -358,12 +394,9 @@ DPsplithalf.all <- function(data, RTmintrim, RTmaxtrim, incErrors = FALSE,
 
     print(paste("Split half estimates for", no.iterations, "random splits",
                 sep = " "))
-    print(SplitHalf2)
 
-    if (sum(is.na(finData$half1.congruent)) +
-        sum(is.na(finData$half1.incongruent)) +
-        sum(is.na(finData$half2.congruent)) +
-        sum(is.na(finData$half2.incongruent)) > 0)
+    if (sum(is.na(finData$bias1)) +
+        sum(is.na(finData$bias2)) > 0)
     {
       return(list(Estimates = SplitHalf2, omitted = omitted))
     } else {

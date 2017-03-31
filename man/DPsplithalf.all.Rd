@@ -4,10 +4,11 @@
 \alias{DPsplithalf.all}
 \title{Dot-Probe Split Half}
 \usage{
-DPsplithalf.all(data, RTmintrim, RTmaxtrim, incErrors = FALSE, conditionlist,
-  halftype, no.iterations = 1, var.RT = "latency",
-  var.condition = "blockcode", var.participant = "subject",
-  var.correct = "correct", removelist = "")
+DPsplithalf.all(data, RTmintrim = "none", RTmaxtrim = "none",
+  incErrors = FALSE, conditionlist, halftype, no.iterations = 1,
+  var.RT = "latency", var.condition = "blockcode",
+  var.participant = "subject", var.correct = "correct",
+  var.trialnum = "trialnum", removelist = "")
 }
 \arguments{
 \item{data}{specifies the raw dataset to be processed}
@@ -32,8 +33,33 @@ DPsplithalf.all(data, RTmintrim, RTmaxtrim, incErrors = FALSE, conditionlist,
 
 \item{var.correct}{specifies the accuracy variable name in data}
 
+\item{var.trialnum}{specifies the trial number variable}
+
 \item{removelist}{specifies a list of participants to be removed}
+}
+\value{
+Returns a data frame containing split-half reliability estimates for the bias index in each condition specified. Also returns split half reliability estimates for congruent and incongruent trials separately.
+
+splithalf returns the raw estimate of the bias index
+
+spearmanbrown returns the spearman-brown corrected estimate of the bias index
+
+CONsplithalf returns the raw estimate of congruent trials
+
+CONspearmanbrown returns the spearman-brown corrected estimate of congruent trials
+
+INCONsplithalf returns the raw estimate of incongruent trials
+
+INCONspearmanbrown returns the spearman-brown corrected estimate of incongruent trials
+
+Warning: If there are missing data (e.g one condition data missing for one participant) output will include details of the missing data and return a dataframe containing the NA data. Warnings will be displayed in the console.
 }
 \description{
 This function calculates split half reliability estimates for Dot Probe data
+}
+\examples{
+## split half estimates for the bias index and congruent/incongruent trials in two blocks
+## using 5000 iterations of the random split method
+DPsplithalf.all(DPdata, conditionlist = c("block1","block2"),
+halftype = "random", no.iterations = 5000)
 }

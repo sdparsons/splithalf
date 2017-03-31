@@ -1,9 +1,6 @@
 #' Dot-Probe Split Half
 #'
 #' This function calculates split half reliability estimates
-#' @export
-#' @import plyr
-#' @import stats
 #' @param data specifies the raw dataset to be processed
 #' @param RTmintrim specifies the lower cut-off point for RTs
 #' @param RTmaxtrim specifies the maximum cut-off point for RTs
@@ -15,13 +12,26 @@
 #' @param var.condition specifies the condition variable name in data
 #' @param var.participant specifies the subject variable name in data
 #' @param var.correct specifies the accuracy variable name in data
+#' @param var.trialnum specifies the trial number variable
 #' @param removelist specifies a list of participants to be removed
-
-splithalf <- function(data, RTmintrim, RTmaxtrim, incErrors = FALSE,
-                        conditionlist, halftype, no.iterations = 1,
-                        var.RT = "latency", var.condition = "blockcode",
-                        var.participant = "subject", var.correct = "correct",
-                        removelist = "")
+#' @return Returns a data frame containing split-half reliability estimates for each condition specified.
+#' @return splithalf returns the raw estimate
+#' @return spearmanbrown returns the spearman-brown corrected estimate
+#' @return Warning: If there are missing data (e.g one condition data missing for one participant) output will include details of the missing data and return a dataframe containing the NA data. Warnings will be displayed in the console.
+#' @examples
+#' ## split half estimates for two blocks of the task
+#' ## using 5000 iterations of the random split method
+#' splithalf(DPdata, conditionlist = c("block1","block2"), halftype = "random", no.iterations = 5000)
+#' @import plyr
+#' @import stats
+#' @export
+#'
+splithalf <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
+                      incErrors = FALSE,
+                      conditionlist, halftype, no.iterations = 1,
+                      var.RT = "latency", var.condition = "blockcode",
+                      var.participant = "subject", var.correct = "correct",
+                      var.trialnum = 'trialnum', removelist = "")
 {
   # create empty objects for the purposes of binding global variables
   RT <- 0
@@ -39,12 +49,25 @@ splithalf <- function(data, RTmintrim, RTmaxtrim, incErrors = FALSE,
   data$condition <- data[, var.condition]
   data$participant <- data[, var.participant]
   data$correct <- data[, var.correct]
+  data$trialnum <- data[, var.trialnum]
+
 
   # for randdom samples, the number of samples drawn
   iterations <- 1:no.iterations
 
+  # loads data into dataset
+  dataset <- data
+
   # removes trials below the minimum cutoff and above the maximum cutoff
-  dataset <- subset(data, RT > RTmintrim & RT < RTmaxtrim)
+
+  if (is.integer(RTmintrim) == TRUE)
+  {
+    dataset <- subset(data, RT > RTmintrim)
+  }
+  if (is.integer(RTmaxtrim) == TRUE)
+  {
+    dataset <- subset(data, RT < RTmaxtrim)
+  }
 
   # removes participants specified to be removed in removelist
   dataset <- dataset[!dataset$participant %in% removelist, ]
@@ -126,9 +149,9 @@ splithalf <- function(data, RTmintrim, RTmaxtrim, incErrors = FALSE,
 
     if (sum(is.na(finalData$half1) + is.na(finalData$half2)) > 0)
     {
-      print("the following is a dataset with participants with missing data")
+      print("the following are participants/conditions with missing data")
       omitted <- finalData[!complete.cases(finalData), ]
-      print(omitted)
+      print(unique(omitted[c("condition", "participant")]))
       print("note: these particpants will be removed from the split half
             reliability calculations, in that condition")
       warning("Bias indices missing:
@@ -149,8 +172,6 @@ splithalf <- function(data, RTmintrim, RTmaxtrim, incErrors = FALSE,
                                                 use = "pairwise.complete"))/
                          (1 + (2 - 1) * cor(half1, half2,
                                             use = "pairwise.complete")))
-
-    print(SplitHalf)
 
     if (sum(is.na(finalData$half1) + is.na(finalData$half2)) > 0)
     {
@@ -227,9 +248,9 @@ splithalf <- function(data, RTmintrim, RTmaxtrim, incErrors = FALSE,
 
     if (sum(is.na(finData$half1) + sum(is.na(finData$half2)) > 0))
     {
-      print("the following is a dataset containing iterations with missing data")
+      print("the following are participants/conditions with missing data")
       omitted <- finData[!complete.cases(finData), ]
-      print(omitted)
+      print(unique(omitted[c("condition", "participant")]))
       print("note: these iterations will be removed from the split half
             reliability calculations, in that condition")
       warning("Bias indices missing:
@@ -257,7 +278,6 @@ splithalf <- function(data, RTmintrim, RTmaxtrim, incErrors = FALSE,
 
     print(paste("Split half estimates for", no.iterations, "random splits",
                 sep = " "))
-    print(SplitHalf2)
 
     if (sum(is.na(finData$half1)) + sum(is.na(finData$half2) > 0))
     {
