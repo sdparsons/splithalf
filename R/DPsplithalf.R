@@ -1,9 +1,6 @@
 #' Dot-Probe Split Half
 #'
 #' This function calculates split half reliability estimates for Dot Probe data
-#' @export
-#' @import plyr
-#' @import stats
 #' @param data specifies the raw dataset to be processed
 #' @param RTmintrim specifies the lower cut-off point for RTs
 #' @param RTmaxtrim specifies the maximum cut-off point for RTs
@@ -16,7 +13,12 @@
 #' @param var.participant specifies the subject variable name in data
 #' @param var.correct specifies the accuracy variable name in data
 #' @param removelist specifies a list of participants to be removed
-
+#' @return Returns a data frame containing split-half reliability estimates for each condition specified.
+#'     splithalf returns the raw estimate
+#'     spearmanbrown returns the spearman-brown corrected estimate
+#' @import plyr
+#' @import stats
+#' @export
 
 DPsplithalf <- function(data, RTmintrim, RTmaxtrim, incErrors = FALSE,
                      conditionlist, halftype, no.iterations = 1,
