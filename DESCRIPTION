@@ -14,11 +14,16 @@ Depends: R (>= 3.3.2)
 Imports:
     plyr,
     stats
-Suggests: testthat
+Suggests: 
+    testthat,
+    knitr,
+    rmarkdown,
+    tools,
+    ggplot2
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1.9000
 URL: http://github.com/sdparsons/splithalf
 BugReports: http://github.com/sdparsons/splithalf
-Suggests: testthat
+VignetteBuilder: knitr

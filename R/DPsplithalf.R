@@ -37,7 +37,7 @@ DPsplithalf <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
                         no.iterations = 1, var.RT = "latency",
                         var.condition = "blockcode",
                         var.participant = "subject", var.correct = "correct",
-                        var.trialnum = 'trialnum', removelist = "")
+                        var.trialnum = "trialnum", removelist = "")
 {
   # create empty objects for the purposes of binding global variables
   RT <- 0
