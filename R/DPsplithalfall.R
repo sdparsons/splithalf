@@ -44,6 +44,11 @@ DPsplithalf.all <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
                             var.correct = "correct", var.trialnum = "trialnum",
                             removelist = "")
 {
+  # check for missing variables
+  if(halftype != "oddeven" & halftype != "halfs" & halftype != "random") {
+    stop("the halftype has not been specified")
+  }
+
   # create empty objects for the purposes of binding global variables
   RT <- 0
   correct <- 0
@@ -80,13 +85,13 @@ DPsplithalf.all <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
   dataset <- data
 
   # removes trials below the minimum cutoff and above the maximum cutoff
-  if (is.integer(RTmintrim) == TRUE)
+  if (is.numeric(RTmintrim) == TRUE)
   {
-    dataset <- subset(data, RT > RTmintrim)
+    dataset <- subset(dataset, RT > RTmintrim)
   }
-  if (is.integer(RTmaxtrim) == TRUE)
+  if (is.numeric(RTmaxtrim) == TRUE)
   {
-    dataset <- subset(data, RT < RTmaxtrim)
+    dataset <- subset(dataset, RT < RTmaxtrim)
   }
 
   # removes participants specified to be removed in removelist
