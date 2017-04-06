@@ -20,14 +20,14 @@
 #' @return Warning: If there are missing data (e.g one condition data missing for one participant) output will include details of the missing data and return a dataframe containing the NA data. Warnings will be displayed in the console.
 #' @examples
 #' ## split half estimates for the bias index in two blocks
-#' ## using 5000 iterations of the random split method
+#' ## using 50 iterations of the random split method (note: 5000 would be standard)
 #' DPsplithalf(DPdata, conditionlist = c("block1","block2"),
-#' halftype = "random", no.iterations = 5000)
+#' halftype = "random", no.iterations = 50)
 #' ## In datasets with missing data an additional output is generated
 #' ## the console will return a list of participants/blocks
 #' ## the output will also include a full dataframe of missing values
 #' DPsplithalf(DPdata_missing, conditionlist = c("block1","block2"),
-#' halftype = "random", no.iterations = 5000)
+#' halftype = "random", no.iterations = 50)
 #' @import plyr
 #' @import stats
 #' @export

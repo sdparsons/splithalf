@@ -6,7 +6,7 @@ Authors@R: person("Sam", "Parsons", email = "sam.parsons@psy.ox.ac.uk",
   role = c("aut", "cre"))
 Maintainer: Sam Parsons <sam.parsons@psy.ox.ac.uk>
 Description: A series of functions to calculate the split 
-    half reliability of RT based tasks. The core function performs a monte carlo
+    half reliability of RT based tasks. The core function performs a Monte Carlo
     procedure to process a user defined number of random splits in order to 
     provide a better reliability estimate. The current functions target the dot-
     probe task, however, can be modified for other tasks.

@@ -199,11 +199,11 @@ ggplot2::ggplot(times, aes(x = Sample.size, y = System.time, linetype = Conditio
 
 ## References
 
-*Enock, P. M., Hofmann, S. G., & McNally, R. J. (2014). Attention Bias Modification Training Via Smartphone to Reduce Social Anxiety: A Randomized, Controlled Multi-Session Experiment. Cognitive Therapy and Research, 38(2), 200–216. http://doi.org/10.1007/s10608-014-9606-z*
+*Enock, P. M., Hofmann, S. G., & McNally, R. J. (2014). Attention Bias Modification Training Via Smartphone to Reduce Social Anxiety: A Randomized, Controlled Multi-Session Experiment. Cognitive Therapy and Research, 38(2), 200–216.*
 
-*LeBel, E. P., & Paunonen, S. V. (2011). Sexy But Often Unreliable: The Impact of Unreliability on the Replicability of Experimental Findings With Implicit Measures. Personality and Social Psychology Bulletin, 37(4), 570–583. http://doi.org/10.1177/0146167211400619*
+*LeBel, E. P., & Paunonen, S. V. (2011). Sexy But Often Unreliable: The Impact of Unreliability on the Replicability of Experimental Findings With Implicit Measures. Personality and Social Psychology Bulletin, 37(4), 570–583.*
 
-*Schmukle, S. C. (2005). Unreliability of the dot probe task. European Journal of Personality, 19(7), 595–605. http://doi.org/10.1002/per.554*
+*Schmukle, S. C. (2005). Unreliability of the dot probe task. European Journal of Personality, 19(7), 595–605.*
 
 *Staugaard, S. R. (2009). Reliability of two versions of the dot-probe task using photographic faces. Psychology Science Quarterly, 51(3), 339–350.*
 
