@@ -1,0 +1,20 @@
+---
+output: github_document
+---
+
+<!-- NEWS.md is generated from NEWS.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "NEWS-"
+)
+```
+
+splithalf v0.1.0 (Release data: 07/04/2017)
+==============
+
+Changes:
+
+* Submitted to CRAN
