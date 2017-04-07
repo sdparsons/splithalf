@@ -1,0 +1,6 @@
+splithalf v0.1.0 (Release data: 07/04/2017)
+==============
+
+Changes:
+
+* Submitted to CRAN
