@@ -4,3 +4,4 @@
 ^README-.*\.png$
 ^NEWS\.md$
 ^cran-comments\.md$
+^NEWS\.Rmd$
