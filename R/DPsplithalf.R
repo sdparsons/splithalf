@@ -44,6 +44,11 @@ DPsplithalf <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
     stop("the halftype has not been specified")
   }
 
+  # check if the congruency variable exists
+  if("congruency" %in% colnames(data) == FALSE) {
+    stop("the trial congruency variable does not exist")
+  }
+
   # create empty objects for the purposes of binding global variables
   RT <- 0
   correct <- 0
@@ -56,6 +61,7 @@ DPsplithalf <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
   iteration <- 0
   N <- 0
   spearmanbrown <- 0
+  twoalpha <- 0
 
 # renames the dataset variables to fit with the code
 data$RT <- data[, var.RT]
@@ -213,13 +219,20 @@ plist <- sort(unique(dataset$participant))
 
   # create calculate estimates
   SplitHalf <- plyr::ddply(finalData2, ~condition, summarise,
-                     N = sum(!is.na(half1bias)),
-                     splithalf = cor(half1bias, half2bias,
-                                     use = "pairwise.complete"),
-                     spearmanbrown = (2 * cor(half1bias, half2bias,
-                                              use = "pairwise.complete"))/
-                                     (1 + (2 - 1) * cor(half1bias, half2bias,
-                                              use = "pairwise.complete")))
+               N = sum(!is.na(half1bias)),
+               splithalf = cor(half1bias, half2bias,
+                               use = "pairwise.complete"),
+               spearmanbrown = (2 * cor(half1bias, half2bias,
+                                        use = "pairwise.complete")) /
+                               (1 + (2 - 1) * cor(half1bias, half2bias,
+                                        use = "pairwise.complete")),
+               twoalpha = (4*cor(half1bias, half2bias,
+                                       use = "pairwise.complete")
+                                 *sd(half1bias)*sd(half2bias)) /
+                                 ((sd(half1bias)^2) + (sd(half2bias)^2) +
+                                 (2*cor(half1bias, half2bias,
+                                       use = "pairwise.complete")*
+                                    sd(half1bias)*sd(half2bias))))
 
   if (sum(is.na(finalData$half1.congruent)) +
       sum(is.na(finalData$half1.incongruent)) +
@@ -328,14 +341,21 @@ plist <- sort(unique(dataset$participant))
                      N = sum(!is.na(bias1)),
                      splithalf = cor(bias1, bias2, use = "pairwise.complete"),
                      spearmanbrown = (2 * cor(bias1, bias2,
-                                              use = "pairwise.complete"))/
+                                              use = "pairwise.complete")) /
                                      (1 +(2 - 1) * cor(bias1, bias2,
-                                              use = "pairwise.complete")))
+                                              use = "pairwise.complete")),
+                    twoalpha = (4*cor(bias1, bias2, use = "pairwise.complete")*
+                                    sd(bias1)*sd(bias2)) /
+                                ((sd(bias1)^2) + (sd(bias2)^2) +
+                                   (2*cor(bias1, bias2,
+                                          use = "pairwise.complete")*
+                                     sd(bias1)*sd(bias2))))
 
   # take the mean estimates per condition
   SplitHalf2 <- plyr::ddply(SplitHalf, .(condition), summarise, N = mean(N),
                       splithalf = mean(splithalf),
-                      spearmanbrown = mean(spearmanbrown))
+                      spearmanbrown = mean(spearmanbrown),
+                      twoalpha = mean(twoalpha))
 
   print(paste("Split half estimates for", no.iterations, "random splits",
               sep = " "))

@@ -44,6 +44,11 @@ splithalf <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
     stop("the halftype has not been specified")
   }
 
+  # check if the congruency variable exists
+  if("congruency" %in% colnames(data) == FALSE) {
+    stop("the trial congruency variable does not exist")
+  }
+
   # create empty objects for the purposes of binding global variables
   RT <- 0
   correct <- 0
@@ -54,6 +59,7 @@ splithalf <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
   iteration <- 0
   N <- 0
   spearmanbrown <- 0
+  twoalpha <- 0
 
   # renames the dataset variables to fit with the code
   data$RT <- data[, var.RT]
@@ -182,7 +188,14 @@ splithalf <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
                        spearmanbrown = (2 * cor(half1, half2,
                                                 use = "pairwise.complete"))/
                          (1 + (2 - 1) * cor(half1, half2,
-                                            use = "pairwise.complete")))
+                                            use = "pairwise.complete")),
+                       twoalpha = (4*cor(half1, half2,
+                                         use = "pairwise.complete")*sd(half1)*
+                                     sd(half2))/
+                         ((sd(half1)^2) + (sd(half2)^2) +
+                            (2*cor(half1, half2,
+                                   use = "pairwise.complete")*
+                               sd(half1)*sd(half2))))
 
     if (sum(is.na(finalData$half1) + is.na(finalData$half2)) > 0)
     {
@@ -281,12 +294,20 @@ splithalf <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
                        spearmanbrown = (2 * cor(half1, half2,
                                                 use = "pairwise.complete"))/
                          (1 +(2 - 1) * cor(half1, half2,
-                                           use = "pairwise.complete")))
+                                           use = "pairwise.complete")),
+                       twoalpha = (4*cor(half1, half2,
+                                         use = "pairwise.complete")*sd(half1)*
+                                     sd(half2))/
+                         ((sd(half1)^2) + (sd(half2)^2) +
+                            (2*cor(half1, half2,
+                                   use = "pairwise.complete")*
+                               sd(half1)*sd(half2))))
 
     # take the mean estimates per condition
     SplitHalf2 <- ddply(SplitHalf, .(condition), summarise, N = mean(N),
                         splithalf = mean(splithalf),
-                        spearmanbrown = mean(spearmanbrown))
+                        spearmanbrown = mean(spearmanbrown),
+                        twoalpha = mean(twoalpha))
 
     print(paste("Split half estimates for", no.iterations, "random splits",
                 sep = " "))

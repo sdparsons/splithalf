@@ -49,6 +49,11 @@ DPsplithalf.all <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
     stop("the halftype has not been specified")
   }
 
+  # check if the congruency variable exists
+  if("congruency" %in% colnames(data) == FALSE) {
+    stop("the trial congruency variable does not exist")
+  }
+
   # create empty objects for the purposes of binding global variables
   RT <- 0
   correct <- 0
@@ -69,6 +74,7 @@ DPsplithalf.all <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
   INCONsplithalf <- 0
   INCONspearmanbrown <- 0
   spearmanbrown <- 0
+  twoaplha <- 0
 
   # renames the dataset variables to fit with the code
   data$RT <- data[, var.RT]
@@ -237,6 +243,13 @@ DPsplithalf.all <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
                           (1 + (2 - 1) * cor(half1.congruent,
                                              half2.congruent,
                                              use = "pairwise.complete")),
+                 CONtwoalpha = (4*cor(half1.congruent, half2.congruent,
+                                   use = "pairwise.complete")
+                             *sd(half1.congruent)*sd(half2.congruent)) /
+                   ((sd(half1.congruent)^2) + (sd(half2.congruent)^2) +
+                      (2*cor(half1.congruent, half2.congruent,
+                             use = "pairwise.complete")*
+                         sd(half1.congruent)*sd(half2.congruent))),
                  INCONsplithalf = cor(half1.incongruent,
                                       half2.incongruent,
                                       use = "pairwise.complete"),
@@ -246,11 +259,25 @@ DPsplithalf.all <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
                           (1 + (2 - 1) * cor(half1.incongruent,
                                              half2.incongruent,
                                              use = "pairwise.complete")),
+                 INCONtwoalpha = (4*cor(half1.incongruent, half2.incongruent,
+                                      use = "pairwise.complete")
+                                *sd(half1.incongruent)*sd(half2.incongruent)) /
+                   ((sd(half1.incongruent)^2) + (sd(half2.incongruent)^2) +
+                      (2*cor(half1.incongruent, half2.incongruent,
+                             use = "pairwise.complete")*
+                         sd(half1.incongruent)*sd(half2.incongruent))),
                  splithalf = cor(half1bias, half2bias),
                  spearmanbrown = (2 * cor(half1bias, half2bias,
                                           use = "pairwise.complete"))/
                        (1 + (2 - 1) * cor(half1bias, half2bias,
-                                          use = "pairwise.complete")))
+                                          use = "pairwise.complete")),
+                 twoalpha = (4*cor(half1bias, half2bias,
+                                   use = "pairwise.complete")
+                             *sd(half1bias)*sd(half2bias)) /
+                   ((sd(half1bias)^2) + (sd(half2bias)^2) +
+                      (2*cor(half1bias, half2bias,
+                             use = "pairwise.complete")*
+                         sd(half1bias)*sd(half2bias))))
 
     if (sum(is.na(finData$bias1)) +
         sum(is.na(finData$bias2)) > 0)
@@ -381,26 +408,44 @@ DPsplithalf.all <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
                                                 use = "pairwise.complete"))/
                              (1 + (2 - 1) * cor(h1con, h2con,
                                                 use = "pairwise.complete")),
+                    CONtwoalpha = (4*cor(h1con, h2con, use = "pairwise.complete")*
+                                  sd(h1con)*sd(h2con))/
+                      ((sd(h1con)^2) + (sd(h2con)^2) +
+                         (2*cor(h1con, h2con, use = "pairwise.complete")
+                          *sd(h1con)*sd(h2con))),
                     INCONsplithalf = cor(h1incon, h2incon,
                                          use = "pairwise.complete"),
                     INCONspearmanbrown = (2 * cor(h1incon, h2incon,
                                                   use = "pairwise.complete"))/
                                (1 + (2 - 1) * cor(h1incon, h2incon,
                                                   use = "pairwise.complete")),
-                             splithalf = cor(bias1, bias2, use = "complete"),
-                             spearmanbrown = (2 * cor(bias1, bias2,
-                                                      use = "complete"))/
-                               (1 +(2 - 1) * cor(bias1, bias2,
-                                                 use = "complete")))
+                    INCONtwoalpha = (4*cor(h1con, h2con, use = "pairwise.complete")*
+                                  sd(h1con)*sd(h2con))/
+                      ((sd(h1con)^2) + (sd(h2con)^2) +
+                         (2*cor(h1con, h2con, use = "pairwise.complete")
+                          *sd(h1con)*sd(h2con))),
+                    splithalf = cor(bias1, bias2, use = "pairwise.complete"),
+                    spearmanbrown = (2 * cor(bias1, bias2,
+                                             use = "pairwise.complete"))/
+                                    (1 +(2 - 1) * cor(bias1, bias2,
+                                                 use = "pairwise.complete")),
+                    twoalpha = (4*cor(bias1, bias2, use = "pairwise.complete")*
+                                  sd(bias1)*sd(bias2))/
+                               ((sd(bias1)^2) + (sd(bias2)^2) +
+                                  (2*cor(bias1, bias2, use = "pairwise.complete")
+                                   *sd(bias1)*sd(bias2))))
 
     # take the mean estimates per condition
     SplitHalf2 <- plyr::ddply(SplitHalf, .(condition), summarise, N = mean(N),
                               CONsplithalf = mean(CONsplithalf),
                               CONspearmanbrown = mean(CONspearmanbrown),
+                              CONtwoalpha = mean(CONtwoalpha),
                               INCONsplithalf = mean(INCONsplithalf),
                               INCONspearmanbrown = mean(INCONspearmanbrown),
+                              INCONtwoalpha = mean(INCONtwoalpha),
                               splithalf = mean(splithalf),
-                              spearmanbrown = mean(spearmanbrown))
+                              spearmanbrown = mean(spearmanbrown),
+                              twoalpha = mean(twoalpha))
 
     print(paste("Split half estimates for", no.iterations, "random splits",
                 sep = " "))
