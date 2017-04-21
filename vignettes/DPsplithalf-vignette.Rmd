@@ -2,7 +2,7 @@
 title: "DPsplithalf() Vignette"
 author: "Sam Parsons"
 date: "`r Sys.Date()`"
-output: rmarkdown::pdf_vignette
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{DPsplithalf() Vignette}
   %\VignetteEngine{knitr::rmarkdown}

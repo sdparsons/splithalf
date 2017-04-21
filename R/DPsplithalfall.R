@@ -71,10 +71,12 @@ DPsplithalf.all <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
   N <- 0
   CONsplithalf <- 0
   CONspearmanbrown <- 0
+  CONtwoalpha <- 0
   INCONsplithalf <- 0
   INCONspearmanbrown <- 0
+  INCONtwoalpha <- 0
   spearmanbrown <- 0
-  twoaplha <- 0
+  twoalpha <- 0
 
   # renames the dataset variables to fit with the code
   data$RT <- data[, var.RT]
@@ -244,12 +246,15 @@ DPsplithalf.all <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
                                              half2.congruent,
                                              use = "pairwise.complete")),
                  CONtwoalpha = (4*cor(half1.congruent, half2.congruent,
-                                   use = "pairwise.complete")
-                             *sd(half1.congruent)*sd(half2.congruent)) /
-                   ((sd(half1.congruent)^2) + (sd(half2.congruent)^2) +
+                                   use = "pairwise.complete")*
+                              sd(half1.congruent, na.rm = TRUE)*
+                              sd(half2.congruent, na.rm = TRUE)) /
+                   ((sd(half1.congruent, na.rm = TRUE)^2) +
+                      (sd(half2.congruent, na.rm = TRUE)^2) +
                       (2*cor(half1.congruent, half2.congruent,
                              use = "pairwise.complete")*
-                         sd(half1.congruent)*sd(half2.congruent))),
+                         sd(half1.congruent, na.rm = TRUE)*
+                         sd(half2.congruent, na.rm = TRUE))),
                  INCONsplithalf = cor(half1.incongruent,
                                       half2.incongruent,
                                       use = "pairwise.complete"),
@@ -260,24 +265,30 @@ DPsplithalf.all <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
                                              half2.incongruent,
                                              use = "pairwise.complete")),
                  INCONtwoalpha = (4*cor(half1.incongruent, half2.incongruent,
-                                      use = "pairwise.complete")
-                                *sd(half1.incongruent)*sd(half2.incongruent)) /
-                   ((sd(half1.incongruent)^2) + (sd(half2.incongruent)^2) +
+                                      use = "pairwise.complete")*
+                              sd(half1.incongruent, na.rm = TRUE)*
+                              sd(half2.incongruent, na.rm = TRUE)) /
+                   ((sd(half1.incongruent, na.rm = TRUE)^2) +
+                    (sd(half2.incongruent, na.rm = TRUE)^2) +
                       (2*cor(half1.incongruent, half2.incongruent,
                              use = "pairwise.complete")*
-                         sd(half1.incongruent)*sd(half2.incongruent))),
+                         sd(half1.incongruent, na.rm = TRUE)*
+                         sd(half2.incongruent, na.rm = TRUE))),
                  splithalf = cor(half1bias, half2bias),
                  spearmanbrown = (2 * cor(half1bias, half2bias,
                                           use = "pairwise.complete"))/
                        (1 + (2 - 1) * cor(half1bias, half2bias,
                                           use = "pairwise.complete")),
                  twoalpha = (4*cor(half1bias, half2bias,
-                                   use = "pairwise.complete")
-                             *sd(half1bias)*sd(half2bias)) /
-                   ((sd(half1bias)^2) + (sd(half2bias)^2) +
+                                   use = "pairwise.complete")*
+                              sd(half1bias, na.rm = TRUE)*
+                              sd(half2bias, na.rm = TRUE)) /
+                   ((sd(half1bias, na.rm = TRUE)^2) +
+                    (sd(half2bias, na.rm = TRUE)^2) +
                       (2*cor(half1bias, half2bias,
                              use = "pairwise.complete")*
-                         sd(half1bias)*sd(half2bias))))
+                         sd(half1bias, na.rm = TRUE)*
+                         sd(half2bias, na.rm = TRUE))))
 
     if (sum(is.na(finData$bias1)) +
         sum(is.na(finData$bias2)) > 0)

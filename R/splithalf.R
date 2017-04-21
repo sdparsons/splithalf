@@ -190,12 +190,15 @@ splithalf <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
                          (1 + (2 - 1) * cor(half1, half2,
                                             use = "pairwise.complete")),
                        twoalpha = (4*cor(half1, half2,
-                                         use = "pairwise.complete")*sd(half1)*
-                                     sd(half2))/
-                         ((sd(half1)^2) + (sd(half2)^2) +
+                                         use = "pairwise.complete")*
+                                     sd(half1, na.rm = TRUE)*
+                                     sd(half2, na.rm = TRUE))/
+                         ((sd(half1, na.rm = TRUE)^2) +
+                            (sd(half2, na.rm = TRUE)^2) +
                             (2*cor(half1, half2,
                                    use = "pairwise.complete")*
-                               sd(half1)*sd(half2))))
+                               sd(half1, na.rm = TRUE)*
+                               sd(half2, na.rm = TRUE))))
 
     if (sum(is.na(finalData$half1) + is.na(finalData$half2)) > 0)
     {
@@ -296,12 +299,14 @@ splithalf <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
                          (1 +(2 - 1) * cor(half1, half2,
                                            use = "pairwise.complete")),
                        twoalpha = (4*cor(half1, half2,
-                                         use = "pairwise.complete")*sd(half1)*
-                                     sd(half2))/
-                         ((sd(half1)^2) + (sd(half2)^2) +
+                                         use = "pairwise.complete")*
+                                     sd(half1, na.rm = TRUE)*
+                                     sd(half2, na.rm = TRUE))/
+                         ((sd(half1, na.rm = TRUE)^2) +
+                          (sd(half2, na.rm = TRUE)^2) +
                             (2*cor(half1, half2,
                                    use = "pairwise.complete")*
-                               sd(half1)*sd(half2))))
+                               sd(half1, na.rm = TRUE)*sd(half2, na.rm = TRUE))))
 
     # take the mean estimates per condition
     SplitHalf2 <- ddply(SplitHalf, .(condition), summarise, N = mean(N),

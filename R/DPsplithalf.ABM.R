@@ -1,12 +1,12 @@
 #' Dot-Probe Split Half
 #'
-#' This function calculates split half reliability estimates for Dot Probe data
+#' This function calculates split half reliability estimates for the change in bias index from pre- to post- ABM
 #' @param data specifies the raw dataset to be processed
 #' @param RTmintrim specifies the lower cut-off point for RTs
 #' @param RTmaxtrim specifies the maximum cut-off point for RTs
 #' @param no.iterations specifies the number of random splits to run
 #' @param incErrors include incorrect trials?, defaults to FALSE
-#' @param conditionlist sets conditions/blocks to be processed
+#' @param conditionlist of length sets assessments to be processed. the first assessment specified is considered to be the pre-ABM assessment, and the second is the  post-ABM assessment.
 #' @param halftype specifies the split method; "oddeven", "halfs", or "random"
 #' @param var.RT specifies the RT variable name in data
 #' @param var.condition specifies the condition variable name in data
@@ -32,7 +32,7 @@
 #' @import stats
 #' @export
 
-DPsplithalf <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
+DPsplithalf.ABM <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
                         incErrors = FALSE, conditionlist, halftype,
                         no.iterations = 1, var.RT = "latency",
                         var.condition = "blockcode",
@@ -61,6 +61,11 @@ DPsplithalf <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
   iteration <- 0
   N <- 0
   spearmanbrown <- 0
+  twoalpha <- 0
+  CONtwoalpha <- 0
+  INCONtwoalpha <- 0
+  changehalf1 <- 0
+  changehalf2 <- 0
   twoalpha <- 0
 
 # renames the dataset variables to fit with the code
@@ -217,25 +222,33 @@ plist <- sort(unique(dataset$participant))
   finalData2$half2bias <- finalData2$half2.incongruent -
                           finalData2$half2.congruent
 
-  # create calculate estimates
-  SplitHalf <- plyr::ddply(finalData2, ~condition, summarise,
-               N = sum(!is.na(half1bias)),
-               splithalf = cor(half1bias, half2bias,
+  # calculate change in bias between pre- and post-
+  finalData3 <- reshape(finalData2, idvar = "participant",
+                        timevar = "condition", direction = "wide",
+                        drop = c("half1.congruent", "half1.incongruent",
+                                 "half2.congruent","half2.incongruent"))
+  finalData3$changehalf1 <- finalData3[,4] - finalData3[,2]
+  finalData3$changehalf2 <- finalData3[,5] - finalData3[,3]
+
+    # create calculate estimates
+  SplitHalf <- data.frame(
+               N = sum(!is.na(finalData3$changehalf1)),
+               splithalf = cor(finalData3$changehalf1, finalData3$changehalf2,
                                use = "pairwise.complete"),
-               spearmanbrown = (2 * cor(half1bias, half2bias,
+               spearmanbrown = (2 * cor(finalData3$changehalf1, finalData3$changehalf2,
                                         use = "pairwise.complete")) /
-                               (1 + (2 - 1) * cor(half1bias, half2bias,
+                               (1 + (2 - 1) * cor(finalData3$changehalf1, finalData3$changehalf2,
                                         use = "pairwise.complete")),
-               twoalpha = (4*cor(half1bias, half2bias,
-                                       use = "pairwise.complete")*
-                                  sd(half1bias, na.rm = TRUE)*
-                                  sd(half2bias, na.rm = TRUE)) /
-                                 ((sd(half1bias, na.rm = TRUE)^2) +
-                                    (sd(half2bias, na.rm = TRUE)^2) +
-                                 (2*cor(half1bias, half2bias,
-                                       use = "pairwise.complete")*
-                                    sd(half1bias, na.rm = TRUE)*
-                                    sd(half2bias, na.rm = TRUE))))
+               twoalpha = (4*cor(finalData3$changehalf1, finalData3$changehalf2,
+                                       use = "pairwise.complete") *
+                              sd(finalData3$changehalf1, na.rm = TRUE)*
+                              sd(finalData3$changehalf2, na.rm = TRUE)) /
+                              ((sd(finalData3$changehalf1, na.rm = TRUE)^2) +
+                              (sd(finalData3$changehalf2, na.rm = TRUE)^2) +
+                                 (2*cor(finalData3$changehalf1, finalData3$changehalf2,
+                                       use = "pairwise.complete") *
+                                    sd(finalData3$changehalf1, na.rm = TRUE)*
+                                    sd(finalData3$changehalf2, na.rm = TRUE))))
 
   if (sum(is.na(finalData$half1.congruent)) +
       sum(is.na(finalData$half1.incongruent)) +
@@ -339,29 +352,39 @@ plist <- sort(unique(dataset$participant))
   # remove NA rows
   finData2 <- na.omit(finData)
 
-  # calculate correlations per condition and iteration
-  SplitHalf <- plyr::ddply(finData2, .(iteration, condition), summarise,
-                     N = sum(!is.na(bias1)),
-                     splithalf = cor(bias1, bias2, use = "pairwise.complete"),
-                     spearmanbrown = (2 * cor(bias1, bias2,
-                                              use = "pairwise.complete")) /
-                                     (1 +(2 - 1) * cor(bias1, bias2,
-                                              use = "pairwise.complete")),
-                    twoalpha = (4*cor(bias1, bias2, use = "pairwise.complete")*
-                                    sd(bias1, na.rm = TRUE)*
-                                    sd(bias2, na.rm = TRUE)) /
-                                ((sd(bias1, na.rm = TRUE)^2) +
-                                   (sd(bias2, na.rm = TRUE)^2) +
-                                   (2*cor(bias1, bias2,
-                                          use = "pairwise.complete")*
-                                     sd(bias1, na.rm = TRUE)*
-                                     sd(bias2, na.rm = TRUE))))
+  # calculate change in bias between pre- and post-
+  finData3 <- reshape(finData2, idvar = c("participant","iteration"),
+                      timevar = "condition", direction = "wide")
 
-  # take the mean estimates per condition
-  SplitHalf2 <- plyr::ddply(SplitHalf, .(condition), summarise, N = mean(N),
-                      splithalf = mean(splithalf),
-                      spearmanbrown = mean(spearmanbrown),
-                      twoalpha = mean(twoalpha))
+  finData3$changehalf1 <- finData3[,5] - finData3[,3]
+  finData3$changehalf2 <- finData3[,6] - finData3[,4]
+
+  # calculate correlations per condition and iteration
+  SplitHalf <- plyr::ddply(finData3, .(iteration), summarise,
+                           N = sum(!is.na(changehalf1)),
+                           splithalf = cor(changehalf1, changehalf2, use = "pairwise.complete"),
+                           spearmanbrown = (2 * cor(changehalf1, changehalf2,
+                                                    use = "pairwise.complete")) /
+                             (1 +(2 - 1) * cor(changehalf1, changehalf2,
+                                               use = "pairwise.complete")),
+                           twoalpha = (4*cor(changehalf1, changehalf2, use = "pairwise.complete")*
+                                         sd(changehalf1, na.rm = TRUE)*
+                                         sd(changehalf2, na.rm = TRUE)) /
+                             ((sd(changehalf1, na.rm = TRUE)^2) +
+                              (sd(changehalf2, na.rm = TRUE)^2) +
+                                (2*cor(changehalf1, changehalf2,
+                                       use = "pairwise.complete")*
+                                   sd(changehalf1, na.rm = TRUE)*
+                                   sd(changehalf2, na.rm = TRUE))))
+
+
+
+    # take the mean estimates per condition
+  SplitHalf2 <- data.frame(
+                      N = mean(SplitHalf$N),
+                      splithalf = mean(SplitHalf$splithalf),
+                      spearmanbrown = mean(SplitHalf$spearmanbrown),
+                      twoalpha = mean(SplitHalf$twoalpha))
 
   print(paste("Split half estimates for", no.iterations, "random splits",
               sep = " "))
