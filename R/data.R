@@ -44,3 +44,45 @@
 #' \item correct: accuracy (set to all accurate for the example)
 #' }
 "DPdata_missing"
+
+#' Generated dataset of Task switching data
+#'
+#' The data is adapted from the DPdata set using the following code
+#'
+#' TSTdata <- DPdata
+#' names(TSTdata)[names(TSTdata) == "congruency"] <- "trialtype"
+#' TSTdata$trialtype <- ifelse(TSTdata$trialtype == "Congruent", "Repeat", "Switch")
+#'
+#' A dataset containing data necessary to run examples of each function
+#'
+#' @format A dataframe with 3840 rows and 6 variables
+#' \itemize{
+#' \item subject: contains participant numbers for 20 subjects
+#' \item blockcode: two block conditions "block1" and "block2"
+#' \item trialnum: 96 trials per block
+#' \item trialtype: sets to repeat or switch trials
+#' \item latency: RT measure (simulated data)
+#' \item correct: accuracy (set to all accurate for the example)
+#' }
+"TSTdata"
+
+#' Generated dataset of Task switching data with missing data
+#'
+#' The data is adapted from the DPdata_missing set using the following code
+#'
+#' TSTdata_missing <- DPdata_missing
+#' names(TSTdata_missing)[names(TSTdata_missing) == "congruency"] <- "trialtype"
+#' TSTdata_missing$trialtype <- ifelse(TSTdata_missing$trialtype == "Congruent", "Repeat", "Switch")
+#'
+#' A dataset containing data necessary to run examples of each function
+#'
+#' @format A dataframe with 3840 rows and 6 variables
+#' \itemize{
+#' \item subject: contains participant numbers for 20 subjects
+#' \item blockcode: two block conditions "block1" and "block2"
+#' \item trialnum: 96 trials per block
+#' \item trialtype: sets to repeat or switch trials
+#' \item latency: RT measure (simulated data)
+#' \item correct: accuracy (set to all accurate for the example)
+#' }
+"TSTdata_missing"

@@ -210,8 +210,10 @@ DPsplithalf.all <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
     names(finalData)[1] <- "participant"
     names(finalData)[2] <- "condition"
 
-    if (sum(is.na(finData$bias1)) +
-        sum(is.na(finData$bias2)) > 0)
+    if (sum(is.na(finData$half1.congruent))   +
+        sum(is.na(finData$half1.incongruent)) +
+        sum(is.na(finData$half2.congruent))   +
+        sum(is.na(finData$half2.incongruent)) > 0)
     {
       print("the following are participants/conditions with missing data")
       omitted <- finData[!complete.cases(finData), ]

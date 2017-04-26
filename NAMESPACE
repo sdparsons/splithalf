@@ -3,6 +3,7 @@
 export(DPsplithalf)
 export(DPsplithalf.ABM)
 export(DPsplithalf.all)
+export(TSTsplithalf)
 export(splithalf)
 import(plyr)
 import(stats)
