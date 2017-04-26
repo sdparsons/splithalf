@@ -5,15 +5,13 @@
 
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
+0 errors | 0 warnings | 0 note
 
-There were no ERRORs or WARNINGs, the only NOTE is due to this is a new release
-
-* This is a new release.
+There were no ERRORs or WARNINGs
 
 ## Reverse dependencies
 
-This is a new release, so there are no reverse dependencies.
+Reverse dependencies have been checked.
 
 ---
 
