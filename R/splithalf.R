@@ -44,11 +44,6 @@ splithalf <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
     stop("the halftype has not been specified")
   }
 
-  # check if the congruency variable exists
-  if("congruency" %in% colnames(data) == FALSE) {
-    stop("the trial congruency variable does not exist")
-  }
-
   # create empty objects for the purposes of binding global variables
   RT <- 0
   correct <- 0
