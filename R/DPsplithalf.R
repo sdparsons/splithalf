@@ -363,6 +363,12 @@ plist <- sort(unique(dataset$participant))
                       spearmanbrown = mean(spearmanbrown),
                       twoalpha = mean(twoalpha))
 
+  colnames(SplitHalf2) <- c("condition", "N",
+                            paste("mc",no.iterations,"splithalf", sep = ""),
+                            paste("mc",no.iterations,"spearmanbrown", sep = ""),
+                            paste("mc",no.iterations,"twoalpha", sep = ""))
+
+
   print(paste("Split half estimates for", no.iterations, "random splits",
               sep = " "))
 
