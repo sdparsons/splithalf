@@ -1,0 +1,9 @@
+citHeader("To cite splithalf in publications, please use:")
+
+citEntry(
+  title        = "splithalf; Calculate Task Split Half Reliability Estimates",
+  author       = personList(as.person("Sam Parsons")),
+  url          = "http://github.com/sdparsons/splithalf",
+
+  textVersion  = "Parsons, S. (2017). splithalf; Calculate Task Split Half Reliability Estimates. URL: http://github.com/sdparsons/splithalf",
+  year = "2017")
