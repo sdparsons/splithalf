@@ -359,14 +359,23 @@ plist <- sort(unique(dataset$participant))
 
   # take the mean estimates per condition
   SplitHalf2 <- plyr::ddply(SplitHalf, .(condition), summarise, N = mean(N),
-                      splithalf = mean(splithalf),
-                      spearmanbrown = mean(spearmanbrown),
-                      twoalpha = mean(twoalpha))
+                            splithalf_estimate = round(mean(splithalf),2),
+                            splithalf95 = paste("[", round(quantile(splithalf, c(.025), names = F), 2), ", ",
+                                                round(quantile(splithalf, c(.975), names = F), 2), "]", sep = ""),
+                            spearmanbrown_estimate = round(mean(spearmanbrown),2),
+                            spearmanbrown95 = paste("[", round(quantile(spearmanbrown, c(.025), names = F), 2), ", ",
+                                                    round(quantile(spearmanbrown, c(.975), names = F), 2), "]", sep = ""),
+                            twoalpha_estimate = round(mean(twoalpha),2),
+                            twoalpha95 = paste("[", round(quantile(twoalpha, c(.025), names = F), 2), ", ",
+                                               round(quantile(twoalpha, c(.975), names = F), 2), "]", sep = ""))
 
   colnames(SplitHalf2) <- c("condition", "N",
                             paste("mc",no.iterations,"splithalf", sep = ""),
+                            "splithalf95percentiles",
                             paste("mc",no.iterations,"spearmanbrown", sep = ""),
-                            paste("mc",no.iterations,"twoalpha", sep = ""))
+                            "spearmanbrown95percentiles",
+                            paste("mc",no.iterations,"twoalpha", sep = ""),
+                            "twoalpha95percentiles")
 
 
   print(paste("Split half estimates for", no.iterations, "random splits",
