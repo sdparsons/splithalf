@@ -360,14 +360,14 @@ plist <- sort(unique(dataset$participant))
   # take the mean estimates per condition
   SplitHalf2 <- plyr::ddply(SplitHalf, .(condition), summarise, N = mean(N),
                             splithalf_estimate = round(mean(splithalf),2),
-                            splithalf95CI_lower = rounding.2dp(quantile(splithalf, c(.025), names = F)),
-                            splithalf95CI_upper = rounding.2dp(quantile(splithalf, c(.975), names = F)),
+                            splithalf95CI_lower = round(quantile(splithalf, c(.025), names = F),2),
+                            splithalf95CI_upper = round(quantile(splithalf, c(.975), names = F),2),
                             spearmanbrown_estimate = round(mean(spearmanbrown),2),
-                            spearmanbrown95CI_lower = rounding.2dp(quantile(spearmanbrown, c(.025), names = F)),
-                            spearmanbrown95CI_upper = rounding.2dp(quantile(spearmanbrown, c(.975), names = F)),
+                            spearmanbrown95CI_lower = round(quantile(spearmanbrown, c(.025), names = F),2),
+                            spearmanbrown95CI_upper = round(quantile(spearmanbrown, c(.975), names = F),2),
                             twoalpha_estimate = round(mean(twoalpha),2),
-                            twoalpha95CI_lower = rounding.2dp(quantile(twoalpha, c(.025), names = F)),
-                            twoalpha95CI_upper = rounding.2dp(quantile(twoalpha, c(.975), names = F)),
+                            twoalpha95CI_lower = round(quantile(twoalpha, c(.025), names = F),2),
+                            twoalpha95CI_upper = round(quantile(twoalpha, c(.975), names = F),2),
 
   )
 
