@@ -367,9 +367,7 @@ plist <- sort(unique(dataset$participant))
                             spearmanbrown95CI_upper = round(quantile(spearmanbrown, c(.975), names = F),2),
                             twoalpha_estimate = round(mean(twoalpha),2),
                             twoalpha95CI_lower = round(quantile(twoalpha, c(.025), names = F),2),
-                            twoalpha95CI_upper = round(quantile(twoalpha, c(.975), names = F),2),
-
-  )
+                            twoalpha95CI_upper = round(quantile(twoalpha, c(.975), names = F),2)  )
 
 
   colnames(SplitHalf2) <- c("condition", "N",
