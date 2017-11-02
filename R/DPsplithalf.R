@@ -360,22 +360,28 @@ plist <- sort(unique(dataset$participant))
   # take the mean estimates per condition
   SplitHalf2 <- plyr::ddply(SplitHalf, .(condition), summarise, N = mean(N),
                             splithalf_estimate = round(mean(splithalf),2),
-                            splithalf95 = paste("[", round(quantile(splithalf, c(.025), names = F), 2), ", ",
-                                                round(quantile(splithalf, c(.975), names = F), 2), "]", sep = ""),
+                            splithalf95CI_lower = rounding.2dp(quantile(splithalf, c(.025), names = F)),
+                            splithalf95CI_upper = rounding.2dp(quantile(splithalf, c(.975), names = F)),
                             spearmanbrown_estimate = round(mean(spearmanbrown),2),
-                            spearmanbrown95 = paste("[", round(quantile(spearmanbrown, c(.025), names = F), 2), ", ",
-                                                    round(quantile(spearmanbrown, c(.975), names = F), 2), "]", sep = ""),
+                            spearmanbrown95CI_lower = rounding.2dp(quantile(spearmanbrown, c(.025), names = F)),
+                            spearmanbrown95CI_upper = rounding.2dp(quantile(spearmanbrown, c(.975), names = F)),
                             twoalpha_estimate = round(mean(twoalpha),2),
-                            twoalpha95 = paste("[", round(quantile(twoalpha, c(.025), names = F), 2), ", ",
-                                               round(quantile(twoalpha, c(.975), names = F), 2), "]", sep = ""))
+                            twoalpha95CI_lower = rounding.2dp(quantile(twoalpha, c(.025), names = F)),
+                            twoalpha95CI_upper = rounding.2dp(quantile(twoalpha, c(.975), names = F)),
+
+  )
+
 
   colnames(SplitHalf2) <- c("condition", "N",
                             paste("mc",no.iterations,"splithalf", sep = ""),
-                            "splithalf95percentiles",
+                            "splithalf95percentile_lower",
+                            "splithalf95percentile_upper",
                             paste("mc",no.iterations,"spearmanbrown", sep = ""),
-                            "spearmanbrown95percentiles",
+                            "spearmanbrown95percentile_lower",
+                            "spearmanbrown95percentile_upper",
                             paste("mc",no.iterations,"twoalpha", sep = ""),
-                            "twoalpha95percentiles")
+                            "twoalpha95percentile_lower",
+                            "twoalpha95percentile_upper")
 
 
   print(paste("Split half estimates for", no.iterations, "random splits",
