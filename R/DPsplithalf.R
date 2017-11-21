@@ -32,22 +32,59 @@
 #' @import stats
 #' @export
 
-DPsplithalf <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
-                        incErrors = FALSE, conditionlist, halftype,
-                        no.iterations = 1, var.RT = "latency",
+DPsplithalf2 <- function(data,
+                        RTmintrim = 'none',
+                        RTmaxtrim = 'none',
+                        incErrors = FALSE,
+                        conditionlist,
+                        halftype,
+                        no.iterations = 5000,
+                        var.RT = "latency",
                         var.condition = "blockcode",
-                        var.participant = "subject", var.correct = "correct",
-                        var.trialnum = "trialnum", removelist = "")
+                        var.participant = "subject",
+                        var.correct = "correct",
+                        var.trialnum = "trialnum",
+                        var.compare = "congruency",
+                        compare1 = "Congruent",
+                        compare2 = "Incongruent",
+                        removelist = ""
+                        )
 {
   # check for missing variables
   if(halftype != "oddeven" & halftype != "halfs" & halftype != "random") {
     stop("the halftype has not been specified")
   }
 
-  # check if the congruency variable exists
-  if("congruency" %in% colnames(data) == FALSE) {
-    stop("the trial congruency variable does not exist")
+  # check that all of the variables exist in the data frame,
+  # including the trial level components
+  if(var.RT %in% colnames(data) == FALSE) {
+    stop("the RT varible has not been specified")
   }
+  if(var.condition %in% colnames(data) == FALSE) {
+    stop("the condition varible has not been specified")
+  }
+  if(all(conditionlist %in% unique(data[[var.condition]])) == FALSE) {
+    stop("one or more of the conditions do not exist in the condition variable")
+  }
+  if(var.participant %in% colnames(data) == FALSE) {
+    stop("the participant varible has not been specified")
+  }
+  if(var.correct %in% colnames(data) == FALSE) {
+    stop("the accuracy varible has not been specified")
+  }
+  if(var.trialnum %in% colnames(data) == FALSE) {
+    stop("the trial number varible has not been specified")
+  }
+  if(var.compare %in% colnames(data) == FALSE) {
+    stop("the compare varible has not been specified")
+  }
+  if(compare1 %in% unique(data[[var.compare]]) == FALSE) {
+    stop("compare1 does not exist in the compare variable")
+  }
+  if(compare2 %in% unique(data[[var.compare]]) == FALSE) {
+    stop("compare2 does not exist in the compare variable")
+  }
+
 
   # create empty objects for the purposes of binding global variables
   RT <- 0
@@ -69,6 +106,7 @@ data$condition <- data[, var.condition]
 data$participant <- data[, var.participant]
 data$correct <- data[, var.correct]
 data$trialnum <- data[, var.trialnum]
+data$compare <- data[, var.compare]
 
 
 # for randdom samples, the number of samples drawn
@@ -119,17 +157,17 @@ plist <- sort(unique(dataset$participant))
       {
       temp <- subset(dataset, participant == i & condition == j)
 
-      half1.congruent   <- mean(subset(temp$RT, temp$congruency ==
-                                "Congruent" & temp$trialnum%%2 == 0),
+      half1.congruent   <- mean(subset(temp$RT, temp$compare ==
+                                compare1 & temp$trialnum%%2 == 0),
                                 na.rm = T)
-      half1.incongruent <- mean(subset(temp$RT, temp$congruency ==
-                                "Incongruent" & temp$trialnum%%2 == 0),
+      half1.incongruent <- mean(subset(temp$RT, temp$compare ==
+                                compare2 & temp$trialnum%%2 == 0),
                                 na.rm = T)
-      half2.congruent   <- mean(subset(temp$RT, temp$congruency ==
-                                "Congruent" & temp$trialnum%%2 == 1),
+      half2.congruent   <- mean(subset(temp$RT, temp$compare ==
+                                compare1 & temp$trialnum%%2 == 1),
                                 na.rm = T)
-      half2.incongruent <- mean(subset(temp$RT, temp$congruency ==
-                                "Incongruent" & temp$trialnum%%2 == 1),
+      half2.incongruent <- mean(subset(temp$RT, temp$compare ==
+                                compare2 & temp$trialnum%%2 == 1),
                                 na.rm = T)
 
       finalData[l, 3:6] <- c(half1.congruent, half1.incongruent,
@@ -162,22 +200,22 @@ plist <- sort(unique(dataset$participant))
        half1.congruent  <- mean(subset(half1$RT,
                                        half1$participant == i &
                                        half1$condition == j &
-                                       half1$congruency == "Congruent"),
+                                       half1$compare == compare1),
                                        na.rm = T)
        half1.incongruent <- mean(subset(half1$RT,
                                         half1$participant == i &
                                         half1$condition == j &
-                                        half1$congruency == "Incongruent"),
+                                        half1$compare == compare2),
                                         na.rm = T)
        half2.congruent  <- mean(subset(half2$RT,
                                        half2$participant == i &
                                        half2$condition == j &
-                                       half2$congruency == "Congruent"),
+                                       half2$compare == compare1),
                                        na.rm = T)
        half2.incongruent <- mean(subset(half2$RT,
                                         half2$participant == i &
                                         half2$condition == j
-                                        & half2$congruency == "Incongruent"),
+                                        & half2$compare == compare2),
                                         na.rm = T)
 
        finalData[l, 3:6] <- c(half1.congruent, half1.incongruent,
@@ -275,10 +313,10 @@ plist <- sort(unique(dataset$participant))
     # congruency
     temp.con   <- subset(dataset$RT, dataset$participant == i &
                          dataset$condition == j &
-                         dataset$congruency == "Congruent")
+                         dataset$compare == compare1)
     temp.incon <- subset(dataset$RT, dataset$participant ==
                          i & dataset$condition == j &
-                         dataset$congruency == "Incongruent")
+                         dataset$compare == compare2)
 
     # calculates what will be the middle numbered trial in each congruent
     # and incongruent list
