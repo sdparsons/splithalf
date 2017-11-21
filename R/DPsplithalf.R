@@ -32,7 +32,7 @@
 #' @import stats
 #' @export
 
-DPsplithalf2 <- function(data,
+DPsplithalf <- function(data,
                         RTmintrim = 'none',
                         RTmaxtrim = 'none',
                         incErrors = FALSE,
