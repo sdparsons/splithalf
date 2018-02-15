@@ -32,17 +32,61 @@
 #' @import stats
 #' @export
 #'
-splithalf <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
+splithalf <- function(data,
+                      RTmintrim = 'none',
+                      RTmaxtrim = 'none',
                       incErrors = FALSE,
-                      conditionlist, halftype, no.iterations = 1,
-                      var.RT = "latency", var.condition = "blockcode",
-                      var.participant = "subject", var.correct = "correct",
-                      var.trialnum = "trialnum", removelist = "")
+                      conditionlist = FALSE,
+                      halftype,
+                      no.iterations = 1,
+                      var.RT = "latency",
+                      var.condition = FALSE,
+                      var.participant = "subject",
+                      var.correct = "correct",
+                      var.trialnum = "trialnum",
+                      removelist = "",
+                      average = "mean",
+                      sdtrim = FALSE
+                      )
 {
-  # check for missing variables
-  if(halftype != "oddeven" & halftype != "halfs" & halftype != "random") {
-    stop("the halftype has not been specified")
+
+  # check that all of the variables exist in the data frame,
+  # including the trial level components
+  if(var.RT %in% colnames(data) == FALSE) {
+    stop("the RT varible has not been specified")
   }
+  if(var.participant %in% colnames(data) == FALSE) {
+    stop("the participant varible has not been specified")
+  }
+  if(var.correct %in% colnames(data) == FALSE) {
+    stop("the accuracy varible has not been specified")
+  }
+  if(var.trialnum %in% colnames(data) == FALSE) {
+    stop("the trial number varible has not been specified")
+  }
+  if(average != "mean" & average != "median") {
+    stop("averaging method not selected")
+  }
+
+  # for running without a condition list
+  if(var.condition == FALSE) {
+    warning("no condition variable specified, splithalf will treat all trials as one condition")
+    data$all <- "all"
+    var.condition <- "all"
+    conditionlist <- "all"
+  }  else if(var.condition %in% colnames(data) == FALSE)  {
+    stop("condition variable cannot be found in dataframe")
+  } else if(!exists("conditionlist")) {
+    warning("condition list not specified, treating task as single condition")
+    data$all <- "all"
+    var.condition <- "all"
+    conditionlist <- "all"
+  } else if(exists("conditionlist")) {
+    if(all(conditionlist %in% unique(data[[var.condition]])) == FALSE) {
+      stop("one or more of the conditions do not exist in the condition variable")
+    }
+  }
+
 
   # create empty objects for the purposes of binding global variables
   RT <- 0
@@ -70,6 +114,17 @@ splithalf <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
   # loads data into dataset
   dataset <- data
 
+  # removes participants specified to be removed in removelist
+  dataset <- dataset[!dataset$participant %in% removelist, ]
+
+  # how many participants?
+  n_par <- n_distinct(dat2$subject)
+
+  # removes errors if FALSE, includes error trials if TRUE
+  if (incErrors == FALSE) {
+    dataset <- subset(dataset, correct == 1)
+  }
+
   # removes trials below the minimum cutoff and above the maximum cutoff
 
   if (is.numeric(RTmintrim) == TRUE)
@@ -81,20 +136,31 @@ splithalf <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
     dataset <- subset(dataset, RT < RTmaxtrim)
   }
 
-  # removes participants specified to be removed in removelist
-  dataset <- dataset[!dataset$participant %in% removelist, ]
-
-  # removes errors if FALSE, includes error trials if TRUE
-  if (incErrors == FALSE)
-    dataset <- subset(dataset, correct == 1)
-
   # creates a list of participants
   plist <- sort(unique(dataset$participant))
+
+  # if there is a sd trim
+  if(is.numeric(sdtrim)) {
+    dataset <- dataset %>%
+      group_by(participant, condition) %>%
+      mutate(low =  mean(RT) - (sdtrim * sd(RT)),
+             high = mean(RT) + (sdtrim * sd(RT))) %>%
+      filter(RT >= low & RT <= high)
+  }
+
+  # checks whether user difference score is based on means or medians
+  if(average == "mean") {
+    ave_fun <- function(val) {mean(val, na.rm = TRUE)}
+  } else if(average == "median") {
+    ave_fun <- function(val) {median(val, na.rm = TRUE)}
+  }
+
+## Main splithalf processing
 
 
   if (halftype == "oddeven" | halftype == "halfs")
   {
-    finalData <- data.frame(i = rep(plist, times = length(conditionlist)),
+    finaldata <- data.frame(i = rep(plist, times = length(conditionlist)),
                             j = rep(conditionlist, each = length(plist)),
                             half1 = NA, half2 = NA)
     l <- 1
@@ -111,12 +177,12 @@ splithalf <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
         {
           temp <- subset(dataset, participant == i & condition == j)
 
-          half1 <- mean(subset(temp$RT, temp$trialnum%%2 == 0),
+          half1 <- ave_fun(subset(temp$RT, temp$trialnum%%2 == 0),
                                na.rm = T)
-          half2 <- mean(subset(temp$RT, temp$trialnum%%2 == 0),
+          half2 <- ave_fun(subset(temp$RT, temp$trialnum%%2 == 0),
                                na.rm = T)
 
-          finalData[l, 3:4] <- c(half1, half2)
+          finaldata[l, 3:4] <- c(half1, half2)
 
           l <- l + 1
         }
@@ -142,13 +208,13 @@ splithalf <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
             half1 <- temp[1:midtrial, ]
             half2 <- temp[(midtrial + 1):totaltrial, ]
 
-            half1  <- mean(subset(half1$RT, half1$participant == i &
+            half1  <- ave_fun(subset(half1$RT, half1$participant == i &
                                   half1$condition == j), na.rm = T)
-            half2  <- mean(subset(half2$RT, half2$participant == i &
+            half2  <- ave_fun(subset(half2$RT, half2$participant == i &
                                   half2$condition == j), na.rm = T)
 
 
-            finalData[l, 3:4] <- c(half1, half2)
+            finaldata[l, 3:4] <- c(half1, half2)
 
             l <- l + 1
           }
@@ -156,13 +222,13 @@ splithalf <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
         }
       }
     }
-    names(finalData)[1] <- "participant"
-    names(finalData)[2] <- "condition"
+    names(finaldata)[1] <- "participant"
+    names(finaldata)[2] <- "condition"
 
-    if (sum(is.na(finalData$half1) + is.na(finalData$half2)) > 0)
+    if (sum(is.na(finaldata$half1) + is.na(finaldata$half2)) > 0)
     {
       print("the following are participants/conditions with missing data")
-      omitted <- finalData[!complete.cases(finalData), ]
+      omitted <- finaldata[!complete.cases(finaldata), ]
       print(unique(omitted[c("condition", "participant")]))
       print("note: these particpants will be removed from the split half
             reliability calculations, in that condition")
@@ -173,33 +239,26 @@ splithalf <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
     }
 
     # remove NA rows
-    finalData2 <- na.omit(finalData)
+    finaldata2 <- na.omit(finaldata)
 
     # create calculate estimates
-    SplitHalf <- ddply(finalData2, ~condition, summarise,
-                       N = sum(!is.na(half1)),
+    splithalf <- finaldata2 %>%
+      dplyr::group_by(condition) %>%
+      dplyr::summarise(n = sum(!is.na(half1)),
                        splithalf = cor(half1, half2,
                                        use = "pairwise.complete"),
                        spearmanbrown = (2 * cor(half1, half2,
                                                 use = "pairwise.complete"))/
                          (1 + (2 - 1) * cor(half1, half2,
-                                            use = "pairwise.complete")),
-                       twoalpha = (4*cor(half1, half2,
-                                         use = "pairwise.complete")*
-                                     sd(half1, na.rm = TRUE)*
-                                     sd(half2, na.rm = TRUE))/
-                         ((sd(half1, na.rm = TRUE)^2) +
-                            (sd(half2, na.rm = TRUE)^2) +
-                            (2*cor(half1, half2,
-                                   use = "pairwise.complete")*
-                               sd(half1, na.rm = TRUE)*
-                               sd(half2, na.rm = TRUE))))
+                                            use = "pairwise.complete")))
 
-    if (sum(is.na(finalData$half1) + is.na(finalData$half2)) > 0)
+
+
+    if (sum(is.na(finaldata$half1) + is.na(finaldata$half2)) > 0)
     {
-      return(list(Estimates = SplitHalf, omitted = omitted))
+      return(list(Estimates = splithalf, omitted = omitted))
     } else {
-      return(SplitHalf)
+      return(splithalf)
     }
 
     }
@@ -207,7 +266,7 @@ splithalf <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
   if (halftype == "random")
   {
     # create the data.frame to populate
-    finData <- data.frame(j = rep(conditionlist, each = (length(plist) *
+    findata <- data.frame(j = rep(conditionlist, each = (length(plist) *
                                                          length(iterations))),
                           i = rep(plist, each = length(iterations)),
                           h = rep(iterations, times = (length(conditionlist) *
@@ -215,6 +274,9 @@ splithalf <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
                           half1 = NA, half2 = NA)
     # loop counter
     l <- 1
+
+    # participant loop counter for progress bar
+    ppt <- 1
 
     # create vectors to contain both halfs to be compared
     half1v <- vector(length = (length(conditionlist) * length(plist) *
@@ -224,6 +286,10 @@ splithalf <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
 
     for (j in conditionlist)
     {
+      # set up progress bar
+      pb <- txtProgressBar(min = 0, max = n_par, style = 3)
+      setTxtProgressBar(pb, 0)
+
       for (i in plist)
       {
         # subset the dataframe into RT vectors by participant, condition, and
@@ -250,28 +316,33 @@ splithalf <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
           h1 <- temp[ind1]
           h2 <- temp[ind2]
 
-          half1v[l] <- mean(h1)
-          half2v[l] <- mean(h2)
+          half1v[l] <- ave_fun(h1)
+          half2v[l] <- ave_fun(h2)
 
           l <- l + 1
         }
+
+        ppt <- ppt + 1
+        setTxtProgressBar(pb, ppt)
       }
+      ppt <- 1 # reset the progress bar
+
       print(paste("condition", j, "complete"))
     }
 
     print("Calculating split half estimates")
 
-    finData$half1 <- half1v
-    finData$half2 <- half2v
+    findata$half1 <- half1v
+    findata$half2 <- half2v
 
-    names(finData)[1] <- "condition"
-    names(finData)[2] <- "participant"
-    names(finData)[3] <- "iteration"
+    names(findata)[1] <- "condition"
+    names(findata)[2] <- "participant"
+    names(findata)[3] <- "iteration"
 
-    if (sum(is.na(finData$half1) + sum(is.na(finData$half2)) > 0))
+    if (sum(is.na(findata$half1) + sum(is.na(findata$half2)) > 0))
     {
       print("the following are participants/conditions with missing data")
-      omitted <- finData[!complete.cases(finData), ]
+      omitted <- findata[!complete.cases(findata), ]
       print(unique(omitted[c("condition", "participant")]))
       print("note: these iterations will be removed from the split half
             reliability calculations, in that condition")
@@ -282,56 +353,50 @@ splithalf <- function(data, RTmintrim = 'none', RTmaxtrim = 'none',
     }
 
     # remove NA rows
-    finData2 <- na.omit(finData)
+    findata2 <- na.omit(findata)
 
     # calculate correlations per condition and iteration
-    SplitHalf <- ddply(finData2, .(iteration, condition), summarise,
-                       N = sum(!is.na(half1)),
-                       splithalf = cor(half1, half2,
-                                       use = "pairwise.complete"),
-                       spearmanbrown = (2 * cor(half1, half2,
-                                                use = "pairwise.complete"))/
-                         (1 +(2 - 1) * cor(half1, half2,
-                                           use = "pairwise.complete")),
-                       twoalpha = (4*cor(half1, half2,
-                                         use = "pairwise.complete")*
-                                     sd(half1, na.rm = TRUE)*
-                                     sd(half2, na.rm = TRUE))/
-                         ((sd(half1, na.rm = TRUE)^2) +
-                          (sd(half2, na.rm = TRUE)^2) +
-                            (2*cor(half1, half2,
-                                   use = "pairwise.complete")*
-                               sd(half1, na.rm = TRUE)*sd(half2, na.rm = TRUE))))
+    splithalf <- findata2 %>%
+      group_by(iteration, condition) %>%
+      summarise(n = sum(!is.na(half1)),
+                splithalf = cor(half1, half2,
+                                use = "pairwise.complete"),
+                spearmanbrown = (2 * cor(half1, half2,
+                                         use = "pairwise.complete"))/
+                  (1 +(2 - 1) * cor(half1, half2,
+                                    use = "pairwise.complete")))
+
 
     # take the mean estimates per condition
-    SplitHalf2 <- ddply(SplitHalf, .(condition), summarise, N = mean(N),
+    splithalf2 <- splithalf %>%
+                    group_by(condition) %>%
+                    summarise(
+                        n = mean(n),
                         splithalf_estimate = round(mean(splithalf),2),
-                        splithalf95 = paste("[", round(quantile(splithalf, c(.025), names = F), 2), ", ",
-                                            round(quantile(splithalf, c(.975), names = F), 2), "]", sep = ""),
+                        splithalf95CI_lower = round(quantile(splithalf, c(.025), names = F),2),
+                        splithalf95CI_upper = round(quantile(splithalf, c(.975), names = F),2),
                         spearmanbrown_estimate = round(mean(spearmanbrown),2),
-                        spearmanbrown95 = paste("[", round(quantile(spearmanbrown, c(.025), names = F), 2), ", ",
-                                            round(quantile(spearmanbrown, c(.975), names = F), 2), "]", sep = ""),
-                        twoalpha_estimate = round(mean(twoalpha),2),
-                        twoalpha95 = paste("[", round(quantile(twoalpha, c(.025), names = F), 2), ", ",
-                                            round(quantile(twoalpha, c(.975), names = F), 2), "]", sep = "")
-                        )
+                        spearmanbrown95CI_lower = round(quantile(spearmanbrown, c(.025), names = F),2),
+                        spearmanbrown95CI_upper = round(quantile(spearmanbrown, c(.975), names = F),2)  ) %>%
+      as.data.frame()
 
-    colnames(SplitHalf2) <- c("condition", "N",
+
+    colnames(splithalf2) <- c("condition", "n",
                               paste("mc",no.iterations,"splithalf", sep = ""),
-                              "splithalf95percentiles",
+                              "95_low",
+                              "95_high",
                               paste("mc",no.iterations,"spearmanbrown", sep = ""),
-                              "spearmanbrown95percentiles",
-                              paste("mc",no.iterations,"twoalpha", sep = ""),
-                              "twoalpha95percentiles")
+                              "SB_low",
+                              "SB_high")
 
     print(paste("Split half estimates for", no.iterations, "random splits",
                 sep = " "))
 
-    if (sum(is.na(finData$half1)) + sum(is.na(finData$half2) > 0))
+    if (sum(is.na(findata$half1)) + sum(is.na(findata$half2) > 0))
     {
-      return(list(Estimates = SplitHalf2, omitted = omitted))
+      return(list(Estimates = splithalf2, omitted = omitted))
     } else {
-      return(SplitHalf2)
+      return(splithalf2)
     }
 
     }

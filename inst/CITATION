@@ -4,7 +4,7 @@ citEntry(
   entry        = "Misc",
   title        = "splithalf; Calculate Task Split Half Reliability Estimates",
   author       = personList(as.person("Sam Parsons")),
-  url          = "http://github.com/sdparsons/splithalf",
+  url          = "https://doi.org/10.6084/m9.figshare.5559175.v2",
 
-  textVersion  = "Parsons, S. (2017). splithalf; Calculate Task Split Half Reliability Estimates. URL: http://github.com/sdparsons/splithalf",
+  textVersion  = "Parsons, S.. (2017). splithalf: robust estimates of split half reliability (Version 2). figshare. https://doi.org/10.6084/m9.figshare.5559175.v2",
   year = "2017")

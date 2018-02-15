@@ -5,9 +5,10 @@
 \title{Dot-Probe Split Half}
 \usage{
 splithalf(data, RTmintrim = "none", RTmaxtrim = "none", incErrors = FALSE,
-  conditionlist, halftype, no.iterations = 1, var.RT = "latency",
-  var.condition = "blockcode", var.participant = "subject",
-  var.correct = "correct", var.trialnum = "trialnum", removelist = "")
+  conditionlist = FALSE, halftype, no.iterations = 1, var.RT = "latency",
+  var.condition = FALSE, var.participant = "subject",
+  var.correct = "correct", var.trialnum = "trialnum", removelist = "",
+  average = "mean", sdtrim = FALSE)
 }
 \arguments{
 \item{data}{specifies the raw dataset to be processed}
