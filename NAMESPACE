@@ -3,6 +3,5 @@
 export(splithalf)
 export(splithalf_diff)
 export(splithalf_diff_diff)
-import(plyr)
 import(stats)
 import(tidyverse)

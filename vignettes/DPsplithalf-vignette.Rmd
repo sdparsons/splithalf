@@ -9,6 +9,9 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+note: this vignette requires some updating for the latest package version
+
+
 # Introduction to the DPsplithalf function
 
   Researchers should estimate and report the reliability of their cognitive tasks. Unfortunately, this is the exception rather than the rule. The routine reporting of reliability estimates stands to benefit our science in several ways (I also discuss this in greater depth elsewhere):
@@ -60,7 +63,14 @@ sum(is.na(DPdata))
 
 ``` {r}
 library(splithalf)
-DPsplithalf(DPdata, conditionlist = c("block1","block2"), halftype = "random", no.iterations = 5000)
+library(tidyverse)
+splithalf_diff(DPdata, 
+               conditionlist = c("block1","block2"), 
+               halftype = "random", 
+               no.iterations = 5000,
+               var.compare = "congruency",
+               compare1 = "Congruent",
+               compare2 = "Incongruent")
 ```
 
   What you see first is the console output. You will be informed as each condition has been processed and at which point the estimates are being calculated. This is purely so the user can keep track of the progress of the function. 
@@ -122,8 +132,17 @@ var.trialnum = 'trialnum'
 We will therefore specify; condition, trialnum, RT, correct
 
 ``` {r}
-example2 <- DPsplithalf(DPdata_missing, conditionlist = c("block1","block2"), halftype = "random",                                   no.iterations = 5000, var.condition = "block", var.trialnum = "trialnumber", 
-                        var.RT = "responsetime", var.correct = "accuracy" )
+example2 <- splithalf_diff(DPdata_missing, 
+                        conditionlist = c("block1","block2"), 
+                        halftype = "random",
+                        no.iterations = 50, 
+                        var.condition = "block",
+                        var.trialnum = "trialnumber", 
+                        var.RT = "responsetime", 
+                        var.correct = "accuracy",
+                        var.compare = "congruency",
+                        compare1 = "Congruent",
+                        compare2 = "Incongruent")
 example2$Estimates
 head(example2$omitted)
 ```

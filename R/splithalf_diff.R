@@ -143,7 +143,7 @@ splithalf_diff <- function(data,
   dataset <- dataset[!dataset$participant %in% removelist, ]
 
   # how many participants?
-  n_par <- n_distinct(dat2$subject)
+  n_par <- n_distinct(dataset$subject)
 
   # removes errors if FALSE, includes error trials if TRUE
   if (incErrors == FALSE) {

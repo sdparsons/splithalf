@@ -17,12 +17,22 @@ splithalf v0.2.0 (current development version)
 
 Changes:
 
+* reworked the package into three main functions
+* more options added for flexibility to many RT tasks
+* progress bars added
+
+
+splithalf v0.2.0 (current development version)
+==============
+
+Changes:
+
 * Added the TSTsplithalf function
 * Some minor bug fixes
 * Output for all functions now includes two-part alpha
 
 
-splithalf v0.1.0 (Release data: 07/04/2017)
+splithalf v0.2.0 (Release data: 07/04/2017)
 ==============
 
 Changes:
