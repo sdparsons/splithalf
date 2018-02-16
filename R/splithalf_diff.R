@@ -434,7 +434,7 @@ splithalf_diff <- function(data,
     }
 
     # remove NA rows
-    findata2 <<-  na.omit(findata)
+    findata2 <-  na.omit(findata)
     findata2$iteration <- as.factor(findata2$iteration)
 
     # calculate correlations per condition and iteration
