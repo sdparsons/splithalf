@@ -1,7 +1,7 @@
 Package: splithalf
 Type: Package
 Title: Calculate Task Split Half Reliability Estimates
-Version: 0.3.0
+Version: 0.3.1
 Authors@R: person("Sam", "Parsons", email = "sam.parsons@psy.ox.ac.uk",
   role = c("aut", "cre"))
 Maintainer: Sam Parsons <sam.parsons@psy.ox.ac.uk>
@@ -13,6 +13,7 @@ Description: A series of functions to calculate the split
 Depends: R (>= 3.3.2)
 Imports:
     tidyverse,
+    dplyr,
     stats
 Suggests: 
     testthat,

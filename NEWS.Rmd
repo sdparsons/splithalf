@@ -12,7 +12,15 @@ knitr::opts_chunk$set(
 )
 ```
 
-splithalf v0.2.0 (current development version)
+splithalf v0.3.1 (current development version)
+==============
+
+Changes:
+* added dplyr to dependencies
+* added splithalf functions for accuracy (currently development version)
+
+
+splithalf v0.3.0 (current development version)
 ==============
 
 Changes:

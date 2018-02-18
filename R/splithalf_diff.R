@@ -36,6 +36,7 @@
 #' # splithalf_diff(DPdata_missing, conditionlist = c("block1","block2"),
 #' # halftype = "random", no.iterations = 50)
 #' @import tidyverse
+#' @import dplyr
 #' @import stats
 #' @export
 

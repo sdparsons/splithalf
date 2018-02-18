@@ -17,7 +17,6 @@
 #' @param compare1 specifies the first trial type to be compared (e.g. congruent trials)
 #' @param compare2 specifies the first trial type to be compared (e.g. incongruent trials)
 #' @param removelist specifies a list of participants to be removed
-#' @param average allows the user to specify whether mean or median will be used to create the bias index
 #' @param sdtrim allows the user to trim the data by selected sd (after removal of errors and min/max RTs)
 #' @return Returns a data frame containing split-half reliability estimates for the bias index in each condition specified.
 #' @return splithalf returns the raw estimate of the bias index
@@ -40,10 +39,9 @@
 #' @import stats
 #' @export
 
-splithalf_diff_diff <- function(data,
+splithalf_ACC_diff_diff <- function(data,
                            RTmintrim = 'none',
                            RTmaxtrim = 'none',
-                           incErrors = FALSE,
                            condition1 = "Assessment1",
                            condition2 = "Assessment2",
                            halftype = "random",
@@ -57,7 +55,6 @@ splithalf_diff_diff <- function(data,
                            compare1 = "Congruent",
                            compare2 = "Incongruent",
                            removelist = "",
-                           average = "mean",
                            sdtrim = FALSE
 )
 {
@@ -88,9 +85,6 @@ splithalf_diff_diff <- function(data,
   }
   if(compare2 %in% unique(data[[var.compare]]) == FALSE) {
     stop("compare2 does not exist in the compare variable")
-  }
-  if(average != "mean" & average != "median") {
-    stop("averaging method not selected")
   }
   if(var.condition %in% colnames(data) == FALSE) {
     stop("the condition varible has not been specified")
@@ -136,10 +130,6 @@ splithalf_diff_diff <- function(data,
   # how many participants? (multiply by 2 for error bar)
   n_par <- n_distinct(dataset$participant) * 2
 
-  # removes errors if FALSE, includes error trials if TRUE
-  if (incErrors == FALSE) {
-    dataset <- subset(dataset, correct == 1)
-  }
 
   # removes trials below the minimum cutoff and above the maximum cutoff
   if (is.numeric(RTmintrim) == TRUE)
@@ -167,12 +157,6 @@ splithalf_diff_diff <- function(data,
   }
 
 
-  # checks whether user difference score is based on means or medians
-  if(average == "mean") {
-    ave_fun <- function(val) {mean(val, na.rm = TRUE)}
-  } else if(average == "median") {
-    ave_fun <- function(val) {median(val, na.rm = TRUE)}
-  }
 
   ## Main splithalf processing
 
@@ -196,13 +180,13 @@ splithalf_diff_diff <- function(data,
         {
           temp <- subset(dataset, participant == i & condition == j)
 
-          half1.congruent   <- ave_fun(subset(temp$RT, temp$compare ==
+          half1.congruent   <- sum(subset(temp$correct, temp$compare ==
                                                 compare1 & temp$trialnum%%2 == 0))
-          half1.incongruent <- ave_fun(subset(temp$RT, temp$compare ==
+          half1.incongruent <- sum(subset(temp$correct, temp$compare ==
                                                 compare2 & temp$trialnum%%2 == 0))
-          half2.congruent   <- ave_fun(subset(temp$RT, temp$compare ==
+          half2.congruent   <- sum(subset(temp$correct, temp$compare ==
                                                 compare1 & temp$trialnum%%2 == 1))
-          half2.incongruent <- ave_fun(subset(temp$RT, temp$compare ==
+          half2.incongruent <- sum(subset(temp$correct, temp$compare ==
                                                 compare2 & temp$trialnum%%2 == 1))
 
           finaldata[l, 3:6] <- c(half1.congruent, half1.incongruent,
@@ -232,19 +216,19 @@ splithalf_diff_diff <- function(data,
             half1 <- temp[1:midtrial, ]
             half2 <- temp[(midtrial + 1):totaltrial, ]
 
-            half1.congruent  <- ave_fun(subset(half1$RT,
+            half1.congruent  <- sum(subset(half1$correct,
                                                half1$participant == i &
                                                  half1$condition == j &
                                                  half1$compare == compare1))
-            half1.incongruent <- ave_fun(subset(half1$RT,
+            half1.incongruent <- sum(subset(half1$correct,
                                                 half1$participant == i &
                                                   half1$condition == j &
                                                   half1$compare == compare2))
-            half2.congruent  <- ave_fun(subset(half2$RT,
+            half2.congruent  <- sum(subset(half2$correct,
                                                half2$participant == i &
                                                  half2$condition == j &
                                                  half2$compare == compare1))
-            half2.incongruent <- ave_fun(subset(half2$RT,
+            half2.incongruent <- sum(subset(half2$correct,
                                                 half2$participant == i &
                                                   half2$condition == j
                                                 & half2$compare == compare2))
@@ -368,10 +352,10 @@ splithalf_diff_diff <- function(data,
       {
         # subset the dataframe into RT vectors by participant, condition, and
         # congruency
-        temp.con   <- subset(dataset$RT, dataset$participant == i &
+        temp.con   <- subset(dataset$correct, dataset$participant == i &
                                dataset$condition == j &
                                dataset$compare == compare1)
-        temp.incon <- subset(dataset$RT, dataset$participant ==
+        temp.incon <- subset(dataset$correct, dataset$participant ==
                                i & dataset$condition == j &
                                dataset$compare == compare2)
 
@@ -399,8 +383,8 @@ splithalf_diff_diff <- function(data,
           h2.congruent <- temp.con[ind2.con]
           h2.incongruent <- temp.incon[ind2.incon]
 
-          bias1v[l] <- ave_fun(h1.incongruent) - ave_fun(h1.congruent)
-          bias2v[l] <- ave_fun(h2.incongruent) - ave_fun(h2.congruent)
+          bias1v[l] <- sum(h1.incongruent) - sum(h1.congruent)
+          bias2v[l] <- sum(h2.incongruent) - sum(h2.congruent)
 
           l <- l + 1
         }

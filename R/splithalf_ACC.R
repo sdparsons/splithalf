@@ -33,10 +33,9 @@
 #' @import stats
 #' @export
 #'
-splithalf <- function(data,
+splithalf_ACC <- function(data,
                       RTmintrim = 'none',
                       RTmaxtrim = 'none',
-                      incErrors = FALSE,
                       conditionlist = FALSE,
                       halftype,
                       no.iterations = 1,
@@ -46,7 +45,6 @@ splithalf <- function(data,
                       var.correct = "correct",
                       var.trialnum = "trialnum",
                       removelist = "",
-                      average = "mean",
                       sdtrim = FALSE
                       )
 {
@@ -65,9 +63,7 @@ splithalf <- function(data,
   if(var.trialnum %in% colnames(data) == FALSE) {
     stop("the trial number varible has not been specified")
   }
-  if(average != "mean" & average != "median") {
-    stop("averaging method not selected")
-  }
+
 
   # for running without a condition list
   if(var.condition == FALSE) {
@@ -121,10 +117,6 @@ splithalf <- function(data,
   # how many participants?
   n_par <- n_distinct(dataset$participant)
 
-  # removes errors if FALSE, includes error trials if TRUE
-  if (incErrors == FALSE) {
-    dataset <- subset(dataset, correct == 1)
-  }
 
   # removes trials below the minimum cutoff and above the maximum cutoff
 
@@ -150,11 +142,7 @@ splithalf <- function(data,
   }
 
   # checks whether user difference score is based on means or medians
-  if(average == "mean") {
-    ave_fun <- function(val) {mean(val, na.rm = TRUE)}
-  } else if(average == "median") {
-    ave_fun <- function(val) {median(val, na.rm = TRUE)}
-  }
+
 
 ## Main splithalf processing
 
@@ -178,9 +166,9 @@ splithalf <- function(data,
         {
           temp <- subset(dataset, participant == i & condition == j)
 
-          half1 <- ave_fun(subset(temp$RT, temp$trialnum%%2 == 0),
+          half1 <- sum(subset(temp$correct, temp$trialnum%%2 == 0),
                                na.rm = T)
-          half2 <- ave_fun(subset(temp$RT, temp$trialnum%%2 == 0),
+          half2 <- sum(subset(temp$correct, temp$trialnum%%2 == 0),
                                na.rm = T)
 
           finaldata[l, 3:4] <- c(half1, half2)
@@ -209,9 +197,9 @@ splithalf <- function(data,
             half1 <- temp[1:midtrial, ]
             half2 <- temp[(midtrial + 1):totaltrial, ]
 
-            half1  <- ave_fun(subset(half1$RT, half1$participant == i &
+            half1  <- sum(subset(half1$correct, half1$participant == i &
                                   half1$condition == j), na.rm = T)
-            half2  <- ave_fun(subset(half2$RT, half2$participant == i &
+            half2  <- sum(subset(half2$correct, half2$participant == i &
                                   half2$condition == j), na.rm = T)
 
 
@@ -295,7 +283,7 @@ splithalf <- function(data,
       {
         # subset the dataframe into RT vectors by participant, condition, and
         # congruency
-        temp <- subset(dataset$RT, dataset$participant == i &
+        temp <- subset(dataset$correct, dataset$participant == i &
                        dataset$condition == j)
 
 
@@ -317,8 +305,8 @@ splithalf <- function(data,
           h1 <- temp[ind1]
           h2 <- temp[ind2]
 
-          half1v[l] <- ave_fun(h1)
-          half2v[l] <- ave_fun(h2)
+          half1v[l] <- sum(h1)
+          half2v[l] <- sum(h2)
 
           l <- l + 1
         }
