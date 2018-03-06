@@ -99,7 +99,9 @@ splithalf <- function(data,
   iteration <- 0
   N <- 0
   spearmanbrown <- 0
-  twoalpha <- 0
+
+  # set the data as a data.frame to avoid tibble issues
+  data <- as.data.frame(data)
 
   # renames the dataset variables to fit with the code
   data$RT <- data[, var.RT]
