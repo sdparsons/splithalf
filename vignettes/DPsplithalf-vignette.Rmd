@@ -63,7 +63,8 @@ sum(is.na(DPdata))
 
 ``` {r}
 library(splithalf)
-library(tidyverse)
+library(dplyr)
+library(tidyr)
 splithalf_diff(DPdata, 
                conditionlist = c("block1","block2"), 
                halftype = "random", 

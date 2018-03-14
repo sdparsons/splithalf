@@ -43,8 +43,6 @@ splithalf_ACC_diff(data, RTmintrim = "none", RTmaxtrim = "none",
 \item{removelist}{specifies a list of participants to be removed}
 
 \item{sdtrim}{allows the user to trim the data by selected sd (after removal of errors and min/max RTs)}
-
-\item{incErrors}{include incorrect trials?, defaults to FALSE}
 }
 \value{
 Returns a data frame containing split-half reliability estimates for the bias index in each condition specified.

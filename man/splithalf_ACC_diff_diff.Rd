@@ -19,6 +19,10 @@ splithalf_ACC_diff_diff(data, RTmintrim = "none", RTmaxtrim = "none",
 
 \item{RTmaxtrim}{specifies the maximum cut-off point for RTs}
 
+\item{condition1}{specifies the first condition}
+
+\item{condition2}{specifies the second condition}
+
 \item{halftype}{specifies the split method; "oddeven", "halfs", or "random"}
 
 \item{no.iterations}{specifies the number of random splits to run}
@@ -42,10 +46,6 @@ splithalf_ACC_diff_diff(data, RTmintrim = "none", RTmaxtrim = "none",
 \item{removelist}{specifies a list of participants to be removed}
 
 \item{sdtrim}{allows the user to trim the data by selected sd (after removal of errors and min/max RTs)}
-
-\item{incErrors}{include incorrect trials?, defaults to FALSE}
-
-\item{conditionlist}{sets conditions/blocks to be processed}
 }
 \value{
 Returns a data frame containing split-half reliability estimates for the bias index in each condition specified.

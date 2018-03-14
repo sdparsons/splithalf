@@ -35,7 +35,7 @@ splithalf_ACC(data, RTmintrim = "none", RTmaxtrim = "none",
 
 \item{removelist}{specifies a list of participants to be removed}
 
-\item{incErrors}{include incorrect trials?, defaults to FALSE}
+\item{sdtrim}{allows the user to trim the data by selected sd (after removal of errors and min/max RTs)}
 }
 \value{
 Returns a data frame containing split-half reliability estimates for each condition specified.

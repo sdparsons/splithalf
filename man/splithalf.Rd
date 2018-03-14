@@ -36,6 +36,10 @@ splithalf(data, RTmintrim = "none", RTmaxtrim = "none", incErrors = FALSE,
 \item{var.trialnum}{specifies the trial number variable}
 
 \item{removelist}{specifies a list of participants to be removed}
+
+\item{average}{allows the user to specify whether mean or median will be used to create the bias index}
+
+\item{sdtrim}{allows the user to trim the data by selected sd (after removal of errors and min/max RTs)}
 }
 \value{
 Returns a data frame containing split-half reliability estimates for each condition specified.

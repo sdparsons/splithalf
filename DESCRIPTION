@@ -12,7 +12,7 @@ Description: A series of functions to calculate the split
     probe task, however, can be modified for other tasks.
 Depends: R (>= 3.3.2)
 Imports:
-    tidyverse,
+    tidyr,
     dplyr,
     stats
 Suggests: 

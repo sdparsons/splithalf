@@ -5,7 +5,6 @@
 #' @param RTmintrim specifies the lower cut-off point for RTs
 #' @param RTmaxtrim specifies the maximum cut-off point for RTs
 #' @param no.iterations specifies the number of random splits to run
-#' @param incErrors include incorrect trials?, defaults to FALSE
 #' @param conditionlist sets conditions/blocks to be processed
 #' @param halftype specifies the split method; "oddeven", "halfs", or "random"
 #' @param var.RT specifies the RT variable name in data
@@ -14,6 +13,7 @@
 #' @param var.correct specifies the accuracy variable name in data
 #' @param var.trialnum specifies the trial number variable
 #' @param removelist specifies a list of participants to be removed
+#' @param sdtrim allows the user to trim the data by selected sd (after removal of errors and min/max RTs)
 #' @return Returns a data frame containing split-half reliability estimates for each condition specified.
 #' @return splithalf returns the raw estimate
 #' @return spearmanbrown returns the spearman-brown corrected estimate
@@ -28,11 +28,13 @@
 #' ## the output will also include a full dataframe of missing values
 #' splithalf(DPdata_missing, conditionlist = c("block1","block2"),
 #' halftype = "random", no.iterations = 50)
-#' @import tidyverse
+#' @import tidyr
 #' @import dplyr
-#' @import stats
+#' @import utils
+#' @importFrom stats complete.cases cor median na.omit quantile sd
 #' @export
-#'
+
+
 splithalf_ACC <- function(data,
                       RTmintrim = 'none',
                       RTmaxtrim = 'none',
@@ -95,6 +97,8 @@ splithalf_ACC <- function(data,
   iteration <- 0
   N <- 0
   spearmanbrown <- 0
+  low <- 0
+  high <- 0
 
   # set the data as a data.frame to avoid tibble issues
   data <- as.data.frame(data)
@@ -135,7 +139,7 @@ splithalf_ACC <- function(data,
   plist <- sort(unique(dataset$participant))
 
   # if there is a sd trim
-  if(is.numeric(sdtrim)) {
+  if (is.numeric(sdtrim)) {
     dataset <- dataset %>%
       group_by(participant, condition) %>%
       mutate(low =  mean(RT) - (sdtrim * sd(RT)),
@@ -239,7 +243,7 @@ splithalf_ACC <- function(data,
                        splithalf = cor(half1, half2,
                                        use = "pairwise.complete"),
                        spearmanbrown = (2 * cor(half1, half2,
-                                                use = "pairwise.complete"))/
+                                                use = "pairwise.complete")) /
                          (1 + (2 - 1) * cor(half1, half2,
                                             use = "pairwise.complete")))
 
@@ -348,20 +352,20 @@ splithalf_ACC <- function(data,
 
     # calculate correlations per condition and iteration
     splithalf <- findata2 %>%
-      group_by(iteration, condition) %>%
-      summarise(n = sum(!is.na(half1)),
+      dplyr::group_by(iteration, condition) %>%
+      dplyr::summarise(n = sum(!is.na(half1)),
                 splithalf = cor(half1, half2,
                                 use = "pairwise.complete"),
                 spearmanbrown = (2 * cor(half1, half2,
-                                         use = "pairwise.complete"))/
-                  (1 +(2 - 1) * cor(half1, half2,
+                                         use = "pairwise.complete")) /
+                  (1 + (2 - 1) * cor(half1, half2,
                                     use = "pairwise.complete")))
 
 
     # take the mean estimates per condition
     splithalf2 <- splithalf %>%
-                    group_by(condition) %>%
-                    summarise(
+                    dplyr::group_by(condition) %>%
+                    dplyr::summarise(
                         n = mean(n),
                         splithalf_estimate = round(mean(splithalf),2),
                         splithalf95CI_lower = round(quantile(splithalf, c(.025), names = F),2),
