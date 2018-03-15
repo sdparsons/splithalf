@@ -4,7 +4,6 @@
 #' @param data specifies the raw dataset to be processed
 #' @param RTmintrim specifies the lower cut-off point for RTs
 #' @param RTmaxtrim specifies the maximum cut-off point for RTs
-#' @param incErrors include incorrect trials?, defaults to FALSE
 #' @param conditionlist sets conditions/blocks to be processed
 #' @param halftype specifies the split method; "oddeven", "halfs", or "random"
 #' @param no.iterations specifies the number of random splits to run
@@ -17,7 +16,6 @@
 #' @param compare1 specifies the first trial type to be compared (e.g. congruent trials)
 #' @param compare2 specifies the first trial type to be compared (e.g. incongruent trials)
 #' @param removelist specifies a list of participants to be removed
-
 #' @param sdtrim allows the user to trim the data by selected sd (after removal of errors and min/max RTs)
 #' @return Returns a data frame containing split-half reliability estimates for the bias index in each condition specified.
 #' @return splithalf returns the raw estimate of the bias index
@@ -35,9 +33,10 @@
 #' # not run:
 #' # splithalf_diff(DPdata_missing, conditionlist = c("block1","block2"),
 #' # halftype = "random", no.iterations = 50)
-#' @import tidyverse
+#' @import tidyr
 #' @import dplyr
-#' @import stats
+#' @import utils
+#' @importFrom stats complete.cases cor median na.omit quantile sd
 #' @export
 
 splithalf_ACC_diff <- function(data,
@@ -107,7 +106,6 @@ splithalf_ACC_diff <- function(data,
     }
   }
 
-
   # create empty objects for the purposes of binding global variables
   RT <- 0
   correct <- 0
@@ -120,6 +118,12 @@ splithalf_ACC_diff <- function(data,
   iteration <- 0
   N <- 0
   spearmanbrown <- 0
+  low <- 0
+  high <- 0
+  compare <- 0
+  bias <- 0
+  value <- 0
+  estimate <- 0
 
   # set the data as a data.frame to avoid tibble issues
   data <- as.data.frame(data)
@@ -159,18 +163,13 @@ splithalf_ACC_diff <- function(data,
   plist <- sort(unique(dataset$participant))
 
   # if there is a sd trim
-  if(is.numeric(sdtrim)) {
+  if (is.numeric(sdtrim)) {
   dataset <- dataset %>%
-    group_by(participant, condition, compare) %>%
-    mutate(low =  mean(RT) - (sdtrim * sd(RT)),
-           high = mean(RT) + (sdtrim * sd(RT))) %>%
-    filter(RT >= low & RT <= high)
+              dplyr::group_by(participant, condition, compare) %>%
+              dplyr::mutate(low =  mean(RT) - (sdtrim * sd(RT)),
+                            high = mean(RT) + (sdtrim * sd(RT))) %>%
+              dplyr::filter(RT >= low & RT <= high)
   }
-
-
-
-
-
 
 
 
@@ -197,13 +196,13 @@ splithalf_ACC_diff <- function(data,
           temp <- subset(dataset, participant == i & condition == j)
 
           half1.congruent   <- sum(subset(temp$correct, temp$compare ==
-                                             compare1 & temp$trialnum%%2 == 0))
+                                             compare1 & temp$trialnum %% 2 == 0))
           half1.incongruent <- sum(subset(temp$correct, temp$compare ==
-                                             compare2 & temp$trialnum%%2 == 0))
+                                             compare2 & temp$trialnum %% 2 == 0))
           half2.congruent   <- sum(subset(temp$correct, temp$compare ==
-                                             compare1 & temp$trialnum%%2 == 1))
+                                             compare1 & temp$trialnum %% 2 == 1))
           half2.incongruent <- sum(subset(temp$correct, temp$compare ==
-                                             compare2 & temp$trialnum%%2 == 1))
+                                             compare2 & temp$trialnum %% 2 == 1))
 
           finaldata[l, 3:6] <- c(half1.congruent, half1.incongruent,
                                  half2.congruent, half2.incongruent)
@@ -321,8 +320,6 @@ splithalf_ACC_diff <- function(data,
   if (halftype == "random")
   {
 
-
-
     # create the data.frame to populate
     findata <-  data.frame(j = rep(conditionlist, each = (length(plist) *
                                                            length(iterations))),
@@ -335,7 +332,6 @@ splithalf_ACC_diff <- function(data,
 
     # participant loop counter for progress bar
     ppt <- 1
-
 
     # create vectors to contain both halfs to be compared
     bias1v <- vector(length = (length(conditionlist) * length(plist) *
@@ -435,7 +431,7 @@ splithalf_ACC_diff <- function(data,
                        splithalf = cor(bias1, bias2, use = "pairwise.complete"),
                        spearmanbrown = (2 * cor(bias1, bias2,
                                                 use = "pairwise.complete")) /
-                         (1 +(2 - 1) * cor(bias1, bias2,
+                         (1 + (2 - 1) * cor(bias1, bias2,
                                            use = "pairwise.complete")))
 
 

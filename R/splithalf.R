@@ -14,6 +14,8 @@
 #' @param var.correct specifies the accuracy variable name in data
 #' @param var.trialnum specifies the trial number variable
 #' @param removelist specifies a list of participants to be removed
+#' @param average allows the user to specify whether mean or median will be used to create the bias index
+#' @param sdtrim allows the user to trim the data by selected sd (after removal of errors and min/max RTs)
 #' @return Returns a data frame containing split-half reliability estimates for each condition specified.
 #' @return splithalf returns the raw estimate
 #' @return spearmanbrown returns the spearman-brown corrected estimate
@@ -28,9 +30,10 @@
 #' ## the output will also include a full dataframe of missing values
 #' splithalf(DPdata_missing, conditionlist = c("block1","block2"),
 #' halftype = "random", no.iterations = 50)
-#' @import tidyverse
+#' @import tidyr
 #' @import dplyr
-#' @import stats
+#' @import utils
+#' @importFrom stats complete.cases cor median na.omit quantile sd
 #' @export
 #'
 splithalf <- function(data,
@@ -53,37 +56,37 @@ splithalf <- function(data,
 
   # check that all of the variables exist in the data frame,
   # including the trial level components
-  if(var.RT %in% colnames(data) == FALSE) {
+  if (var.RT %in% colnames(data) == FALSE) {
     stop("the RT varible has not been specified")
   }
-  if(var.participant %in% colnames(data) == FALSE) {
+  if (var.participant %in% colnames(data) == FALSE) {
     stop("the participant varible has not been specified")
   }
-  if(var.correct %in% colnames(data) == FALSE) {
+  if (var.correct %in% colnames(data) == FALSE) {
     stop("the accuracy varible has not been specified")
   }
-  if(var.trialnum %in% colnames(data) == FALSE) {
+  if (var.trialnum %in% colnames(data) == FALSE) {
     stop("the trial number varible has not been specified")
   }
-  if(average != "mean" & average != "median") {
+  if (average != "mean" & average != "median") {
     stop("averaging method not selected")
   }
 
   # for running without a condition list
-  if(var.condition == FALSE) {
+  if (var.condition == FALSE) {
     warning("no condition variable specified, splithalf will treat all trials as one condition")
     data$all <- "all"
     var.condition <- "all"
     conditionlist <- "all"
-  }  else if(var.condition %in% colnames(data) == FALSE)  {
+  }  else if (var.condition %in% colnames(data) == FALSE)  {
     stop("condition variable cannot be found in dataframe")
-  } else if(!exists("conditionlist")) {
+  } else if (!exists("conditionlist")) {
     warning("condition list not specified, treating task as single condition")
     data$all <- "all"
     var.condition <- "all"
     conditionlist <- "all"
-  } else if(exists("conditionlist")) {
-    if(all(conditionlist %in% unique(data[[var.condition]])) == FALSE) {
+  } else if (exists("conditionlist")) {
+    if (all(conditionlist %in% unique(data[[var.condition]])) == FALSE) {
       stop("one or more of the conditions do not exist in the condition variable")
     }
   }
@@ -99,6 +102,8 @@ splithalf <- function(data,
   iteration <- 0
   N <- 0
   spearmanbrown <- 0
+  low <- 0
+  high <- 0
 
   # set the data as a data.frame to avoid tibble issues
   data <- as.data.frame(data)
@@ -143,18 +148,18 @@ splithalf <- function(data,
   plist <- sort(unique(dataset$participant))
 
   # if there is a sd trim
-  if(is.numeric(sdtrim)) {
+  if (is.numeric(sdtrim)) {
     dataset <- dataset %>%
-      group_by(participant, condition) %>%
-      mutate(low =  mean(RT) - (sdtrim * sd(RT)),
+      dplyr::group_by(participant, condition) %>%
+      dplyr::mutate(low =  mean(RT) - (sdtrim * sd(RT)),
              high = mean(RT) + (sdtrim * sd(RT))) %>%
-      filter(RT >= low & RT <= high)
+      dplyr::filter(RT >= low & RT <= high)
   }
 
   # checks whether user difference score is based on means or medians
-  if(average == "mean") {
+  if (average == "mean") {
     ave_fun <- function(val) {mean(val, na.rm = TRUE)}
-  } else if(average == "median") {
+  } else if (average == "median") {
     ave_fun <- function(val) {median(val, na.rm = TRUE)}
   }
 
@@ -180,10 +185,8 @@ splithalf <- function(data,
         {
           temp <- subset(dataset, participant == i & condition == j)
 
-          half1 <- ave_fun(subset(temp$RT, temp$trialnum%%2 == 0),
-                               na.rm = T)
-          half2 <- ave_fun(subset(temp$RT, temp$trialnum%%2 == 0),
-                               na.rm = T)
+          half1 <- ave_fun(subset(temp$RT, temp$trialnum %% 2 == 0))
+          half2 <- ave_fun(subset(temp$RT, temp$trialnum %% 2 == 0))
 
           finaldata[l, 3:4] <- c(half1, half2)
 
@@ -212,9 +215,9 @@ splithalf <- function(data,
             half2 <- temp[(midtrial + 1):totaltrial, ]
 
             half1  <- ave_fun(subset(half1$RT, half1$participant == i &
-                                  half1$condition == j), na.rm = T)
+                                  half1$condition == j))
             half2  <- ave_fun(subset(half2$RT, half2$participant == i &
-                                  half2$condition == j), na.rm = T)
+                                  half2$condition == j))
 
 
             finaldata[l, 3:4] <- c(half1, half2)
@@ -251,7 +254,7 @@ splithalf <- function(data,
                        splithalf = cor(half1, half2,
                                        use = "pairwise.complete"),
                        spearmanbrown = (2 * cor(half1, half2,
-                                                use = "pairwise.complete"))/
+                                                use = "pairwise.complete")) /
                          (1 + (2 - 1) * cor(half1, half2,
                                             use = "pairwise.complete")))
 
@@ -360,20 +363,20 @@ splithalf <- function(data,
 
     # calculate correlations per condition and iteration
     splithalf <- findata2 %>%
-      group_by(iteration, condition) %>%
-      summarise(n = sum(!is.na(half1)),
+      dplyr::group_by(iteration, condition) %>%
+      dplyr::summarise(n = sum(!is.na(half1)),
                 splithalf = cor(half1, half2,
                                 use = "pairwise.complete"),
                 spearmanbrown = (2 * cor(half1, half2,
-                                         use = "pairwise.complete"))/
-                  (1 +(2 - 1) * cor(half1, half2,
+                                         use = "pairwise.complete")) /
+                  (1 + (2 - 1) * cor(half1, half2,
                                     use = "pairwise.complete")))
 
 
     # take the mean estimates per condition
     splithalf2 <- splithalf %>%
-                    group_by(condition) %>%
-                    summarise(
+                    dplyr::group_by(condition) %>%
+                    dplyr::summarise(
                         n = mean(n),
                         splithalf_estimate = round(mean(splithalf),2),
                         splithalf95CI_lower = round(quantile(splithalf, c(.025), names = F),2),

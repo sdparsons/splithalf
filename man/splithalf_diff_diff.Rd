@@ -22,6 +22,10 @@ splithalf_diff_diff(data, RTmintrim = "none", RTmaxtrim = "none",
 
 \item{incErrors}{include incorrect trials?, defaults to FALSE}
 
+\item{condition1}{specifies the first condition}
+
+\item{condition2}{specifies the second condition}
+
 \item{halftype}{specifies the split method; "oddeven", "halfs", or "random"}
 
 \item{no.iterations}{specifies the number of random splits to run}
@@ -47,8 +51,6 @@ splithalf_diff_diff(data, RTmintrim = "none", RTmaxtrim = "none",
 \item{average}{allows the user to specify whether mean or median will be used to create the bias index}
 
 \item{sdtrim}{allows the user to trim the data by selected sd (after removal of errors and min/max RTs)}
-
-\item{conditionlist}{sets conditions/blocks to be processed}
 }
 \value{
 Returns a data frame containing split-half reliability estimates for the bias index in each condition specified.

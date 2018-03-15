@@ -35,9 +35,10 @@
 #' # not run:
 #' # splithalf_diff(DPdata_missing, conditionlist = c("block1","block2"),
 #' # halftype = "random", no.iterations = 50)
-#' @import tidyverse
+#' @import tidyr
 #' @import dplyr
-#' @import stats
+#' @import utils
+#' @importFrom stats complete.cases cor median na.omit quantile sd
 #' @export
 
 splithalf_diff <- function(data,
@@ -124,6 +125,9 @@ splithalf_diff <- function(data,
   iteration <- 0
   N <- 0
   spearmanbrown <- 0
+  low <- 0
+  high <- 0
+  compare <- 0
 
   # set the data as a data.frame to avoid tibble issues
   data <- as.data.frame(data)
@@ -168,24 +172,21 @@ splithalf_diff <- function(data,
   plist <- sort(unique(dataset$participant))
 
   # if there is a sd trim
-  if(is.numeric(sdtrim)) {
+  if (is.numeric(sdtrim)) {
   dataset <- dataset %>%
-    group_by(participant, condition, compare) %>%
-    mutate(low =  mean(RT) - (sdtrim * sd(RT)),
+    dplyr::group_by(participant, condition, compare) %>%
+    dplyr::mutate(low =  mean(RT) - (sdtrim * sd(RT)),
            high = mean(RT) + (sdtrim * sd(RT))) %>%
-    filter(RT >= low & RT <= high)
+    dplyr::filter(RT >= low & RT <= high)
   }
 
 
     # checks whether user difference score is based on means or medians
-  if(average == "mean") {
+  if (average == "mean") {
     ave_fun <- function(val) {mean(val, na.rm = TRUE)}
-  } else if(average == "median") {
+  } else if (average == "median") {
     ave_fun <- function(val) {median(val, na.rm = TRUE)}
   }
-
-
-
 
 
 ## Main splithalf processing
@@ -211,13 +212,13 @@ splithalf_diff <- function(data,
           temp <- subset(dataset, participant == i & condition == j)
 
           half1.congruent   <- ave_fun(subset(temp$RT, temp$compare ==
-                                             compare1 & temp$trialnum%%2 == 0))
+                                             compare1 & temp$trialnum %% 2 == 0))
           half1.incongruent <- ave_fun(subset(temp$RT, temp$compare ==
-                                             compare2 & temp$trialnum%%2 == 0))
+                                             compare2 & temp$trialnum %% 2 == 0))
           half2.congruent   <- ave_fun(subset(temp$RT, temp$compare ==
-                                             compare1 & temp$trialnum%%2 == 1))
+                                             compare1 & temp$trialnum %% 2 == 1))
           half2.incongruent <- ave_fun(subset(temp$RT, temp$compare ==
-                                             compare2 & temp$trialnum%%2 == 1))
+                                             compare2 & temp$trialnum %% 2 == 1))
 
           finaldata[l, 3:6] <- c(half1.congruent, half1.incongruent,
                                  half2.congruent, half2.incongruent)
@@ -350,7 +351,6 @@ splithalf_diff <- function(data,
     # participant loop counter for progress bar
     ppt <- 1
 
-
     # create vectors to contain both halfs to be compared
     bias1v <- vector(length = (length(conditionlist) * length(plist) *
                                  length(iterations)))
@@ -449,7 +449,7 @@ splithalf_diff <- function(data,
                        splithalf = cor(bias1, bias2, use = "pairwise.complete"),
                        spearmanbrown = (2 * cor(bias1, bias2,
                                                 use = "pairwise.complete")) /
-                         (1 +(2 - 1) * cor(bias1, bias2,
+                         (1 + (2 - 1) * cor(bias1, bias2,
                                            use = "pairwise.complete")))
 
 

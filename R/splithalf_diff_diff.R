@@ -5,11 +5,12 @@
 #' @param RTmintrim specifies the lower cut-off point for RTs
 #' @param RTmaxtrim specifies the maximum cut-off point for RTs
 #' @param incErrors include incorrect trials?, defaults to FALSE
-#' @param conditionlist sets conditions/blocks to be processed
 #' @param halftype specifies the split method; "oddeven", "halfs", or "random"
 #' @param no.iterations specifies the number of random splits to run
 #' @param var.RT specifies the RT variable name in data
 #' @param var.condition specifies the condition variable name in data - if not specified then splithalf will treat all trials as one condition
+#' @param condition1 specifies the first condition
+#' @param condition2 specifies the second condition
 #' @param var.participant specifies the subject variable name in data
 #' @param var.correct specifies the accuracy variable name in data
 #' @param var.trialnum specifies the trial number variable
@@ -35,9 +36,10 @@
 #' # not run:
 #' # splithalf_diff(DPdata_missing, conditionlist = c("block1","block2"),
 #' # halftype = "random", no.iterations = 50)
-#' @import tidyverse
+#' @import tidyr
 #' @import dplyr
-#' @import stats
+#' @import utils
+#' @importFrom stats complete.cases cor median na.omit quantile sd
 #' @export
 
 splithalf_diff_diff <- function(data,
@@ -62,43 +64,43 @@ splithalf_diff_diff <- function(data,
 )
 {
   # check for missing variables
-  if(halftype != "oddeven" & halftype != "halfs" & halftype != "random") {
+  if (halftype != "oddeven" & halftype != "halfs" & halftype != "random") {
     stop("the halftype has not been specified")
   }
 
   # check that all of the variables exist in the data frame,
   # including the trial level components
-  if(var.RT %in% colnames(data) == FALSE) {
+  if (var.RT %in% colnames(data) == FALSE) {
     stop("the RT varible has not been specified")
   }
-  if(var.participant %in% colnames(data) == FALSE) {
+  if (var.participant %in% colnames(data) == FALSE) {
     stop("the participant varible has not been specified")
   }
-  if(var.correct %in% colnames(data) == FALSE) {
+  if (var.correct %in% colnames(data) == FALSE) {
     stop("the accuracy varible has not been specified")
   }
-  if(var.trialnum %in% colnames(data) == FALSE) {
+  if (var.trialnum %in% colnames(data) == FALSE) {
     stop("the trial number varible has not been specified")
   }
-  if(var.compare %in% colnames(data) == FALSE) {
+  if (var.compare %in% colnames(data) == FALSE) {
     stop("the compare varible has not been specified")
   }
-  if(compare1 %in% unique(data[[var.compare]]) == FALSE) {
+  if (compare1 %in% unique(data[[var.compare]]) == FALSE) {
     stop("compare1 does not exist in the compare variable")
   }
-  if(compare2 %in% unique(data[[var.compare]]) == FALSE) {
+  if (compare2 %in% unique(data[[var.compare]]) == FALSE) {
     stop("compare2 does not exist in the compare variable")
   }
-  if(average != "mean" & average != "median") {
+  if (average != "mean" & average != "median") {
     stop("averaging method not selected")
   }
-  if(var.condition %in% colnames(data) == FALSE) {
+  if (var.condition %in% colnames(data) == FALSE) {
     stop("the condition varible has not been specified")
   }
-  if(condition1 %in% unique(data[[var.condition]]) == FALSE) {
+  if (condition1 %in% unique(data[[var.condition]]) == FALSE) {
     stop("condition1 does not exist in the condition variable")
   }
-  if(condition2 %in% unique(data[[var.condition]]) == FALSE) {
+  if (condition2 %in% unique(data[[var.condition]]) == FALSE) {
     stop("condition2 does not exist in the condition variable")
   }
 
@@ -114,6 +116,20 @@ splithalf_diff_diff <- function(data,
   iteration <- 0
   N <- 0
   spearmanbrown <- 0
+  low <- 0
+  high <- 0
+  Assessment1_bias1 <- 0
+  Assessment1_bias2 <- 0
+  Assessment2_bias1 <- 0
+  Assessment2_bias2 <- 0
+  difference1_1 <- 0
+  difference1_2 <- 0
+  difference2_1 <- 0
+  difference2_2 <- 0
+  bias <- 0
+  compare <- 0
+  value <- 0
+  estimate <- 0
 
   # set the data as a data.frame to avoid tibble issues
   data <- as.data.frame(data)
@@ -161,19 +177,19 @@ splithalf_diff_diff <- function(data,
   conditionlist <- c(condition1, condition2)
 
   # if there is a sd trim
-  if(is.numeric(sdtrim)) {
+  if (is.numeric(sdtrim)) {
     dataset <- dataset %>%
-      group_by(participant, condition, compare) %>%
-      mutate(low =  mean(RT) - (sdtrim * sd(RT)),
-             high = mean(RT) + (sdtrim * sd(RT))) %>%
-      filter(RT >= low & RT <= high)
+                  dplyr::group_by(participant, condition, compare) %>%
+                  dplyr::mutate(low =  mean(RT) - (sdtrim * sd(RT)),
+                         high = mean(RT) + (sdtrim * sd(RT))) %>%
+                  dplyr::filter(RT >= low & RT <= high)
   }
 
 
   # checks whether user difference score is based on means or medians
-  if(average == "mean") {
+  if (average == "mean") {
     ave_fun <- function(val) {mean(val, na.rm = TRUE)}
-  } else if(average == "median") {
+  } else if (average == "median") {
     ave_fun <- function(val) {median(val, na.rm = TRUE)}
   }
 
@@ -200,13 +216,13 @@ splithalf_diff_diff <- function(data,
           temp <- subset(dataset, participant == i & condition == j)
 
           half1.congruent   <- ave_fun(subset(temp$RT, temp$compare ==
-                                                compare1 & temp$trialnum%%2 == 0))
+                                                compare1 & temp$trialnum %% 2 == 0))
           half1.incongruent <- ave_fun(subset(temp$RT, temp$compare ==
-                                                compare2 & temp$trialnum%%2 == 0))
+                                                compare2 & temp$trialnum %% 2 == 0))
           half2.congruent   <- ave_fun(subset(temp$RT, temp$compare ==
-                                                compare1 & temp$trialnum%%2 == 1))
+                                                compare1 & temp$trialnum %% 2 == 1))
           half2.incongruent <- ave_fun(subset(temp$RT, temp$compare ==
-                                                compare2 & temp$trialnum%%2 == 1))
+                                                compare2 & temp$trialnum %% 2 == 1))
 
           finaldata[l, 3:6] <- c(half1.congruent, half1.incongruent,
                                  half2.congruent, half2.incongruent)
@@ -295,18 +311,18 @@ splithalf_diff_diff <- function(data,
     # first crack at the difference of a difference thing. looks promicing
     # make this able to load into Splithalf 2 later and its sorted
     splithalf <- findata2 %>%
-      gather(key = "bias", value = "value", 4:5) %>%
-      unite(compare, condition, bias, sep = "_") %>%
-      spread(compare, value) %>%
-      mutate(difference1_1 = Assessment1_bias1 - Assessment2_bias1,
-             difference1_2 = Assessment1_bias2 - Assessment2_bias2,
-             difference2_1 = Assessment1_bias1 - Assessment2_bias2,
-             difference2_2 = Assessment1_bias2 - Assessment2_bias1) %>%
-      group_by(iteration) %>%
-      summarise(cor1 = cor(difference1_1, difference1_2, use = "pairwise.complete"),
-                cor2 = cor(difference2_1, difference2_2, use = "pairwise.complete")) %>%
-      gather("var", "splithalf",2:3) %>%
-      mutate(spearmanbrown = (2 * estimate) / ((1 + (2 - 1) * estimate)))
+        tidyr::gather(key = "bias", value = "value", 4:5) %>%
+        tidyr::unite(compare, condition, bias, sep = "_") %>%
+        tidyr::spread(compare, value) %>%
+        dplyr::mutate(difference1_1 = Assessment1_bias1 - Assessment2_bias1,
+               difference1_2 = Assessment1_bias2 - Assessment2_bias2,
+               difference2_1 = Assessment1_bias1 - Assessment2_bias2,
+               difference2_2 = Assessment1_bias2 - Assessment2_bias1) %>%
+        dplyr::group_by(iteration) %>%
+        dplyr::summarise(cor1 = cor(difference1_1, difference1_2, use = "pairwise.complete"),
+                  cor2 = cor(difference2_1, difference2_2, use = "pairwise.complete")) %>%
+        tidyr::gather("var", "splithalf",2:3) %>%
+        dplyr::mutate(spearmanbrown = (2 * estimate) / ((1 + (2 - 1) * estimate)))
 
 
     # splithalf <<- finaldata2 %>%
@@ -445,19 +461,19 @@ splithalf_diff_diff <- function(data,
 
 
     splithalf <- findata2 %>%
-      gather(key = "bias", value = "value", 4:5) %>%
-      unite(compare, condition, bias, sep = "_") %>%
-      spread(compare, value) %>%
-      mutate(difference1_1 = Assessment1_bias1 - Assessment2_bias1,
+      tidyr::gather(key = "bias", value = "value", 4:5) %>%
+      tidyr::unite(compare, condition, bias, sep = "_") %>%
+      tidyr::spread(compare, value) %>%
+      dplyr::mutate(difference1_1 = Assessment1_bias1 - Assessment2_bias1,
              difference1_2 = Assessment1_bias2 - Assessment2_bias2,
              difference2_1 = Assessment1_bias1 - Assessment2_bias2,
              difference2_2 = Assessment1_bias2 - Assessment2_bias1) %>%
-      group_by(iteration) %>%
-      summarise(cor1 = cor(difference1_1, difference1_2, use = "pairwise.complete"),
+      dplyr::group_by(iteration) %>%
+      dplyr::summarise(cor1 = cor(difference1_1, difference1_2, use = "pairwise.complete"),
                 cor2 = cor(difference2_1, difference2_2, use = "pairwise.complete"),
                 n = n()) %>%
-      gather("var", "splithalf",2:3) %>%
-      mutate(spearmanbrown = (2 * splithalf) / ((1 + (2 - 1) * splithalf)))
+      tidyr::gather("var", "splithalf",2:3) %>%
+      dplyr::mutate(spearmanbrown = (2 * splithalf) / ((1 + (2 - 1) * splithalf)))
 
 
     # splithalf <- findata2 %>%
