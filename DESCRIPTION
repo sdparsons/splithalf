@@ -10,6 +10,7 @@ Description: A series of functions to calculate the split
     procedure to process a user defined number of random splits in order to 
     provide a better reliability estimate. The current functions target the dot-
     probe task, however, can be modified for other tasks.
+    Unofficial release name: "fly, you fools"
 Depends: R (>= 3.3)
 Imports:
     tidyr,
