@@ -1,6 +1,7 @@
 #' Split Half for difference scores
 #'
 #' This function calculates split half reliability estimates for Dot Probe data
+#' The (unofficial) version name is "Fighter of the nightman"
 #' @param data specifies the raw dataset to be processed
 #' @param RTmintrim specifies the lower cut-off point for RTs
 #' @param RTmaxtrim specifies the maximum cut-off point for RTs
@@ -37,8 +38,11 @@
 #' # halftype = "random", no.iterations = 50)
 #' @import tidyr
 #' @import dplyr
-#' @import utils
+#' @import Rcpp
 #' @importFrom stats complete.cases cor median na.omit quantile sd
+#' @useDynLib splithalf, .registration = TRUE
+#' @importFrom Rcpp sourceCpp
+#' @importFrom utils setTxtProgressBar txtProgressBar
 #' @export
 
 splithalf_diff <- function(data,
@@ -61,6 +65,8 @@ splithalf_diff <- function(data,
                         sdtrim = FALSE
                         )
 {
+
+
   # check for missing variables
   if(halftype != "oddeven" & halftype != "halfs" & halftype != "random") {
     stop("the halftype has not been specified")
@@ -183,7 +189,7 @@ splithalf_diff <- function(data,
 
     # checks whether user difference score is based on means or medians
   if (average == "mean") {
-    ave_fun <- function(val) {mean(val, na.rm = TRUE)}
+    ave_fun <- function(val) {sum(val)/length(val)}
   } else if (average == "median") {
     ave_fun <- function(val) {median(val, na.rm = TRUE)}
   }
@@ -379,31 +385,66 @@ splithalf_diff <- function(data,
         midtrial.con <- sum(!is.na(temp.con))/2
         midtrial.incon <- sum(!is.na(temp.incon))/2
 
-        ii.con <- seq(temp.con)
-        ii.incon <- seq(temp.incon)
+        # ii.con <- seq(temp.con)
+        # ii.incon <- seq(temp.incon)
+        #
+        #
+        # con   <- data.frame(dat = rep(sample(ii.con), length.out = length(ii.con)*no.iterations),
+        #                   it = rep(1:no.iterations, each = length(ii.con)),
+        #                   rand = rep(rep(sample(1:2), length.out = length(ii.con)), length.out = length(ii.con)*no.iterations))
+        #
+        # incon <- data.frame(dat = rep(sample(ii.incon), length.out = length(ii.incon)*no.iterations),
+        #                   it = rep(1:no.iterations, each = length(ii.incon)),
+        #                   rand = rep(rep(sample(1:2), length.out = length(ii.incon)), length.out = length(ii.incon)*no.iterations))
+        #
 
-        # in the following loop random halves of each congruent and incongruent
-        # list are taken the ind objects contain the trial list, and the h1/h2
-        # contain the actual RTs the bias indices are then calculated and added
-        # to the vector
-        for (h in iterations)
-        {
-          ind1.con <- sample(ii.con, midtrial.con)
-          ind2.con <- ii.con[!ii.con %in% ind1.con]
-          ind1.incon <- sample(ii.incon, midtrial.incon)
-          ind2.incon <- ii.incon[!ii.incon %in% ind1.incon]
 
-          h1.congruent <- temp.con[ind1.con]
-          h1.incongruent <- temp.incon[ind1.incon]
-          h2.congruent <- temp.con[ind2.con]
-          h2.incongruent <- temp.incon[ind2.incon]
 
-          bias1v[l] <- ave_fun(h1.incongruent) - ave_fun(h1.congruent)
-          bias2v[l] <- ave_fun(h2.incongruent) - ave_fun(h2.congruent)
+        # replicate(no.iterations, sample(temp.con))
 
-          l <- l + 1
 
-        }
+        con2 <- Speedloop(A = matrix(nrow = length(temp.con), ncol = no.iterations, 0), x = no.iterations, y = temp.con)
+        con2.1 <- con2[1:floor(midtrial.con),]
+        con2.2 <- con2[(floor(midtrial.con)+1):length(temp.con),]
+
+        incon2 <- Speedloop(A = matrix(nrow = length(temp.incon), ncol = no.iterations, 0), x = no.iterations, y = temp.incon)
+        incon2.1 <- incon2[1:floor(midtrial.incon),]
+        incon2.2 <- incon2[(floor(midtrial.incon)+1):length(temp.incon),]
+
+        bias1v[l:(l+no.iterations-1)] <- colMeans(con2.1) - colMeans(incon2.1)
+        bias2v[l:(l+no.iterations-1)] <- colMeans(con2.2) - colMeans(incon2.2)
+
+
+
+        #
+        # # in the following loop random halves of each congruent and incongruent
+        # # list are taken the ind objects contain the trial list, and the h1/h2
+        # # contain the actual RTs the bias indices are then calculated and added
+        # # to the vector
+        # for (h in iterations)
+        # {
+        #
+        #
+        #
+        #
+        #
+        #
+        #   # ind1.con <- sample(ii.con, midtrial.con)
+        #   # ind2.con <- ii.con[!ii.con %in% ind1.con]
+        #   # ind1.incon <- sample(ii.incon, midtrial.incon)
+        #   # ind2.incon <- ii.incon[!ii.incon %in% ind1.incon]
+        #   #
+        #   # h1.congruent <- temp.con[ind1.con]
+        #   # h1.incongruent <- temp.incon[ind1.incon]
+        #   # h2.congruent <- temp.con[ind2.con]
+        #   # h2.incongruent <- temp.incon[ind2.incon]
+        #
+        #   bias1v[l] <- ave_fun(h1.incongruent) - ave_fun(h1.congruent)
+        #   bias2v[l] <- ave_fun(h2.incongruent) - ave_fun(h2.congruent)
+        #
+           l <- l + no.iterations
+
+        #}
 
         ppt <- ppt + 1
         setTxtProgressBar(pb, ppt)
@@ -484,9 +525,9 @@ splithalf_diff <- function(data,
     if (sum(is.na(findata$bias1)) +
         sum(is.na(findata$bias2)) > 0)
     {
-      return(list(Estimates = splithalf2, omitted = omitted))
+      print(list(Estimates = splithalf2, omitted = omitted))
     } else {
-      return(splithalf2)
+      print(splithalf2)
     }
 
     }

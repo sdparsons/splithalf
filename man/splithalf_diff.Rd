@@ -60,6 +60,7 @@ Warning: If there are missing data (e.g one condition data missing for one parti
 }
 \description{
 This function calculates split half reliability estimates for Dot Probe data
+The (unofficial) version name is "Fighter of the nightman"
 }
 \examples{
 ## split half estimates for the bias index in two blocks

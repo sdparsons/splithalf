@@ -32,8 +32,8 @@
 #' halftype = "random", no.iterations = 50)
 #' @import tidyr
 #' @import dplyr
-#' @import utils
 #' @importFrom stats complete.cases cor median na.omit quantile sd
+#' @importFrom utils setTxtProgressBar txtProgressBar
 #' @export
 #'
 splithalf <- function(data,
