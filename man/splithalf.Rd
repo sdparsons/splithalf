@@ -2,65 +2,56 @@
 % Please edit documentation in R/splithalf.R
 \name{splithalf}
 \alias{splithalf}
-\title{Dot-Probe Split Half}
+\title{Internal consistency of task measures via a permutation split-half reliability approach}
 \usage{
-splithalf(data, RTmintrim = "none", RTmaxtrim = "none", incErrors = FALSE,
-  conditionlist = FALSE, halftype, no.iterations = 1, var.RT = "latency",
-  var.condition = FALSE, var.participant = "subject",
-  var.correct = "correct", var.trialnum = "trialnum", removelist = "",
-  average = "mean", sdtrim = FALSE)
+splithalf(data, outcome = "RT", score = "difference",
+  conditionlist = FALSE, halftype = "random", permutations = 5000,
+  var.RT = "latency", var.condition = FALSE, var.participant = "subject",
+  var.trialnum = "trialnum", var.compare = "congruency",
+  compare1 = "Congruent", compare2 = "Incongruent", average = "mean")
 }
 \arguments{
 \item{data}{specifies the raw dataset to be processed}
 
-\item{RTmintrim}{specifies the lower cut-off point for RTs}
+\item{outcome}{indicates the type of data to be processed, e.g. response time or accuracy rates}
 
-\item{RTmaxtrim}{specifies the maximum cut-off point for RTs}
-
-\item{incErrors}{include incorrect trials?, defaults to FALSE}
+\item{score}{indicates how the outcome score is calculated, e.g. most commonly the difference score between two trial types}
 
 \item{conditionlist}{sets conditions/blocks to be processed}
 
 \item{halftype}{specifies the split method; "oddeven", "halfs", or "random"}
 
-\item{no.iterations}{specifies the number of random splits to run}
+\item{permutations}{specifies the number of random splits to run - 5000 is good}
 
 \item{var.RT}{specifies the RT variable name in data}
 
-\item{var.condition}{specifies the condition variable name in data}
+\item{var.condition}{specifies the condition variable name in data - if not specified then splithalf will treat all trials as one condition}
 
 \item{var.participant}{specifies the subject variable name in data}
 
-\item{var.correct}{specifies the accuracy variable name in data}
-
 \item{var.trialnum}{specifies the trial number variable}
 
-\item{removelist}{specifies a list of participants to be removed}
+\item{var.compare}{specified the variable that is used to calculate difference scores (e.g. including congruent and incongruent trials)}
 
-\item{average}{allows the user to specify whether mean or median will be used to create the bias index}
+\item{compare1}{specifies the first trial type to be compared (e.g. congruent trials)}
 
-\item{sdtrim}{allows the user to trim the data by selected sd (after removal of errors and min/max RTs)}
+\item{compare2}{specifies the first trial type to be compared (e.g. incongruent trials)}
+
+\item{average}{use mean or median to calculate average scores?}
 }
 \value{
-Returns a data frame containing split-half reliability estimates for each condition specified.
+Returns a data frame containing permutation based split-half reliability estimates
 
-splithalf returns the raw estimate
+splithalf is the raw estimate of the bias index
 
-spearmanbrown returns the spearman-brown corrected estimate
+spearmanbrown is the spearman-brown corrected estimate of the bias index
 
 Warning: If there are missing data (e.g one condition data missing for one participant) output will include details of the missing data and return a dataframe containing the NA data. Warnings will be displayed in the console.
 }
 \description{
-This function calculates split half reliability estimates
+This function calculates split half reliability estimates via a permutation approach for a wide range of tasks
+The (unofficial) version name is "This function gives me the power to fight like a crow"
 }
 \examples{
-## split half estimates for two blocks of the task
-## using 50 iterations of the random split method (note: 5000 would be standard)
-splithalf(DPdata, conditionlist = c("block1","block2"), halftype = "random",
-no.iterations = 50)
-## In datasets with missing data an additional output is generated
-## the console will return a list of participants/blocks
-## the output will also include a full dataframe of missing values
-splithalf(DPdata_missing, conditionlist = c("block1","block2"),
-halftype = "random", no.iterations = 50)
+## examples to be added here - see documentation/vignette for full detail
 }

@@ -1,21 +1,19 @@
 Package: splithalf
 Type: Package
 Title: Calculate Task Split Half Reliability Estimates
-Version: 0.4.1
+Version: 0.5.1
 Authors@R: person("Sam", "Parsons", email = "sam.parsons@psy.ox.ac.uk",
   role = c("aut", "cre"))
 Maintainer: Sam Parsons <sam.parsons@psy.ox.ac.uk>
-Description: A series of functions to calculate the split 
-    half reliability of RT based tasks. The functions perform a Monte Carlo
-    procedure to process a user defined number of random splits in order to 
-    provide a better reliability estimate. 
-    Unofficial release name: "the nightman commeth".
+Description: Estimate the internal consistency of your tasks with a permutation based split-half reliability approach.
+    Unofficial release name: "Fight Milk".
 Depends: R (>= 3.3)
 Imports:
     tidyr,
     dplyr,
     stats,
-    Rcpp
+    Rcpp,
+    robustbase
 LinkingTo: Rcpp
 Suggests: 
     testthat,

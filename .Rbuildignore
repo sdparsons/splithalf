@@ -4,3 +4,5 @@
 ^README-.*\.png$
 ^cran-comments\.md$
 ^NEWS\.Rmd$
+^testing$
+^depreciated$
