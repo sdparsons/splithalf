@@ -648,10 +648,10 @@ splithalf <- function(data,
 
 
     colnames(splithalf2) <- c("condition", "n",
-                              paste("mc",permutations,"splithalf", sep = ""),
+                              "splithalf",
                               "95_low",
                               "95_high",
-                              paste("mc",permutations,"spearmanbrown", sep = ""),
+                              "spearmanbrown",
                               "SB_low",
                               "SB_high")
 
