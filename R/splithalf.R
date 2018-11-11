@@ -33,19 +33,19 @@
 #' @export
 
 splithalf <- function(data,
-                             outcome = "RT",
-                             score = "difference",
-                             conditionlist = FALSE,
-                             halftype = "random",
-                             permutations = 5000,
-                             var.RT = "latency",
-                             var.condition = FALSE,
-                             var.participant = "subject",
-                             var.trialnum = "trialnum",
-                             var.compare = "congruency",
-                             compare1 = "Congruent",
-                             compare2 = "Incongruent",
-                             average = "mean"
+                      outcome = "RT",
+                      score = "difference",
+                      conditionlist = FALSE,
+                      halftype = "random",
+                      permutations = 5000,
+                      var.RT = "latency",
+                      var.condition = FALSE,
+                      var.participant = "subject",
+                      var.trialnum = "trialnum",
+                      var.compare = "congruency",
+                      compare1 = "Congruent",
+                      compare2 = "Incongruent",
+                      average = "mean"
 )
 
 {
@@ -72,17 +72,19 @@ splithalf <- function(data,
   if(var.trialnum %in% colnames(data) == FALSE) {
     stop("the trial number varible has not been specified")
   }
-  if(var.compare %in% colnames(data) == FALSE) {
-    stop("the compare varible has not been specified")
-  }
-  if(compare1 %in% unique(data[[var.compare]]) == FALSE) {
-    stop("compare1 does not exist in the compare variable")
-  }
-  if(compare2 %in% unique(data[[var.compare]]) == FALSE) {
-    stop("compare2 does not exist in the compare variable")
-  }
-  if(average != "mean" & average != "median") {
-    stop("averaging method not selected")
+  if(score == "difference" | score == "difference_of_difference") {
+    if(var.compare %in% colnames(data) == FALSE) {
+      stop("the compare varible has not been specified")
+    }
+    if(compare1 %in% unique(data[[var.compare]]) == FALSE) {
+      stop("compare1 does not exist in the compare variable")
+    }
+    if(compare2 %in% unique(data[[var.compare]]) == FALSE) {
+      stop("compare2 does not exist in the compare variable")
+    }
+    if(average != "mean" & average != "median") {
+      stop("averaging method not selected")
+    }
   }
 
   # specifically checking the condition variables, alterning as necessary to run for all trials as one condition
@@ -137,7 +139,9 @@ splithalf <- function(data,
   data$condition <- data[, var.condition]
   data$participant <- data[, var.participant]
   data$trialnum <- data[, var.trialnum]
-  data$compare <- data[, var.compare]
+  if(score == "difference" | score == "difference_if_difference") {
+    data$compare <- data[, var.compare]
+  }
 
 
   # for randdom samples, the number of samples drawn
