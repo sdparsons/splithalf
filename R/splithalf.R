@@ -139,7 +139,7 @@ splithalf <- function(data,
   data$condition <- data[, var.condition]
   data$participant <- data[, var.participant]
   data$trialnum <- data[, var.trialnum]
-  if(score == "difference" | score == "difference_if_difference") {
+  if(score == "difference" | score == "difference_of_difference") {
     data$compare <- data[, var.compare]
   }
 
