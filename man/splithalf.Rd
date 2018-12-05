@@ -6,9 +6,10 @@
 \usage{
 splithalf(data, outcome = "RT", score = "difference",
   conditionlist = FALSE, halftype = "random", permutations = 5000,
-  var.RT = "latency", var.condition = FALSE, var.participant = "subject",
-  var.trialnum = "trialnum", var.compare = "congruency",
-  compare1 = "Congruent", compare2 = "Incongruent", average = "mean")
+  var.RT = "latency", var.condition = FALSE,
+  var.participant = "subject", var.trialnum = "trialnum",
+  var.compare = "congruency", compare1 = "Congruent",
+  compare2 = "Incongruent", average = "mean")
 }
 \arguments{
 \item{data}{specifies the raw dataset to be processed}
