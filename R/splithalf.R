@@ -58,7 +58,7 @@ splithalf <- function(data,
     stop("the outcome has not been specified: select from RT or accuracy")
   }
   if(score != "average" & score != "difference" & score != "difference_of_difference") {
-    stop("the score has not been specified: select from raw, difference, or difference_of_difference")
+    stop("the score has not been specified: select from average, difference, or difference_of_difference")
   }
 
   # check that all of the variables exist in the data frame,
