@@ -57,8 +57,8 @@ splithalf <- function(data,
   if(outcome != "RT" & outcome != "accuracy") {
     stop("the outcome has not been specified: select from RT or accuracy")
   }
-  if(score != "raw" & score != "difference" & score != "difference_of_difference") {
-    stop("the score has not been specified: select from raw, difference, or difference_of_difference")
+  if(score != "average" & score != "difference" & score != "difference_of_difference") {
+    stop("the score has not been specified: select from average, difference, or difference_of_difference")
   }
 
   # check that all of the variables exist in the data frame,
@@ -139,7 +139,7 @@ splithalf <- function(data,
   data$condition <- data[, var.condition]
   data$participant <- data[, var.participant]
   data$trialnum <- data[, var.trialnum]
-  if(score == "difference" | score == "difference_if_difference") {
+  if(score == "difference" | score == "difference_of_difference") {
     data$compare <- data[, var.compare]
   }
 
@@ -192,7 +192,7 @@ splithalf <- function(data,
       # giving mean RTs in congruent and incongruent conditions for each
       # split
 
-      if(score == "raw"){
+      if(score == "average"){
         for (j in conditionlist)
         {
           for (i in plist)
@@ -242,7 +242,7 @@ splithalf <- function(data,
 
       if (halftype == "halfs") {
 
-        if(score == "raw") {
+        if(score == "average") {
           for (j in conditionlist)
           {
             for (i in plist)
@@ -341,7 +341,7 @@ splithalf <- function(data,
 
     # create calculate estimates
 
-    if(score == "raw" | score == "difference") {
+    if(score == "average" | score == "difference") {
       splithalf <- finaldata2 %>%
         dplyr::group_by(condition) %>%
         dplyr::summarise(n = round(sum(!is.na(half1)),0),
@@ -414,7 +414,7 @@ splithalf <- function(data,
                                  length(iterations)))
 
 
-    if(score == "raw"){
+    if(score == "average"){
       for (j in conditionlist)
       {
         # set up progress bar
@@ -587,7 +587,7 @@ splithalf <- function(data,
     #                      (1 + (2 - 1) * cor(bias1, bias2,
     #                                         use = "pairwise.complete")))
 
-    if(score == "raw" | score == "difference")   {
+    if(score == "average" | score == "difference")   {
       splithalf <- findata2 %>%
         dplyr::group_by(iteration, condition) %>%
         dplyr::summarise(n = round(sum(!is.na(bias1)),2),
