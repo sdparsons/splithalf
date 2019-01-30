@@ -200,7 +200,7 @@ splithalf <- function(data,
             temp <- subset(dataset, participant == i & condition == j)
 
             half1 <- ave_fun_basic(subset(temp$RT, temp$trialnum %% 2 == 0))
-            half2 <- ave_fun_basic(subset(temp$RT, temp$trialnum %% 2 == 0))
+            half2 <- ave_fun_basic(subset(temp$RT, temp$trialnum %% 2 == 1))
 
             finaldata[l, 3:4] <- c(half1, half2)
 
