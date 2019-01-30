@@ -349,8 +349,8 @@ splithalf <- function(data,
                                          use = "pairwise.complete"),
                          spearmanbrown = (2 * cor(half1, half2,
                                                   use = "pairwise.complete")) /
-                           (1 + (2 - 1) * cor(half1, half2,
-                                              use = "pairwise.complete"))) %>%
+                           (1 + (2 - 1) * abs(cor(half1, half2,
+                                              use = "pairwise.complete")))) %>%
         as.data.frame()
     }
 
@@ -367,7 +367,7 @@ splithalf <- function(data,
                          cor2 = cor(difference2_1, difference2_2, use = "pairwise.complete"),
                          n = n()) %>%
         dplyr::mutate(splithalf = (cor1 + cor2)/2) %>%
-        dplyr::mutate(spearmanbrown = (2 * splithalf) / ((1 + (2 - 1) * splithalf))) %>%
+        dplyr::mutate(spearmanbrown = (2 * splithalf) / ((1 + (2 - 1) * abs(splithalf)))) %>%
         dplyr::select(-1, -2)
 
     }
@@ -594,8 +594,8 @@ splithalf <- function(data,
                          splithalf = cor(bias1, bias2, use = "pairwise.complete", method = "spearman"),
                          spearmanbrown = (2 * cor(bias1, bias2,
                                                   use = "pairwise.complete", method = "spearman")) /
-                           (1 + (2 - 1) * cor(bias1, bias2,
-                                              use = "pairwise.complete", method = "spearman")))
+                           (1 + (2 - 1) * abs(cor(bias1, bias2,
+                                              use = "pairwise.complete", method = "spearman"))))
 
 
       # take the mean estimates per condition
@@ -627,7 +627,7 @@ splithalf <- function(data,
                          cor2 = cor(difference2_1, difference2_2, use = "pairwise.complete"),
                          n = n()) %>%
         tidyr::gather("var", "splithalf",2:3) %>%
-        dplyr::mutate(spearmanbrown = (2 * splithalf) / ((1 + (2 - 1) * splithalf)))
+        dplyr::mutate(spearmanbrown = (2 * splithalf) / ((1 + (2 - 1) * abs(splithalf))))
 
 
       # take the mean estimates per condition

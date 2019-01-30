@@ -12,8 +12,12 @@ knitr::opts_chunk$set(
 )
 ```
 
+splithalf v0.5.2 (current development version) [unofficial version name: Fight Milk - rebrand]
+==============
+changes: bug fix to the spearman-brown correction, it now deals with negative splithalf estimates properly. 
 
-splithalf v0.5.1 (current development version) [unofficial version name: Fight Milk]
+
+splithalf v0.5.1 [unofficial version name: Fight Milk]
 ==============
 
 Changes:
