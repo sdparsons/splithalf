@@ -573,8 +573,8 @@ splithalf <- function(data,
     }
 
     # remove NA rows
-    findata2 <-  na.omit(findata)
-    findata2$iteration <- as.factor(findata2$iteration)
+    findata2 <<-  na.omit(findata)
+    findata2$iteration <<- as.factor(findata2$iteration)
 
     # calculate correlations per condition and iteration
 
@@ -597,6 +597,10 @@ splithalf <- function(data,
                            (1 + (2 - 1) * abs(cor(bias1, bias2,
                                               use = "pairwise.complete", method = "spearman"))))
 
+
+      # possibility for some visualisations here
+    # plot(ggplot(findata2, aes(x = bias1, y = bias2)) +
+    #  geom_point())
 
       # take the mean estimates per condition
 
