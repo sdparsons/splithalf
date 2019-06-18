@@ -6,7 +6,7 @@ Authors@R: person("Sam", "Parsons", email = "sam.parsons@psy.ox.ac.uk",
   role = c("aut", "cre"))
 Maintainer: Sam Parsons <sam.parsons@psy.ox.ac.uk>
 Description: Estimate the internal consistency of your tasks with a permutation based split-half reliability approach.
-    Unofficial release name: "Fight Milk - rebrand".
+    Unofficial release name: "Fight Milk - re-brand".
 Depends: R (>= 3.3)
 Imports:
     tidyr,
