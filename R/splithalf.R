@@ -21,7 +21,7 @@
 #' @return spearmanbrown is the spearman-brown corrected estimate of the bias index
 #' @return Warning: If there are missing data (e.g one condition data missing for one participant) output will include details of the missing data and return a dataframe containing the NA data. Warnings will be displayed in the console.
 #' @examples
-#' ## examples to be added here - see documentation/vignette for full detail
+#' ## see online documentation for examples
 #' @import tidyr
 #' @import dplyr
 #' @import Rcpp

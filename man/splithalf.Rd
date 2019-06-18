@@ -54,5 +54,5 @@ This function calculates split half reliability estimates via a permutation appr
 The (unofficial) version name is "This function gives me the power to fight like a crow"
 }
 \examples{
-## examples to be added here - see documentation/vignette for full detail
+## see online documentation for examples
 }

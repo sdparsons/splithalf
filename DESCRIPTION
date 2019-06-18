@@ -26,4 +26,3 @@ LazyData: true
 RoxygenNote: 6.1.1
 URL: http://github.com/sdparsons/splithalf
 BugReports: http://github.com/sdparsons/splithalf
-VignetteBuilder: knitr
