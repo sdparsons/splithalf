@@ -9,6 +9,7 @@
 #' @param halftype specifies the split method; "oddeven", "halfs", or "random"
 #' @param permutations specifies the number of random splits to run - 5000 is good
 #' @param var.RT specifies the RT variable name in data
+#' @param var.ACC specifiec the accuracy variable name in data
 #' @param var.condition specifies the condition variable name in data - if not specified then splithalf will treat all trials as one condition
 #' @param var.participant specifies the subject variable name in data
 #' @param var.trialnum specifies the trial number variable
@@ -39,6 +40,7 @@ splithalf <- function(data,
                       halftype = "random",
                       permutations = 5000,
                       var.RT = "latency",
+                      var.ACC = "accuracy",
                       var.condition = FALSE,
                       var.participant = "subject",
                       var.trialnum = "trialnum",
@@ -142,6 +144,7 @@ splithalf <- function(data,
   if(score == "difference" | score == "difference_of_difference") {
     data$compare <- data[, var.compare]
   }
+  data$accuracy <- data[, var.ACC]
 
 
   # for randdom samples, the number of samples drawn
@@ -170,8 +173,8 @@ splithalf <- function(data,
     }
   }
   if(outcome == "accuracy") {
-    ave_fun <- function(val) {colSums(val)}
-    ave_fun_basic <- function(val) {sum(val)}
+    ave_fun <- function(val) {colMeans(val)}
+    ave_fun_basic <- function(val) {mean(val)}
   }
 
 
@@ -199,8 +202,8 @@ splithalf <- function(data,
           {
             temp <- subset(dataset, participant == i & condition == j)
 
-            half1 <- ave_fun_basic(subset(temp$RT, temp$trialnum %% 2 == 0))
-            half2 <- ave_fun_basic(subset(temp$RT, temp$trialnum %% 2 == 1))
+            half1 <- ave_fun_basic(subset(temp[, outcome], temp$trialnum %% 2 == 0))
+            half2 <- ave_fun_basic(subset(temp[, outcome], temp$trialnum %% 2 == 1))
 
             finaldata[l, 3:4] <- c(half1, half2)
 
@@ -219,13 +222,13 @@ splithalf <- function(data,
           {
             temp <- subset(dataset, participant == i & condition == j)
 
-            half1.congruent   <- ave_fun_basic(subset(temp$RT, temp$compare ==
+            half1.congruent   <- ave_fun_basic(subset(temp[, outcome], temp$compare ==
                                                         compare1 & temp$trialnum %% 2 == 0))
-            half1.incongruent <- ave_fun_basic(subset(temp$RT, temp$compare ==
+            half1.incongruent <- ave_fun_basic(subset(temp[, outcome], temp$compare ==
                                                         compare2 & temp$trialnum %% 2 == 0))
-            half2.congruent   <- ave_fun_basic(subset(temp$RT, temp$compare ==
+            half2.congruent   <- ave_fun_basic(subset(temp[, outcome], temp$compare ==
                                                         compare1 & temp$trialnum %% 2 == 1))
-            half2.incongruent <- ave_fun_basic(subset(temp$RT, temp$compare ==
+            half2.incongruent <- ave_fun_basic(subset(temp[, outcome], temp$compare ==
                                                         compare2 & temp$trialnum %% 2 == 1))
 
             finaldata[l,3] <- half1.congruent - half1.incongruent
@@ -257,9 +260,9 @@ splithalf <- function(data,
               half1 <- temp[1:midtrial, ]
               half2 <- temp[(midtrial + 1):totaltrial, ]
 
-              half1  <- ave_fun_basic(subset(half1$RT, half1$participant == i &
+              half1  <- ave_fun_basic(subset(half1[, outcome], half1$participant == i &
                                                half1$condition == j))
-              half2  <- ave_fun_basic(subset(half2$RT, half2$participant == i &
+              half2  <- ave_fun_basic(subset(half2[, outcome], half2$participant == i &
                                                half2$condition == j))
 
 
@@ -289,19 +292,19 @@ splithalf <- function(data,
               half1 <- temp[1:midtrial, ]
               half2 <- temp[(midtrial + 1):totaltrial, ]
 
-              half1.congruent  <- ave_fun_basic(subset(half1$RT,
+              half1.congruent  <- ave_fun_basic(subset(half1[, outcome],
                                                        half1$participant == i &
                                                          half1$condition == j &
                                                          half1$compare == compare1))
-              half1.incongruent <- ave_fun_basic(subset(half1$RT,
+              half1.incongruent <- ave_fun_basic(subset(half1[, outcome],
                                                         half1$participant == i &
                                                           half1$condition == j &
                                                           half1$compare == compare2))
-              half2.congruent  <- ave_fun_basic(subset(half2$RT,
+              half2.congruent  <- ave_fun_basic(subset(half2[, outcome],
                                                        half2$participant == i &
                                                          half2$condition == j &
                                                          half2$compare == compare1))
-              half2.incongruent <- ave_fun_basic(subset(half2$RT,
+              half2.incongruent <- ave_fun_basic(subset(half2[, outcome],
                                                         half2$participant == i &
                                                           half2$condition == j
                                                         & half2$compare == compare2))
@@ -342,7 +345,7 @@ splithalf <- function(data,
     # create calculate estimates
 
     if(score == "average" | score == "difference") {
-      splithalf <- finaldata2 %>%
+      out <- finaldata2 %>%
         dplyr::group_by(condition) %>%
         dplyr::summarise(n = round(sum(!is.na(half1)),0),
                          splithalf = cor(half1, half2,
@@ -350,12 +353,12 @@ splithalf <- function(data,
                          spearmanbrown = (2 * cor(half1, half2,
                                                   use = "pairwise.complete")) /
                            (1 + (2 - 1) * abs(cor(half1, half2,
-                                              use = "pairwise.complete")))) %>%
+                                                  use = "pairwise.complete")))) %>%
         as.data.frame()
     }
 
     if(score == "difference_of_difference") {
-      splithalf <- finaldata2 %>%
+      out <- finaldata2 %>%
         tidyr::gather(key = "bias", value = "value", 3:4) %>%
         tidyr::unite(compare, condition, bias, sep = "_") %>%
         tidyr::spread(compare, value) %>%
@@ -383,12 +386,12 @@ splithalf <- function(data,
     if (sum(is.na(finaldata$half1)) +
         sum(is.na(finaldata$half2)) > 0)
     {
-      return(list(Estimates = splithalf, omitted = omitted))
+      return(list(Estimates = out, omitted = omitted))
     } else {
-      return(splithalf)
+      return(out)
     }
 
-    }
+  }
 
   if (halftype == "random")
   {
@@ -424,7 +427,7 @@ splithalf <- function(data,
         for (i in plist)
         {
           # subset the dataframe into RT vectors by participant, condition
-          temp   <- subset(dataset$RT, dataset$participant == i &
+          temp   <- subset(dataset[, outcome], dataset$participant == i &
                              dataset$condition == j)
 
           # calculates what will be the middle numbered trial
@@ -464,10 +467,10 @@ splithalf <- function(data,
         {
           # subset the dataframe into RT vectors by participant, condition, and
           # congruency
-          temp.con   <- subset(dataset$RT, dataset$participant == i &
+          temp.con   <- subset(dataset[, outcome], dataset$participant == i &
                                  dataset$condition == j &
                                  dataset$compare == compare1)
-          temp.incon <- subset(dataset$RT, dataset$participant ==
+          temp.incon <- subset(dataset[, outcome], dataset$participant ==
                                  i & dataset$condition == j &
                                  dataset$compare == compare2)
 
@@ -511,10 +514,10 @@ splithalf <- function(data,
         {
           # subset the dataframe into RT vectors by participant, condition, and
           # congruency
-          temp.con   <- subset(dataset$RT, dataset$participant == i &
+          temp.con   <- subset(dataset[, outcome], dataset$participant == i &
                                  dataset$condition == j &
                                  dataset$compare == compare1)
-          temp.incon <- subset(dataset$RT, dataset$participant ==
+          temp.incon <- subset(dataset[, outcome], dataset$participant ==
                                  i & dataset$condition == j &
                                  dataset$compare == compare2)
 
@@ -573,7 +576,7 @@ splithalf <- function(data,
     }
 
     # remove NA rows
-    findata2 <-  na.omit(findata)
+    findata2 <<-  na.omit(findata)
     findata2$iteration <- as.factor(findata2$iteration)
 
     # calculate correlations per condition and iteration
@@ -588,23 +591,23 @@ splithalf <- function(data,
     #                                         use = "pairwise.complete")))
 
     if(score == "average" | score == "difference")   {
-      splithalf <- findata2 %>%
+      out <<- findata2 %>%
         dplyr::group_by(iteration, condition) %>%
         dplyr::summarise(n = round(sum(!is.na(bias1)),2),
                          splithalf = cor(bias1, bias2, use = "pairwise.complete", method = "spearman"),
                          spearmanbrown = (2 * cor(bias1, bias2,
                                                   use = "pairwise.complete", method = "spearman")) /
                            (1 + (2 - 1) * abs(cor(bias1, bias2,
-                                              use = "pairwise.complete", method = "spearman"))))
+                                                  use = "pairwise.complete", method = "spearman"))))
 
 
       # possibility for some visualisations here
-    # plot(ggplot(findata2, aes(x = bias1, y = bias2)) +
-    #  geom_point())
+      # plot(ggplot(findata2, aes(x = bias1, y = bias2)) +
+      #  geom_point())
 
       # take the mean estimates per condition
 
-      splithalf2 <- splithalf %>%
+      out2 <- out %>%
         dplyr::group_by(condition) %>%
         dplyr::summarise(n = mean(n),
                          splithalf_estimate = round(mean(splithalf),2),
@@ -618,7 +621,7 @@ splithalf <- function(data,
 
 
     if(score == "difference_of_difference") {
-      splithalf <- findata2 %>%
+      out <- findata2 %>%
         tidyr::gather(key = "bias", value = "value", 4:5) %>%
         tidyr::unite(compare, condition, bias, sep = "_") %>%
         tidyr::spread(compare, value) %>%
@@ -636,7 +639,7 @@ splithalf <- function(data,
 
       # take the mean estimates per condition
 
-      splithalf2 <- splithalf %>%
+      out2 <- out %>%
         dplyr::summarise(n = mean(n),
                          splithalf_estimate = round(mean(splithalf),2),
                          splithalf95CI_lower = round(quantile(splithalf, c(.025), names = F),2),
@@ -646,18 +649,18 @@ splithalf <- function(data,
                          spearmanbrown95CI_upper = round(quantile(spearmanbrown, c(.975), names = F),2)  ) %>%
         as.data.frame()
 
-      splithalf2 <- cbind(condition = "change score", splithalf2)
+      out2 <- cbind(condition = "change score", splithalf2)
 
     }
 
 
-    colnames(splithalf2) <- c("condition", "n",
-                              "splithalf",
-                              "95_low",
-                              "95_high",
-                              "spearmanbrown",
-                              "SB_low",
-                              "SB_high")
+    colnames(out2) <- c("condition", "n",
+                        "splithalf",
+                        "95_low",
+                        "95_high",
+                        "spearmanbrown",
+                        "SB_low",
+                        "SB_high")
 
 
     print(paste("split half estimates for", permutations, "random splits",
@@ -666,10 +669,10 @@ splithalf <- function(data,
     if (sum(is.na(findata$bias1)) +
         sum(is.na(findata$bias2)) > 0)
     {
-      print(list(Estimates = splithalf2, omitted = omitted))
+      print(list(Estimates = out2, omitted = omitted))
     } else {
-      print(splithalf2)
+      print(out2)
     }
 
-    }
   }
+}
