@@ -12,7 +12,14 @@ knitr::opts_chunk$set(
 )
 ```
 
-splithalf v0.5.2 (current development version) [unofficial version name: Fight Milk - rebrand]
+splithalf v0.5.3 (current development version) [unofficial version name: Fight Milk - rebrand]
+==============
+changes:
+* updated code to allow for estimation of splithalf reliability of accuracy rates. (beta testing needed)
+
+
+
+splithalf v0.5.2  [unofficial version name: Fight Milk - rebrand]
 ==============
 changes: 
 * a guide to the package can be found here https://sdparsons.github.io/splithalf_documentation/

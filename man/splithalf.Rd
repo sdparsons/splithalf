@@ -6,7 +6,7 @@
 \usage{
 splithalf(data, outcome = "RT", score = "difference",
   conditionlist = FALSE, halftype = "random", permutations = 5000,
-  var.RT = "latency", var.condition = FALSE,
+  var.RT = "latency", var.ACC = "accuracy", var.condition = FALSE,
   var.participant = "subject", var.trialnum = "trialnum",
   var.compare = "congruency", compare1 = "Congruent",
   compare2 = "Incongruent", average = "mean")
@@ -25,6 +25,8 @@ splithalf(data, outcome = "RT", score = "difference",
 \item{permutations}{specifies the number of random splits to run - 5000 is good}
 
 \item{var.RT}{specifies the RT variable name in data}
+
+\item{var.ACC}{specifiec the accuracy variable name in data}
 
 \item{var.condition}{specifies the condition variable name in data - if not specified then splithalf will treat all trials as one condition}
 
