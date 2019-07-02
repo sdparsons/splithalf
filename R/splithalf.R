@@ -594,11 +594,11 @@ splithalf <- function(data,
       out <<- findata2 %>%
         dplyr::group_by(iteration, condition) %>%
         dplyr::summarise(n = round(sum(!is.na(bias1)),2),
-                         splithalf = cor(bias1, bias2, use = "pairwise.complete", method = "spearman"),
+                         splithalf = cor(bias1, bias2, use = "pairwise.complete"),
                          spearmanbrown = (2 * cor(bias1, bias2,
-                                                  use = "pairwise.complete", method = "spearman")) /
+                                                  use = "pairwise.complete")) /
                            (1 + (2 - 1) * abs(cor(bias1, bias2,
-                                                  use = "pairwise.complete", method = "spearman"))))
+                                                  use = "pairwise.complete"))))
 
 
       # possibility for some visualisations here

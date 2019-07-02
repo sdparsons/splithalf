@@ -16,6 +16,7 @@ splithalf v0.5.3 (current development version) [unofficial version name: Fight M
 ==============
 changes:
 * updated code to allow for estimation of splithalf reliability of accuracy rates. (beta testing needed)
+* minor bug checks, fixed using spearman over pearson correlation. 
 
 
 
