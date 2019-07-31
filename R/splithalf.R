@@ -65,7 +65,7 @@ splithalf <- function(data,
 
   # check that all of the variables exist in the data frame,
   # including the trial level components
-  if(var.RT %in% colnames(data) == FALSE) {
+  if(var.RT %in% colnames(data) == FALSE & outcome != "accuracy") {
     stop("the RT varible has not been specified")
   }
   if(var.participant %in% colnames(data) == FALSE) {
