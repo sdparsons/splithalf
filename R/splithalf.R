@@ -649,7 +649,7 @@ splithalf <- function(data,
                          spearmanbrown95CI_upper = round(quantile(spearmanbrown, c(.975), names = F),2)  ) %>%
         as.data.frame()
 
-      out2 <- cbind(condition = "change score", splithalf2)
+      out2 <- cbind(condition = "change score", out2)
 
     }
 
