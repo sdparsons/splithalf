@@ -137,7 +137,9 @@ splithalf <- function(data,
   data <- as.data.frame(data)
 
   # renames the dataset variables to fit with the code
-  data$RT <- data[, var.RT]
+  if(outcome == "RT") {
+    data$RT <- data[, var.RT]
+  }
   data$condition <- data[, var.condition]
   data$participant <- data[, var.participant]
   data$trialnum <- data[, var.trialnum]
