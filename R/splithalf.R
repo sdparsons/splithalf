@@ -72,7 +72,7 @@ splithalf <- function(data,
     stop("the participant varible has not been specified")
   }
   if(var.trialnum %in% colnames(data) == FALSE) {
-    stop("the trial number varible has not been specified")
+    warning("var.trialnum will soon be depreciated")
   }
   if(score == "difference" | score == "difference_of_difference") {
     if(var.compare %in% colnames(data) == FALSE) {
@@ -142,12 +142,13 @@ splithalf <- function(data,
   }
   data$condition <- data[, var.condition]
   data$participant <- data[, var.participant]
-  data$trialnum <- data[, var.trialnum]
+  data$trialnum <- 1:nrow(data)
   if(score == "difference" | score == "difference_of_difference") {
     data$compare <- data[, var.compare]
   }
+  if(outcome == "accuracy") {
   data$accuracy <- data[, var.ACC]
-
+  }
 
   # for randdom samples, the number of samples drawn
   iterations <- 1:permutations
