@@ -68,10 +68,10 @@ splithalf <- function(data,
   if('var.RT' %in% colnames(data) == FALSE & outcome != "accuracy") {
     stop("the RT varible has not been specified")
   }
-  if('var.participant' %in% colnames(data) == FALSE) {
+  if(var.participant %in% colnames(data) == FALSE) {
     stop("the participant varible has not been specified")
   }
-  if('var.trialnum' %in% colnames(data) == FALSE) {
+  if(var.trialnum %in% colnames(data) == FALSE) {
     warning("var.trialnum will soon be depreciated")
   }
   if(score == "difference" | score == "difference_of_difference") {
