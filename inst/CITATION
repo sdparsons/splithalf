@@ -2,9 +2,9 @@ citHeader("To cite splithalf in publications, please use:")
 
 citEntry(
   entry        = "Misc",
-  title        = "splithalf; Calculate Task Split Half Reliability Estimates",
+  title        = "splithalf; robust estimates of split half reliability",
   author       = personList(as.person("Sam Parsons")),
-  url          = "https://doi.org/10.6084/m9.figshare.5559175.v2",
+  url          = "https://doi.org/10.6084/m9.figshare.5559175.v5",
 
-  textVersion  = "Parsons, S.. (2017). splithalf: robust estimates of split half reliability (Version 2). figshare. https://doi.org/10.6084/m9.figshare.5559175.v2",
-  year = "2017")
+  textVersion  = "Parsons, S.. (2019). splithalf: robust estimates of split half reliability (Version 5). figshare. https://doi.org/10.6084/m9.figshare.5559175.v5",
+  year = "2019")
