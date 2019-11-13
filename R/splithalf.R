@@ -52,6 +52,11 @@ splithalf <- function(data,
 
 {
 
+  # check that the dataframe is a data frame
+  if(is.data.frame(data) == FALSE) {
+    stop("a data frame has not been specified in data = ")
+  }
+
   # check for missing variables
   if(halftype != "oddeven" & halftype != "halfs" & halftype != "random") {
     stop("the halftype has not been specified")
