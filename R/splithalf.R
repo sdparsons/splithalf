@@ -667,8 +667,8 @@ splithalf <- function(data,
     #                      (1 + (2 - 1) * cor(bias1, bias2,
     #                                         use = "pairwise.complete")))
 
-    if(score == "average" | score == "difference")   {
-      out <<- findata2 %>%
+    if(score == "average" | score == "difference" | score == "DPrime")   {
+      out <- findata2 %>%
         dplyr::group_by(iteration, condition) %>%
         dplyr::summarise(n = round(sum(!is.na(bias1)),2),
                          splithalf = cor(bias1, bias2, use = "pairwise.complete"),
