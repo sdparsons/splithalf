@@ -12,7 +12,14 @@ knitr::opts_chunk$set(
 )
 ```
 
-splithalf v0.5.3 (current development version) [unofficial version name: Fight Milk - rebrand]
+
+splithalf v0.6.1 (current development version) [unofficial version name: the Golden God]
+==============
+changes:
+* added DPrime option, this is still under development
+
+
+splithalf v0.5.3 [unofficial version name: Fight Milk - rebrand]
 ==============
 changes:
 * updated code to allow for estimation of splithalf reliability of accuracy rates. (beta testing needed)
@@ -39,7 +46,7 @@ Changes:
 
 
 
-splithalf v0.4.1 [unofficial version name "the nightman commeth"]
+splithalf v0.4.1 [unofficial version name: The nightman commeth]
 ==============
 I forgot to record changes because I am awful - lots of improvements mainly to speed things up
 

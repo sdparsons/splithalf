@@ -15,6 +15,6 @@ knitr::opts_chunk$set(
 
 # splithalf R package
 
-this is version 0.5.3 [unofficial version name: Fight Milk - rebrand]
+this is version 0.6.1 [unofficial version name: the Golden God]
 
 Please see documentation at https://sdparsons.github.io/splithalf_documentation/ 

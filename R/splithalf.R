@@ -4,7 +4,7 @@
 #' The (unofficial) version name is "This function gives me the power to fight like a crow"
 #' @param data specifies the raw dataset to be processed
 #' @param outcome indicates the type of data to be processed, e.g. response time or accuracy rates
-#' @param score indicates how the outcome score is calculated, e.g. most commonly the difference score between two trial types
+#' @param score indicates how the outcome score is calculated, e.g. most commonly the difference score between two trial types. Can be "average", "difference", "difference_of_difference", and "DPrime"
 #' @param conditionlist sets conditions/blocks to be processed
 #' @param halftype specifies the split method; "oddeven", "halfs", or "random"
 #' @param permutations specifies the number of random splits to run - 5000 is good
@@ -64,7 +64,7 @@ splithalf <- function(data,
   if(outcome != "RT" & outcome != "accuracy") {
     stop("the outcome has not been specified: select from RT or accuracy")
   }
-  if(score != "average" & score != "difference" & score != "difference_of_difference") {
+  if(score != "average" & score != "difference" & score != "difference_of_difference" & score != "DPrime") {
     stop("the score has not been specified: select from average, difference, or difference_of_difference")
   }
 
@@ -151,6 +151,9 @@ splithalf <- function(data,
   if(score == "difference" | score == "difference_of_difference") {
     data$compare <- data[, var.compare]
   }
+  if(score == "DPrime") {
+    data$compare <- data[, var.compare]
+  }
   if(outcome == "accuracy") {
   data$accuracy <- data[, var.ACC]
   }
@@ -183,6 +186,10 @@ splithalf <- function(data,
   if(outcome == "accuracy") {
     ave_fun <- function(val) {colMeans(val)}
     ave_fun_basic <- function(val) {mean(val)}
+  }
+  if(score == "DPrime") {
+    colSdApply <- function(val, ...)apply(X=val, MARGIN=2, FUN=sd, ...)
+    colnApply <- function(val, ...)apply(X=val, MARGIN=2, FUN=length, ...)
   }
 
 
@@ -558,7 +565,69 @@ splithalf <- function(data,
       }
     }
 
+    if(score == "DPrime") {
+      for (j in conditionlist)
+      {
+        # set up progress bar
+        pb <- txtProgressBar(min = 0, max = n_par, style = 3)
+        setTxtProgressBar(pb, 0)
 
+        for (i in plist)
+        {
+          # subset the dataframe into RT vectors by participant, condition, and
+          # congruency
+          temp.con   <- subset(dataset[, outcome], dataset$participant == i &
+                                 dataset$condition == j &
+                                 dataset$compare == compare1)
+          temp.incon <- subset(dataset[, outcome], dataset$participant ==
+                                 i & dataset$condition == j &
+                                 dataset$compare == compare2)
+
+          # calculates what will be the middle numbered trial in each congruent
+          # and incongruent list
+          midtrial.con <- sum(!is.na(temp.con))/2
+          midtrial.incon <- sum(!is.na(temp.incon))/2
+
+          # n.b. this calls a Rcpp function that is similar to replicate(permutations, sample(temp.con)), but is 20x quicker
+          con2 <- Speedloop(A = matrix(nrow = length(temp.con), ncol = permutations, 0), x = permutations, y = temp.con)
+          con2.1 <- con2[1:floor(midtrial.con),]
+          con2.2 <- con2[(floor(midtrial.con)+1):length(temp.con),]
+
+          incon2 <- Speedloop(A = matrix(nrow = length(temp.incon), ncol = permutations, 0), x = permutations, y = temp.incon)
+          incon2.1 <- incon2[1:floor(midtrial.incon),]
+          incon2.2 <- incon2[(floor(midtrial.incon)+1):length(temp.incon),]
+
+          M1.1 = colMeans(con2.1)
+          M2.1 = colMeans(incon2.1)
+          SD1.1 = colSdApply(con2.1)
+          SD2.1 = colSdApply(incon2.1)
+          N1.1 = colnApply(con2.1)
+          N2.1 = colnApply(incon2.1)
+
+          M1.2 = colMeans(con2.2)
+          M2.2 = colMeans(incon2.2)
+          SD1.2 = colSdApply(con2.2)
+          SD2.2 = colSdApply(incon2.2)
+          N1.2 = colnApply(con2.2)
+          N2.2 = colnApply(incon2.2)
+
+          bias1v[l:(l+permutations-1)] <- (M2.1 - M1.1) /
+            sqrt( ( ((N1.1 -1)*SD1.1^2) + ((N2.1 -1)*SD2.1^2) + ((N1.1+N2.1)*((M1.1-M2.1)^2)/4) )/(N1.1 + N2.1 - 1))
+
+          bias2v[l:(l+permutations-1)] <- (M2.2 - M1.2) /
+            sqrt( ( ((N1.2 -1)*SD1.2^2) + ((N2.2 -1)*SD2.2^2) + ((N1.2+N2.2)*((M1.2-M2.2)^2)/4) )/(N1.2 + N2.2 - 1))
+
+
+          l <- l + permutations
+          ppt <- ppt + 1
+          setTxtProgressBar(pb, ppt)
+
+        }
+        ppt <- 1 # reset the progress bar
+
+        print(paste("condition", j, "complete"))
+      }
+    }
 
     print("Calculating split half estimates")
 
