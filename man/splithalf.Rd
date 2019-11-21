@@ -16,7 +16,7 @@ splithalf(data, outcome = "RT", score = "difference",
 
 \item{outcome}{indicates the type of data to be processed, e.g. response time or accuracy rates}
 
-\item{score}{indicates how the outcome score is calculated, e.g. most commonly the difference score between two trial types}
+\item{score}{indicates how the outcome score is calculated, e.g. most commonly the difference score between two trial types. Can be "average", "difference", "difference_of_difference", and "DPrime"}
 
 \item{conditionlist}{sets conditions/blocks to be processed}
 
