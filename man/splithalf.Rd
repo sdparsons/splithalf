@@ -9,7 +9,7 @@ splithalf(data, outcome = "RT", score = "difference",
   var.RT = "latency", var.ACC = "accuracy", var.condition = FALSE,
   var.participant = "subject", var.trialnum = "trialnum",
   var.compare = "congruency", compare1 = "Congruent",
-  compare2 = "Incongruent", average = "mean")
+  compare2 = "Incongruent", average = "mean", plot = FALSE)
 }
 \arguments{
 \item{data}{specifies the raw dataset to be processed}
@@ -41,6 +41,8 @@ splithalf(data, outcome = "RT", score = "difference",
 \item{compare2}{specifies the first trial type to be compared (e.g. incongruent trials)}
 
 \item{average}{use mean or median to calculate average scores?}
+
+\item{plot}{gives the option to visualise the estimates in a raincloud plot. defaults to FALSE}
 }
 \value{
 Returns a data frame containing permutation based split-half reliability estimates

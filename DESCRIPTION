@@ -6,20 +6,22 @@ Authors@R: person("Sam", "Parsons", email = "sam.parsons@psy.ox.ac.uk",
   role = c("aut", "cre"))
 Maintainer: Sam Parsons <sam.parsons@psy.ox.ac.uk>
 Description: Estimate the internal consistency of your tasks with a permutation based split-half reliability approach.
-    Unofficial release name: "Fight Milk - re-brand".
+    Unofficial release name: "The Golden God".
 Depends: R (>= 3.3)
 Imports:
     tidyr,
     dplyr,
     stats,
     Rcpp,
-    robustbase
+    robustbase,
+    ggplot2,
+    plyr,
+    grid
 LinkingTo: Rcpp
 Suggests: 
     knitr,
     rmarkdown,
     tools,
-    ggplot2
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
