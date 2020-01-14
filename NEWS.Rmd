@@ -19,6 +19,7 @@ changes:
 * added DPrime option, this is still under development
 * the structure of splithalf has changed to include additional elements in the output list - intended to make the future reliability multiverse add-on easier to use
 * added a basic plotting functionality, setting plot = TRUE will now give a raincloud plot of all estimates (based on code from Allen et al. https://wellcomeopenresearch.org/articles/4-63/v1)
+* added a 'round.to' option to specify the number of decimal points to round the estimates to
 
 
 splithalf v0.5.3 [unofficial version name: Fight Milk - rebrand]
