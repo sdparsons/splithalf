@@ -4,12 +4,25 @@
 \alias{splithalf}
 \title{Internal consistency of task measures via a permutation split-half reliability approach}
 \usage{
-splithalf(data, outcome = "RT", score = "difference",
-  conditionlist = FALSE, halftype = "random", permutations = 5000,
-  var.RT = "latency", var.ACC = "accuracy", var.condition = FALSE,
-  var.participant = "subject", var.trialnum = "trialnum",
-  var.compare = "congruency", compare1 = "Congruent",
-  compare2 = "Incongruent", average = "mean", plot = FALSE)
+splithalf(
+  data,
+  outcome = "RT",
+  score = "difference",
+  conditionlist = FALSE,
+  halftype = "random",
+  permutations = 5000,
+  var.RT = "latency",
+  var.ACC = "accuracy",
+  var.condition = FALSE,
+  var.participant = "subject",
+  var.trialnum = "trialnum",
+  var.compare = "congruency",
+  compare1 = "Congruent",
+  compare2 = "Incongruent",
+  average = "mean",
+  plot = FALSE,
+  round.to = 2
+)
 }
 \arguments{
 \item{data}{specifies the raw dataset to be processed}
@@ -43,6 +56,8 @@ splithalf(data, outcome = "RT", score = "difference",
 \item{average}{use mean or median to calculate average scores?}
 
 \item{plot}{gives the option to visualise the estimates in a raincloud plot. defaults to FALSE}
+
+\item{round.to}{sets the number of decimals to round the estimates to defaults to 2}
 }
 \value{
 Returns a data frame containing permutation based split-half reliability estimates

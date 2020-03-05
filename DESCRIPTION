@@ -1,7 +1,7 @@
 Package: splithalf
 Type: Package
 Title: Calculate Task Split Half Reliability Estimates
-Version: 0.6.1
+Version: 0.6.2
 Authors@R: person("Sam", "Parsons", email = "sam.parsons@psy.ox.ac.uk",
   role = c("aut", "cre"))
 Maintainer: Sam Parsons <sam.parsons@psy.ox.ac.uk>
@@ -25,6 +25,6 @@ Suggests:
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 URL: http://github.com/sdparsons/splithalf
 BugReports: http://github.com/sdparsons/splithalf

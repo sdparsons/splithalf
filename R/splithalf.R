@@ -239,15 +239,30 @@ splithalf <- function(data,
       ave_fun_basic <- function(val) {
         median(val)
       }
-
     }
   }
   if (outcome == "accuracy") {
-    ave_fun <- function(val) {
-      colMeans(val)
-    }
-    ave_fun_basic <- function(val) {
-      mean(val)
+    if (average == "mean") {
+      ave_fun <- function(val) {
+        colMeans(val)
+      }
+      ave_fun_basic <- function(val) {
+        mean(val)
+      }
+    } else if (average == "median") {
+      ave_fun <- function(val) {
+        robustbase::colMedians(val)
+      }
+      ave_fun_basic <- function(val) {
+        median(val)
+      }
+    } else if (average == "sum") {
+      ave_fun <- function(val) {
+        colSums(val)
+      }
+      ave_fun_basic <- function(val) {
+        sum(val)
+      }
     }
   }
   if (score == "DPrime") {
