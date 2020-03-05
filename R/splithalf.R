@@ -107,7 +107,7 @@ splithalf <- function(data,
     if (compare2 %in% unique(data[[var.compare]]) == FALSE) {
       stop("compare2 does not exist in the compare variable")
     }
-    if (average != "mean" & average != "median") {
+    if (average != "mean" & average != "median" & average != "sum") {
       stop("averaging method not selected")
     }
   }
