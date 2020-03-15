@@ -13,13 +13,19 @@ knitr::opts_chunk$set(
 ```
 
 
-splithalf v0.6.2 (current development version) [unofficial version name: the Golden God]
+splithalf v0.7.1 (current development version) [unofficial version name: Kitten Mittens]
+==============
+changes:
+* added multiverse analyses to package. Functions _splithalf.multiverse_, _testretest.multiverse_, _plot.multiverse_, and _threshold_ now available!
+
+
+splithalf v0.6.2 [unofficial version name: the Golden God]
 ==============
 changes:
 * added "sum" option to the average input. average = "sum" can now be used to calculate the sum score for accuracy (binary 0/1 values)
 
 
-splithalf v0.6.1 (current development version) [unofficial version name: the Golden God]
+splithalf v0.6.1 [unofficial version name: the Golden God]
 ==============
 changes:
 * added DPrime option, this is still under development

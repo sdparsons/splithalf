@@ -1,12 +1,12 @@
 Package: splithalf
 Type: Package
 Title: Calculate Task Split Half Reliability Estimates
-Version: 0.6.2
+Version: 0.7.1
 Authors@R: person("Sam", "Parsons", email = "sam.parsons@psy.ox.ac.uk",
   role = c("aut", "cre"))
 Maintainer: Sam Parsons <sam.parsons@psy.ox.ac.uk>
 Description: Estimate the internal consistency of your tasks with a permutation based split-half reliability approach.
-    Unofficial release name: "The Golden God".
+    Unofficial release name: "Kitten Mittens".
 Depends: R (>= 3.3)
 Imports:
     tidyr,
@@ -16,7 +16,8 @@ Imports:
     robustbase,
     ggplot2,
     plyr,
-    grid
+    grid,
+    patchwork
 LinkingTo: Rcpp
 Suggests: 
     knitr,
