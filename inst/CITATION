@@ -6,5 +6,6 @@ citEntry(
   author       = personList(as.person("Sam Parsons")),
   url          = "https://doi.org/10.6084/m9.figshare.5559175.v5",
 
-  textVersion  = "Parsons, S.. (2019). splithalf: robust estimates of split half reliability (Version 5). figshare. https://doi.org/10.6084/m9.figshare.5559175.v5",
-  year = "2019")
+  textVersion  = "Parsons, S.. (2020). splithalf: robust estimates of split half reliability (Version 4). figshare. https://doi.org/10.6084/m9.figshare.11956746.v4",
+
+  year = "2020")
