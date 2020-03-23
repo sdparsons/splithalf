@@ -148,12 +148,9 @@ splithalf.multiverse <- function(input,
     if(specs[perm, "split_by"] == "subject")
       temp <- temp %>%
         group_by(subject)
-    if(specs[perm, "split_by"] == "condition")
-      temp <- temp %>%
-        group_by(subject, blockcode)
     if(specs[perm, "split_by"] == "trial")
       temp <- temp %>%
-        group_by(subject, blockcode, congruency)
+        group_by(subject, congruency)
 
     if(specs[perm, "RT_sd_cutoff"] != 0)
       temp <- temp %>%
