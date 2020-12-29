@@ -16,6 +16,8 @@ knitr::opts_chunk$set(
 
 [[CURRENT README DOCUMENTATION UNDER DEVELOPMENT]]
 
+<img src="inst/hexlogo/splithalf_logo.png" height="300"/>
+
 # splithalf R package
 
 this is version 0.7.1 [unofficial version name: Kitten Mittens]
