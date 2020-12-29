@@ -3,6 +3,8 @@
 
 \[\[CURRENT README DOCUMENTATION UNDER DEVELOPMENT\]\]
 
+<img src="inst/hexlogo/splithalf_logo.png" height="300"/>
+
 # splithalf R package
 
 this is version 0.7.1 \[unofficial version name: Kitten Mittens\]
@@ -273,18 +275,18 @@ separately might look a bit like this
 
     # A tibble: 120 x 5
     # Groups:   participant_number, block_name [120]
-       participant_number block_name congruent incongruent    bias
-                    <int> <fct>          <dbl>       <dbl>   <dbl>
-     1                  1 A               452.        527.  -74.6 
-     2                  1 B               473.        514.  -41.2 
-     3                  2 A               466.        511.  -45.6 
-     4                  2 B               564.        494.   70.3 
-     5                  3 A               483.        486.   -2.87
-     6                  3 B               488.        515.  -26.2 
-     7                  4 A               537.        536.    1.58
-     8                  4 B               554.        485.   68.6 
-     9                  5 A               510.        455.   54.3 
-    10                  5 B               423.        549. -126.  
+       participant_number block_name congruent incongruent     bias
+                    <int> <fct>          <dbl>       <dbl>    <dbl>
+     1                  1 A               483.        500. -17.4   
+     2                  1 B               519.        481.  38.0   
+     3                  2 A               505.        525. -19.4   
+     4                  2 B               530.        504.  26.3   
+     5                  3 A               502.        422.  80.1   
+     6                  3 B               475.        520. -44.3   
+     7                  4 A               515.        477.  37.9   
+     8                  4 B               482.        487.  -4.64  
+     9                  5 A               496.        497.  -0.0303
+    10                  5 B               532.        554. -21.6   
     # ... with 110 more rows
 
 ok, lets see how reliable our A and B outcome scores (“bias”) are.
@@ -309,8 +311,8 @@ difference <- splithalf(data = sim_data,
 
 ``` 
   condition  n splithalf 95_low 95_high spearmanbrown SB_low SB_high
-1         A 60      0.01  -0.16    0.20          0.01  -0.28    0.33
-2         B 60      0.10  -0.07    0.28          0.17  -0.13    0.43
+1         A 60      0.01  -0.16     0.2          0.01  -0.28    0.33
+2         B 60      0.00  -0.16     0.2          0.00  -0.28    0.33
 ```
 
 #### Reading and reporting the output
@@ -378,8 +380,8 @@ var.trialnum will soon be depreciated
 
 ``` 
   condition  n splithalf 95_low 95_high spearmanbrown SB_low SB_high
-1         A 60     -0.15  -0.32    0.04         -0.25  -0.48    0.08
-2         B 60     -0.08  -0.25    0.11         -0.14  -0.40    0.20
+1         A 60     -0.13   -0.3    0.05         -0.22  -0.46     0.1
+2         B 60      0.08   -0.1    0.25          0.13  -0.18     0.4
 ```
 
 ### Difference-of-difference scores
@@ -431,7 +433,7 @@ Warning in splithalf(data = sim_data, outcome = "RT", score =
 
 ``` 
      condition  n splithalf 95_low 95_high spearmanbrown SB_low SB_high
-1 change score 60      0.07   -0.1    0.26          0.12  -0.18    0.41
+1 change score 60      0.05  -0.13    0.23          0.08  -0.22    0.38
 ```
 
 I do not forsee the difference\_of\_difference option being used often,
