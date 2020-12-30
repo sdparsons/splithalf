@@ -26,13 +26,17 @@ splithalf.multiverse <- function(input,
                                  specifications) {
 
 
-  # you'll need something here to differentiate between internal consistency and test-retest.
-
   if(class(input) != "splithalf") {
     stop("please use a splithalf object as the input")
   }
 
   ###
+
+  if(length(input$call$conditionlist) > 1) {
+    warning("splithalf.multiverse only extracts the first condition for the analyses. If you want to run a multiverse on more than one condition, specify these separately")
+  }
+
+
 
   # set up the output list ####################################################
 
@@ -90,6 +94,15 @@ splithalf.multiverse <- function(input,
   input$data$var.condition = input$data[,var.condition]
   input$data$var.participant = input$data[,var.participant]
   input$data$var.compare = input$data[,var.compare]
+
+  if(length(input$call$conditionlist) > 1) {
+
+    input$data <- input$data %>%
+      filter(var.condition == input$call$conditionlist[1])
+
+    }
+
+
 
   # create empty objects for the purposes of binding global variables
   #(and to pass CRAN checks)
@@ -265,6 +278,10 @@ splithalf.multiverse <- function(input,
   outlist$CI <- quantile(outlist$estimates$estimate, c(.025,.5, .975))
 
   class(outlist) <- "multiverse"
+
+  if(length(input$call$conditionlist) > 1) {
+    print("REMINDER: splithalf.multiverse only extracts the first condition for the analyses. If you want to run a multiverse on more than one condition, specify these separately")
+  }
 
   return(outlist)
 }

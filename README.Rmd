@@ -9,7 +9,7 @@ bibliography: inst/book.bib
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "README-"
+  fig.path = "READMEfigures/"
 )
 ```
 
@@ -217,7 +217,7 @@ difference$final_estimates
 
 Specifying `plot = TRUE` will also allow you to plot the distributions of reliability estimates. you can extract the plot from a saved object with e.g. `difference$plot`.
 
-```{r echo = FALSE, comment = NA}
+```{r plotting distribution, echo = FALSE, comment = NA}
 difference$plot
 ```
 
@@ -337,7 +337,7 @@ multiverse <- splithalf.multiverse(input = difference,
 
 Finally, plot the multiverse with plot.multiverse.
 
-```{r}
+```{r multiverse_plot}
 multiverse.plot(multiverse = multiverse,
                 title = "README multiverse")
 ```
@@ -354,7 +354,7 @@ To examine how many random splits are required to provide a precise estimate, a 
 
 The speed of *splithalf* rests entirely on the number of conditions, participants, and permutations. The biggest factor will be your machine speed. For relative times, I ran a simulation with a range of sample sizes, numbers of conditions, numbers of trials, and permutations. The data is contained within the package as `data/speedtest.csv`
 
-```{r message = FALSE, comment = NA, results = 'hide', echo = FALSE}
+```{r speedtest, message = FALSE, comment = NA, results = 'hide', echo = FALSE}
 speed <- read.csv("data/speedtestdata.csv")
 speed <- speed %>%
   rename(Sim = X,
