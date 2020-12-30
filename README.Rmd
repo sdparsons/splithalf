@@ -311,7 +311,7 @@ specifications <- list(RT_min = c(0, 100, 200),
 
 Second, perform `splithalf(...)`. The key difference here is ...
 
-```{r}
+```{r message = FALSE, comment = NA, results = 'hide'}
 difference <- splithalf(data = sim_data,
                         outcome = "RT",
                         score = "difference",
@@ -330,14 +330,14 @@ difference <- splithalf(data = sim_data,
 
 Third, perform `splithalf.multiverse` with the specification list and splithalf objects as inputs
 
-```{r eval = TRUE}
+```{r message = FALSE, comment = NA, results = 'hide'}
 multiverse <- splithalf.multiverse(input = difference,
                                    specifications = specifications)
 ```
 
 Finally, plot the multiverse with plot.multiverse.
 
-```{r eval = FALSE}
+```{r}
 multiverse.plot(multiverse = multiverse,
                 title = "README multiverse")
 ```
@@ -393,5 +393,8 @@ The *splithalf* package is still under development. If you have suggestions for 
 * include other scoring methods:
     * signal detection, e.g. d prime
     * potentially customisable methods, e.g. where the outcome is scored in formats similar to A - B / A + B
+
+## References
+
 
 
