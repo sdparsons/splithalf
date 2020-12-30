@@ -13,53 +13,48 @@ knitr::opts_chunk$set(
 )
 ```
 
-
-[[CURRENT README DOCUMENTATION UNDER DEVELOPMENT]]
-
-<img src="inst/hexlogo/splithalf_logo.png" height="300"/>
-
-# splithalf R package
-
-this is version 0.7.1 [unofficial version name: Kitten Mittens]
-
-Please see documentation at https://sdparsons.github.io/splithalf_documentation/ 
-
-
-[UNDER DEVELOPMENT, BEYOND HERE BE MONSTERS]
-
-
-## Start-up notes
-
-### Instalation 
-
-The **splithalf** package can be installed from CRAN or Github:
-
-```{r eval=FALSE}
-install.packages("splithalf")
-## or the development version
-## devtools::install_github("sdparsons/splithalf")
+```{r, echo = FALSE}
+library("ggplot2")
 ```
 
 
+<img src="inst/hexlogo/splithalf_logo.png" height="300"/>
+
+[![CRAN Version](http://www.r-pkg.org/badges/version/splithalf)](https://cran.r-project.org/package=splithalf)
+[![Downloads](https://cranlogs.r-pkg.org/badges/splithalf)](https://cran.r-project.org/package=splithalf)
+
+# splithalf: robust estimates of split half reliability
+
+The `R` package *splithalf* provides tools to estimate the internal consistency reliability of cognitive measures. In particular, the tools were developed for application to tasks that use difference scores as the main outcome measure, for instance the Stroop score or dot-probe attention bias index (average RT in incongruent trials minus average RT in congruent trials). 
+
+As it's name suggests, the methods are built around split half reliability estimation. To increase the robustness of these estimates, the package implements a permutation approach that takes a large number of random (without replacement) split halves of the data. For each permutation the correlation between halves is calculated, with the Spearman-Brown correction applied (). This process generates a distribution of reliability estimates from which we can extract summary statistics (e.g. average and 95% HDI).
+
+### Why should I estimate the reliabilty of my task measurement?
+
+A full rationale for estimating and reporting the reliability of task measurements is outlined in Parsons, Kruijt, and Fox [-@parsons_kruijt_fox_2019]. In short, while many cognitive tasks yield robust effects (e.g. everybody shows a Stroop effect) they may not yield reliable individual differences. As these measures are used in questions of individual differences researchers need to have some psychometric information for the outcome measures. 
+
+## Installation 
+
+The latest release version (`0.7.1` unofficial version name: Kitten Mittens) can be installed from CRAN:
+
+```{r eval=FALSE}
+install.packages("splithalf")
+```
+
+The current developmental version can be installed from Github with:
+
+```{r eval=FALSE}
+devtools::install_github("sdparsons/splithalf")
+```
+
+*splithalf* requires the *tidyr* [@R-tidyr] and *dplyr* [@R-dplyr] packages for data handling within the functions. The *robustbase* package is used to extract median scores when applicable. The computationally heavy tasks (extracting many random half samples of the data) are written in `c++` via the `R` package *Rcpp* [@R-Rcpp]. Figures use the *ggplot* package [@R-ggplot2], raincloud plots use code adapted from Allen et al. [@allen_raincloud_2019], and the *patchwork* package [@R-patchwork] is used for plotting the multiverse analyses. 
 
 ```{r eval = FALSE, include = FALSE, echo = FALSE}
-also note that the package requires the following; _tidyr_, _dplyr_, _Rcpp_, _robustbase_. You can load them with the following
 library("tidyr")
 library("dplyr")
 library("Rcpp")
 library("robustbase")
 ```
-
-
-### Version note
-
-**Now on github and submitted to CRAN: VERSION 0.7.1** Featuring reliability multiverse analyses!!!
-
-The current version of **splithalf** is 0.7.1 [unofficial version name: "Kitten Mittens"]
-
-The most noticable difference to this version is the addition of reliability multiverse functions. Now you can take your _splithalf_ object and run it via _splithalf.multiverse_ to estimate reliability across a user-defined list of data-processing specifications. Then, because sometimes science is more art than science, you can plug the multiverse output into _multiverse.plot_ to generate some sweet visualisations. *A tutorial will appear in an upcoming preprint and I will also add a page to this site*
-
-Additionally, the output of splithalf has been reworked. Now a list is returned including the specific function calls, the processed data. Since version 0.6.2 you can also set `plot = TRUE` in _splithalf_ to generate a raincloud plot of the distribution of reliability estimates. 
 
 ### Citing the package
 
@@ -67,13 +62,21 @@ Citing packages is one way for developers to gain some recognition for the time 
 
 Please use the following reference for the code: Parsons, Sam (2020): splithalf: robust estimates of split half reliability. figshare. Software. https://doi.org/10.6084/m9.figshare.11956746.v4
 
-If (eventually) this documentation turns into a publication, this reference will change.
-
-
 ### User feedback
 
 Developing the splithalf package is a labour of love (and occasionally burning hatred). If you have any suggestions for improvement, additional functionality, or anything else, please contact me (sam.parsons\@psy.ox.ac.uk) or raise an issue on github (https://github.com/sdparsons/splithalf). Likewise, if you are having trouble using the package (e.g. scream fits at your computer screen – we’ve all been there) do contact me and I will do my best to help as quickly as possible. These kind of help requests are super welcome. In fact, the package has seen several increases in performance and usability due to people asking for help. 
 
+## Latest update:
+
+**Now on github and submitted to CRAN: VERSION 0.7.2 [unofficial version name: "Kitten Mittens"]** Featuring reliability multiverse analyses!!!
+
+This update includes the addition of reliability multiverse functions. A _splithalf_  object can be inputted into _splithalf.multiverse_ to estimate reliability across a user-defined list of data-processing specifications (e.g. min/max RTs). Then, because sometimes science is more art than science, the multiverse output can be plotted with _multiverse.plot_. A brief tutorial can be found below, and a more comprehensive one can be found in a recent preprint [@parsons_exploring_2020].
+
+Additionally, the output of splithalf has been reworked. Now a list is returned including the specific function calls, the processed data. 
+
+Since version 0.6.2 a user can also set `plot = TRUE` in _splithalf_ to generate a raincloud plot of the distribution of reliability estimates. 
+
+## Examples
 
 ### A note on terminology used in this document
 
@@ -85,38 +88,13 @@ It is important that we have a similar understanding of the terminology I use in
 * Datatype - I use this to refer to the outcome of interest. specifically whether one is interested in average response times or accuracy rates
 * Score - I use score to indicate how the final outcome is measured; e.g. the average RT, or the difference between two average RTs, or even the difference between two differences between two RTs (yes, the final one is confusing)
 
+### A note on preprocessing
 
-## Background
+The core function _splithalf_ requires that the input dataset has already undergone preprocessing (e.g. removal of error trials, RT trimming, and participants with high error rates). Splithalf should therefore be used with the same data that will be used to calculate summary scores and outcome indices. The exception is in multiverse analyses, as described below. 
 
-
-### Why should I estimate the reliabilty of my task measurement?
-
-For my full argument, see our preprint [@parsons_kruijt_fox_2019]. In short, the psychometric properties of our measurements are important and should be taken into consideration when conducting our analyses and interpreting our results. I think it should be standard practice to estimate and report reliability of our tasks. To not do so renders us incapable of knowing how much confidence we can place in results. If the replication crisis was a big deal, the measurement crisis has the potential to be as if not more catastrophic. 
-
-### Why did I develop this package in the first place?
-
-Long story short-ish. I had some dot-probe attention bias data pre- and post- an attention bias modification procedure. In an exploratory analysis the post-training bias, but not the pre-training bias, was associated with self-report measures at follow-up. I think on a whim, we looked at how reliable the measures were pre/post and the post-training measure was much more reliable (~ .7) than the pre-training bias measure (~ .4). This led me down the road of wanting to understand reliability; what it 'means', how it impacts our results, the interesting reliability-power relationship, and so on. It also led me to the realisation (shared with many others), that we should estimate and report the reliability of our measures as standard practice. That has become my quest (albeit, it's not what I am actualy paid to do), taking two main forms.
-
-1. I wrote a paper with my DPhil supervisors [@parsons_kruijt_fox_2019], that I hope will be out in AMPPS soon (after revisions); the message being that we should adopt reporting reliabilty as a standard practice. 
-
-2. I developed the _splithalf_ package with the aim to provide an easy to use tool to estimate internal consistency of bias measures (difference scores) drawn from cognitive tasks. 
-
-### How does _splithalf_ work?
-
-The permutation approach in _splithalf_ is actually rather simple. Over many repetitions (or permutations), the data is split in half and outcome scores are calculated for each half. For each repetion, the correlation coefficient between each half is calculated. Finally, the average of these correlations is taken as the final estimate of reliability. 95% percentiles are also taken from the distribution of estimates to give a picture of the spread of reliability estimates.^[You can also use the package to estimate reliability by splitting the data into odd and even trials, or into the first and last half of trials. In all honesty I'd rather just remove these as it is not the actual purpose of the package. But, it works, and maybe it would be useful to somebody] 
-
-## Preprocessing
-
-Splithalf requires that the input dataset has already undergone preprocessing (e.g. removal of error trials, RT trimming, and participants with high error rates). Splithalf should therefore be used with the same data that will be used to calculate summary scores and outcome indices. 
-
-In my earlier attempts to make splithalf as useful as possible I added a number of user-inputted variables that helped remove participants and trim RTs. This also resulted in far to many input variables and potential confusion.
-
-You might need to do a little pre-processing if you have not saved your processing steps. Here is a code snippet that will work (each line includes a note about what the code is doing after the hash).
-
-You will need to change the numbers to match your data. This code could be briefer, however has been structured like this for ease of use.
+For those unfamiliar with R, the following snippets may help with common data-processing steps. I also highly recommend the Software Carpentry course "R for Reproducible Scientific Analysis" (https://swcarpentry.github.io/r-novice-gapminder/).
 
 Note == indicates ‘is equal to’, :: indicates that the function uses the package indicated, in the first case the **dplyr** package [@R-dplyr].
-
 
 
 ```{r eval = FALSE}
@@ -149,19 +127,13 @@ dplyr::rename(dataset,
               compare = "congruency")
 ```
 
-
-## Examples
-
-This is what you are really here for, isn't it?
-
-I am assuming that you have preprocessed your data to remove any outliers, use any cutoffs etc. These functions should be used on the data that you will then create your scores from, i.e. there should not be further processing to do before you run any of these. If there is, then these internal consistency reliability estimates will not reflect the reliability of the outcome measurements you actually analyse. 
-
+The following examples assume that you have already processed your data to remove outliers, apply any RT cutoffs, etc. A reminder: the data you input into _splithalf_ should be the same as that used to create your final scores - otherwise the resultant estimates will not accurately reflect the reliability of your data. 
 
 ### Questions to ask before running splithalf
 
 These questions should feed into what settings are appropriate for your need, and are aimed to make the _splithalf_ function easy to use. 
 
-1. **What is the type of data you have? **
+1. **What type of data do you have?**
 
 Are you interested in response times, or accuracy rates?
 
@@ -175,12 +147,12 @@ Say that your response time based task has two trial types; "incongruent" and "c
 
 3. **Which method would you like to use to estimate (split-half) reliability?**
 
-A super common way is to split the data into odd and even trials. Another is to split by the first half and second half of the trials. Both approaches are implemented in the _splithalf_ funciton. However, I believe that the permutation splithalf approach is the way forward (and it was the reason why this package was developed, so please use it).
+A super common way is to split the data into odd and even trials. Another is to split by the first half and second half of the trials. Both approaches are implemented in the _splithalf_ funciton. However, I believe that the permutation splithalf approach is the most applicable in general and so the default is `halftype = "random"`
 
 
-### Our example dataset
+### An example dataset
 
-For this quick example, we will simulate some data. Lets say we have 60 participants, who each complete a task with two blocks (A and B) of 80 trials. Trials are also evenly distributed between "congruent" and "incongruent" trials. For each trial we have RT data, and are assuming that participants were accurate in all trials. 
+For this brief example, we will simulate some data for 60 participants, who each completed a task with two blocks (A and B) of 80 trials. Trials are also evenly distributed between "congruent" and "incongruent" trials. For each trial we have RT data, and are assuming that participants were accurate in all trials. 
 
 ```{r}
 n_participants = 60 ## sample size
@@ -191,7 +163,8 @@ sim_data <- data.frame(participant_number = rep(1:n_participants, each = n_block
                        trial_number = rep(1:n_trials, times = n_blocks * n_participants),
                        block_name = rep(c("A","B"), each = n_trials, length.out = n_participants * n_trials * n_blocks),
                        trial_type = rep(c("congruent","incongruent"), length.out = n_participants * n_trials * n_blocks),
-                       RT = rnorm(n_participants * n_trials * n_blocks, 500, 200))
+                       RT = rnorm(n_participants * n_trials * n_blocks, 500, 200),
+                       ACC = 1)
 
 
 ```
@@ -201,10 +174,11 @@ sim_data <- data.frame(participant_number = rep(1:n_participants, each = n_block
 
 This is by far the most common outcome measure I have come across, so lets start with that. 
 
-Our data will be analysed so that we have two 'bias' or 'difference score' outcomes. So, within each block, we will take the average RT in congruent trials and subtract the average RT in incongruent trials. Calculating the final scores for each participant and for each block separately might look a bit like this
+Our data will be analysed so that we have two 'bias' or 'difference score' outcomes. So, within each block, we will take the average RT in congruent trials and subtract the average RT in incongruent trials. Calculating the final scores for each participant and for each block separately could be done as follows:
 
-```{r comment = NA, echo = FALSE, message = FALSE}
-library("tidyverse")
+```{r comment = NA, echo = TRUE, message = FALSE}
+library("dplyr")
+library("tidyr")
 
 sim_data %>%
   group_by(participant_number, block_name, trial_type) %>%
@@ -214,11 +188,9 @@ sim_data %>%
 
 ```
 
+To estimate reliability with _splithalf_ we run the following.
 
-ok, lets see how reliable our A and B outcome scores ("bias") are.
-
-
-```{r message = FALSE, comment = NA, results = 'hide', warning = FALSE}
+```{r message = FALSE, comment = NA, results = 'hide', warning = FALSE, fig.keep='none'}
 library("splithalf")
 
 difference <- splithalf(data = sim_data,
@@ -233,7 +205,8 @@ difference <- splithalf(data = sim_data,
                         var.compare = "trial_type",
                         compare1 = "congruent",
                         compare2 = "incongruent",
-                        average = "mean")
+                        average = "mean",
+                        plot = TRUE)
 
 ```
 
@@ -242,27 +215,30 @@ difference$final_estimates
 
 ```
 
+Specifying `plot = TRUE` will also allow you to plot the distributions of reliability estimates. you can extract the plot from a saved object with e.g. `difference$plot`.
 
-#### Reading and reporting the output
+```{r echo = FALSE, comment = NA}
+difference$plot
+```
+
+### Reading and reporting the output
 
 The _splithalf_ output gives estimates separately for each condition defined (if no condition is defined, the function assumes that you have only a single condition, which it will call "all" to represent that all trials were included). 
 
-The second column (n) gives the number of participants analysed. If, for some reason one participant has too few trials to analyse, or did not complete one condition, this will be reflected here. I suggest you compare this n to your expected n to check that everything is running correctly. If the ns dont match, we have a problem. More likely, it will throw an error, but useful to know. 
+The second column (n) gives the number of participants analysed. If, for some reason one participant has too few trials to analyse, or did not complete one condition, this will be reflected here. I suggest you compare this n to your expected n to check that everything is running correctly. If the ns dont match, we have a problem. More likely, R will give an error message, but useful to know. 
 
 Next are the estimates; the splithalf column and the associated 95% percentile intervals, and the Spearman-Brown corrected estimate with its own percentile intervals. Unsurprisingly, our simlated random data does not yield internally consistant measurements. 
 
-*What should I report?* Ideally, report everything. I have included 95% percentiles of the estimates to give a picture of the spread of internal consistency estimates. Also included is the spearman-brown corrected estimates, which take into account that the estimates are drawn from half the trials that they could have been. Negative reliabilities are near uninterpretable and the spearman-brown formula is not useful in this case. For comparibility between studies I recommend reporting both the raw and the corrected estimates. Something like the following should be sufficient; 
+*What should I report?* My preference is to report everything. 95% percentiles of the estimates are provided to give a picture of the spread of internal consistency estimates. Also included is the spearman-brown corrected estimates, which take into account that the estimates are drawn from half the trials that they could have been. Negative reliabilities are near uninterpretable and the spearman-brown formula is not useful in this case.
 
 > We estimated the internal consitency of bias A and B using a permutation-based splithalf approach [@R-splithalf] with 5000 random splits. The (Spearman-Brown corrected) splithalf internal consistency of bias A was  were _r_~SB~ = `r difference$final_estimates[1,6]`, 95%CI [`r difference$final_estimates[1,7]`,`r difference$final_estimates[1,8]`]. 
 >
-> --- Me, reporting reliability, just now
-
-Simples. I hope :)
+> --- Parsons, 2020
 
 
 ### Average scores
 
-OK, lets change things up and look at average scores only. In this case, imagine that we have only a single trial type and we can then ignore the trial type option. We will want separate outcome scores for each block of trials, but this time it is simply the average RT in each block. Lets see how that looks within _splithalf_. Note that the main difference is that we have omitted the inputs about what trial types to 'compare', as this is irrelevant for the current task.
+For some tasks the outcome measure may simply be the average RT. In this case, we will ignore the trial type option. We will extract separate outcome scores for each block of trials, but this time it is simply the average RT in each block. Note that the main difference in this code is that we have omitted the inputs about what trial types to 'compare', as this is irrelevant for the current task.
 
 ```{r message = FALSE, comment = NA, results = 'hide'}
 average <- splithalf(data = sim_data,
@@ -283,14 +259,11 @@ average$final_estimates
 
 ```
 
-
-
-
 ### Difference-of-difference scores
 
-The difference of differences score is a bit more complex, and perhaps also less common. I programmed this aspect of the package initially because I had seen a few papers that used a change in bias score in their analysis, and I wondered "I wonder how reliable that is as an individual difference measure". Be warned, difference scores are nearly always less reliable than raw averages, and it's very likely that differences-of-differences will be the least reliable amongst the bunch. 
+The difference of differences score is a bit more complex, and perhaps also less common. I programmed this aspect of the package initially because I had seen a few papers that used a change in bias score in their analysis, and I wondered "I wonder how reliable that is as an individual difference measure". Be warned, difference scores are nearly always less reliable than raw averages, and  differences-of-differences will be less reliable again. 
 
-So, lets say our dependant/outcome variable in our task is the difference between bias observed in block A and B. So our outcome is calculated something like this. 
+Our difference-of-difference variable in our task is the difference between bias observed in block A and B. So our outcome is calculated something like this. 
 
 BiasA = incongruent_A - congruent_A
 
@@ -298,7 +271,7 @@ BiasB = incongruent_B - congruent_B
 
 Outcome = BiasB - BiasA
 
-In our function, we specify this very similarly as in the difference score example. The only change will be changing the score to "difference_of_difference" (largely because I could not think of a better name to use). Note that we will keep the condition list consisting of A and B. But, specifying that we are interested in the difference of differences will lead the function to calculate the outcome scores apropriately. 
+In our function, we specify this very similarly as in the difference score example. The only change will be changing the score to "difference_of_difference". Note that we will keep the condition list consisting of A and B. But, specifying that we are interested in the difference of differences will lead the function to calculate the outcome scores apropriately. 
 
 ```{r message = FALSE, comment = NA, results = 'hide'}
 
@@ -324,28 +297,64 @@ diff_of_diff$final_estimates
 
 ```
 
-I do not forsee the difference_of_difference option being used often, but I will continue to maintain it.
 
 
 ## Multiverse analysis extension
 
-(to be added, see [psyarxiv.com/y6tcz](https://psyarxiv.com/y6tcz))
+This example is simplified from Parsons [-@parsons_exploring_2020]. The process takes four steps. First, specify a list of data processing decisions. Here, we'll specify only removing trials greater or lower than a specified amount. More options are available, such as total accuracy cutoff thresholds for participant removals. 
 
+```{r}
+specifications <- list(RT_min = c(0, 100, 200),
+                       RT_max = c(1000, 2000),
+                       averaging_method = c("mean", "median"))
+```
 
-## Important considerations
+Second, perform `splithalf(...)`. The key difference here is ...
+
+```{r}
+difference <- splithalf(data = sim_data,
+                        outcome = "RT",
+                        score = "difference",
+                        conditionlist = c("A"),
+                        halftype = "random",
+                        permutations = 5000,
+                        var.RT = "RT",
+                        var.condition = "block_name",
+                        var.participant = "participant_number",
+                        var.compare = "trial_type",
+                        var.ACC = "ACC",
+                        compare1 = "congruent",
+                        compare2 = "incongruent",
+                        average = "mean")
+```
+
+Third, perform `splithalf.multiverse` with the specification list and splithalf objects as inputs
+
+```{r eval = TRUE}
+multiverse <- splithalf.multiverse(input = difference,
+                                   specifications = specifications)
+```
+
+Finally, plot the multiverse with plot.multiverse.
+
+```{r eval = FALSE}
+multiverse.plot(multiverse = multiverse,
+                title = "README multiverse")
+```
+
+For more information, see Parsons (2020). 
+
+## Other considerations
 
 ### how many permutations?
 
-To examine how many random splits are required to provide a precise estimate, a short simulation was performed including 20 estimates of the spearman-brown reliability estimate, for each of 1, 10, 50, 100, 1000, 2000, 5000, 10000, and 20000 random splits. This simulation was performed on data from one block of ~ 80 trials. Based on this simulation, I recommend 5000 (or more) random splits be used to calculate split-half reliability. 5000 permutations yielded a standard deviation of .002 and a total range of .008, indicating that the reliability estimates are stable to two decimal places with this number of random splits. Increasing the number of splits improved precision, however 20000 splits were required to reduce the standard deviation to .001. 
+To examine how many random splits are required to provide a precise estimate, a short simulation was performed including 20 estimates of the spearman-brown reliability estimate, for each of 1, 10, 50, 100, 1000, 2000, 5000, 10000, and 20000 random splits. This simulation was performed on data from one block of 80 trials. Based on this simulation, I recommend 5000 (or more) random splits be used to calculate split-half reliability. 5000 permutations yielded a standard deviation of .002 and a total range of .008, indicating that the reliability estimates are stable to two decimal places with this number of random splits. Increasing the number of splits improved precision, however 20000 splits were required to reduce the standard deviation to .001. 
 
-So, 5000 is good. More is better, but will not yield greatly improved estimates. 
+### *splithalf* runtime?
 
+The speed of *splithalf* rests entirely on the number of conditions, participants, and permutations. The biggest factor will be your machine speed. For relative times, I ran a simulation with a range of sample sizes, numbers of conditions, numbers of trials, and permutations. The data is contained within the package as `data/speedtest.csv`
 
-### how fast is _splithalf_?
-
-The quick answer is, it depends. The biggest factor will be your machine speed. For relative times, I ran a simulation with a range of sample sizes, numbers of conditions, numbers of trials, and permutations. I'll analyse this properly at a later date, but hopefully this visualisation is a useful demonstration of the relative processing times.
-
-```{r}
+```{r message = FALSE, comment = NA, results = 'hide', echo = FALSE}
 speed <- read.csv("data/speedtestdata.csv")
 speed <- speed %>%
   rename(Sim = X,
@@ -364,25 +373,25 @@ speed2$permutations <- as.factor(speed2$permutations)
 
 
 ggplot(data = speed2, 
-       aes(x = permutations, y = runtime, colour = sample_size, shape = trials, group = interaction(trials, sample_size))) +
-  geom_point(size = 3) +
+       aes(x = permutations, y = runtime, colour = sample_size, group = interaction(trials, sample_size))) +
+  geom_point(size = 2) +
   geom_line() +
-  facet_grid(. ~ Number_conditions)
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  facet_grid(vars(trials), vars(Number_conditions))
 
 ```
 
 
 
-## Wish list
+## Future development
 
-The biggest task on my wishlist was to combine the six or so functions that formed earlier versions of the splithalf package into a single, unified, function. This I have achieved, so in no particular order I have some things I still want to achieve with this package in future versions. If you have any more, please contact me and I will add them to my list
+The *splithalf* package is still under development. If you have suggestions for improvements to the package, or bugs to report, please raise an issue on github (https://github.com/sdparsons/splithalf). Currently, I have the following on my immediate to do list:
 
-* prettier output
 * error tracking
-    * in testing the function, having little data for one participant, e.g. only two trials in one condition, leads to errors gone wild. So, I'd like to add some checking functionality, perhaps as a separate _splithalf-checker_ function in the package. 
+    * I plan to develop a function that catches potential issues that could arise with the functions.
+    * I also plan to document common R warnings and errors that arise and why (as sometimes without knowing exactly how the functions work these issues can be harder to trace back).
+* include other scoring methods:
+    * signal detection, e.g. d prime
+    * potentially customisable methods, e.g. where the outcome is scored in formats similar to A - B / A + B
 
-
-`r if (knitr:::is_html_output()) '
-## References {-}
-'`
 

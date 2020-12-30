@@ -1,52 +1,64 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-\[\[CURRENT README DOCUMENTATION UNDER DEVELOPMENT\]\]
-
 <img src="inst/hexlogo/splithalf_logo.png" height="300"/>
 
-# splithalf R package
+[![CRAN
+Version](http://www.r-pkg.org/badges/version/splithalf)](https://cran.r-project.org/package=splithalf)
+[![Downloads](https://cranlogs.r-pkg.org/badges/splithalf)](https://cran.r-project.org/package=splithalf)
 
-this is version 0.7.1 \[unofficial version name: Kitten Mittens\]
+# splithalf: robust estimates of split half reliability
 
-Please see documentation at
-<https://sdparsons.github.io/splithalf_documentation/>
+The `R` package *splithalf* provides tools to estimate the internal
+consistency reliability of cognitive measures. In particular, the tools
+were developed for application to tasks that use difference scores as
+the main outcome measure, for instance the Stroop score or dot-probe
+attention bias index (average RT in incongruent trials minus average RT
+in congruent trials).
 
-\[UNDER DEVELOPMENT, BEYOND HERE BE MONSTERS\]
+As it’s name suggests, the methods are built around split half
+reliability estimation. To increase the robustness of these estimates,
+the package implements a permutation approach that takes a large number
+of random (without replacement) split halves of the data. For each
+permutation the correlation between halves is calculated, with the
+Spearman-Brown correction applied (). This process generates a
+distribution of reliability estimates from which we can extract summary
+statistics (e.g. average and 95% HDI).
 
-## Start-up notes
+### Why should I estimate the reliabilty of my task measurement?
 
-### Instalation
+A full rationale for estimating and reporting the reliability of task
+measurements is outlined in Parsons, Kruijt, and Fox (2019). In short,
+while many cognitive tasks yield robust effects (e.g. everybody shows a
+Stroop effect) they may not yield reliable individual differences. As
+these measures are used in questions of individual differences
+researchers need to have some psychometric information for the outcome
+measures.
 
-The **splithalf** package can be installed from CRAN or Github:
+## Installation
+
+The latest release version (`0.7.1` unofficial version name: Kitten
+Mittens) can be installed from CRAN:
 
 ``` r
 install.packages("splithalf")
-## or the development version
-## devtools::install_github("sdparsons/splithalf")
 ```
 
-### Version note
+The current developmental version can be installed from Github with:
 
-**Now on github and submitted to CRAN: VERSION 0.7.1** Featuring
-reliability multiverse analyses\!\!\!
+``` r
+devtools::install_github("sdparsons/splithalf")
+```
 
-The current version of **splithalf** is 0.7.1 \[unofficial version name:
-“Kitten Mittens”\]
-
-The most noticable difference to this version is the addition of
-reliability multiverse functions. Now you can take your *splithalf*
-object and run it via *splithalf.multiverse* to estimate reliability
-across a user-defined list of data-processing specifications. Then,
-because sometimes science is more art than science, you can plug the
-multiverse output into *multiverse.plot* to generate some sweet
-visualisations. *A tutorial will appear in an upcoming preprint and I
-will also add a page to this site*
-
-Additionally, the output of splithalf has been reworked. Now a list is
-returned including the specific function calls, the processed data.
-Since version 0.6.2 you can also set `plot = TRUE` in *splithalf* to
-generate a raincloud plot of the distribution of reliability estimates.
+*splithalf* requires the *tidyr* (Wickham and Henry 2019) and *dplyr*
+(Wickham et al. 2018) packages for data handling within the functions.
+The *robustbase* package is used to extract median scores when
+applicable. The computationally heavy tasks (extracting many random half
+samples of the data) are written in `c++` via the `R` package *Rcpp*
+(Eddelbuettel et al. 2018). Figures use the *ggplot* package (Wickham
+2016), raincloud plots use code adapted from Allen et al. (Allen et al.
+2019), and the *patchwork* package (Pedersen 2019) is used for plotting
+the multiverse analyses.
 
 ### Citing the package
 
@@ -60,9 +72,6 @@ Please use the following reference for the code: Parsons, Sam (2020):
 splithalf: robust estimates of split half reliability. figshare.
 Software. <https://doi.org/10.6084/m9.figshare.11956746.v4>
 
-If (eventually) this documentation turns into a publication, this
-reference will change.
-
 ### User feedback
 
 Developing the splithalf package is a labour of love (and occasionally
@@ -75,6 +84,28 @@ we’ve all been there) do contact me and I will do my best to help as
 quickly as possible. These kind of help requests are super welcome. In
 fact, the package has seen several increases in performance and
 usability due to people asking for help.
+
+## Latest update:
+
+**Now on github and submitted to CRAN: VERSION 0.7.2 \[unofficial
+version name: “Kitten Mittens”\]** Featuring reliability multiverse
+analyses\!\!\!
+
+This update includes the addition of reliability multiverse functions. A
+*splithalf* object can be inputted into *splithalf.multiverse* to
+estimate reliability across a user-defined list of data-processing
+specifications (e.g. min/max RTs). Then, because sometimes science is
+more art than science, the multiverse output can be plotted with
+*multiverse.plot*. A brief tutorial can be found below, and a more
+comprehensive one can be found in a recent preprint (Parsons 2020b).
+
+Additionally, the output of splithalf has been reworked. Now a list is
+returned including the specific function calls, the processed data.
+
+Since version 0.6.2 a user can also set `plot = TRUE` in *splithalf* to
+generate a raincloud plot of the distribution of reliability estimates.
+
+## Examples
 
 ### A note on terminology used in this document
 
@@ -97,73 +128,19 @@ reference to the functions later in the documentation.
     even the difference between two differences between two RTs (yes,
     the final one is confusing)
 
-## Background
+### A note on preprocessing
 
-### Why should I estimate the reliabilty of my task measurement?
+The core function *splithalf* requires that the input dataset has
+already undergone preprocessing (e.g. removal of error trials, RT
+trimming, and participants with high error rates). Splithalf should
+therefore be used with the same data that will be used to calculate
+summary scores and outcome indices. The exception is in multiverse
+analyses, as described below.
 
-For my full argument, see our preprint (Parsons, Kruijt, and Fox 2019).
-In short, the psychometric properties of our measurements are important
-and should be taken into consideration when conducting our analyses and
-interpreting our results. I think it should be standard practice to
-estimate and report reliability of our tasks. To not do so renders us
-incapable of knowing how much confidence we can place in results. If the
-replication crisis was a big deal, the measurement crisis has the
-potential to be as if not more catastrophic.
-
-### Why did I develop this package in the first place?
-
-Long story short-ish. I had some dot-probe attention bias data pre- and
-post- an attention bias modification procedure. In an exploratory
-analysis the post-training bias, but not the pre-training bias, was
-associated with self-report measures at follow-up. I think on a whim, we
-looked at how reliable the measures were pre/post and the post-training
-measure was much more reliable (\~ .7) than the pre-training bias
-measure (\~ .4). This led me down the road of wanting to understand
-reliability; what it ‘means’, how it impacts our results, the
-interesting reliability-power relationship, and so on. It also led me to
-the realisation (shared with many others), that we should estimate and
-report the reliability of our measures as standard practice. That has
-become my quest (albeit, it’s not what I am actualy paid to do), taking
-two main forms.
-
-1.  I wrote a paper with my DPhil supervisors (Parsons, Kruijt, and Fox
-    2019), that I hope will be out in AMPPS soon (after revisions); the
-    message being that we should adopt reporting reliabilty as a
-    standard practice.
-
-2.  I developed the *splithalf* package with the aim to provide an easy
-    to use tool to estimate internal consistency of bias measures
-    (difference scores) drawn from cognitive tasks.
-
-### How does *splithalf* work?
-
-The permutation approach in *splithalf* is actually rather simple. Over
-many repetitions (or permutations), the data is split in half and
-outcome scores are calculated for each half. For each repetion, the
-correlation coefficient between each half is calculated. Finally, the
-average of these correlations is taken as the final estimate of
-reliability. 95% percentiles are also taken from the distribution of
-estimates to give a picture of the spread of reliability estimates.\[1\]
-
-## Preprocessing
-
-Splithalf requires that the input dataset has already undergone
-preprocessing (e.g. removal of error trials, RT trimming, and
-participants with high error rates). Splithalf should therefore be used
-with the same data that will be used to calculate summary scores and
-outcome indices.
-
-In my earlier attempts to make splithalf as useful as possible I added a
-number of user-inputted variables that helped remove participants and
-trim RTs. This also resulted in far to many input variables and
-potential confusion.
-
-You might need to do a little pre-processing if you have not saved your
-processing steps. Here is a code snippet that will work (each line
-includes a note about what the code is doing after the hash).
-
-You will need to change the numbers to match your data. This code could
-be briefer, however has been structured like this for ease of use.
+For those unfamiliar with R, the following snippets may help with common
+data-processing steps. I also highly recommend the Software Carpentry
+course “R for Reproducible Scientific Analysis”
+(<https://swcarpentry.github.io/r-novice-gapminder/>).
 
 Note == indicates ‘is equal to’, :: indicates that the function uses the
 package indicated, in the first case the **dplyr** package (Wickham et
@@ -202,23 +179,18 @@ dplyr::rename(dataset,
               compare = "congruency")
 ```
 
-## Examples
-
-This is what you are really here for, isn’t it?
-
-I am assuming that you have preprocessed your data to remove any
-outliers, use any cutoffs etc. These functions should be used on the
-data that you will then create your scores from, i.e. there should not
-be further processing to do before you run any of these. If there is,
-then these internal consistency reliability estimates will not reflect
-the reliability of the outcome measurements you actually analyse.
+The following examples assume that you have already processed your data
+to remove outliers, apply any RT cutoffs, etc. A reminder: the data you
+input into *splithalf* should be the same as that used to create your
+final scores - otherwise the resultant estimates will not accurately
+reflect the reliability of your data.
 
 ### Questions to ask before running splithalf
 
 These questions should feed into what settings are appropriate for your
 need, and are aimed to make the *splithalf* function easy to use.
 
-1.  **What is the type of data you have? **
+1.  **What type of data do you have?**
 
 Are you interested in response times, or accuracy rates?
 
@@ -239,16 +211,16 @@ and the second I call “difference”.
 A super common way is to split the data into odd and even trials.
 Another is to split by the first half and second half of the trials.
 Both approaches are implemented in the *splithalf* funciton. However, I
-believe that the permutation splithalf approach is the way forward (and
-it was the reason why this package was developed, so please use it).
+believe that the permutation splithalf approach is the most applicable
+in general and so the default is `halftype = "random"`
 
-### Our example dataset
+### An example dataset
 
-For this quick example, we will simulate some data. Lets say we have 60
-participants, who each complete a task with two blocks (A and B) of 80
-trials. Trials are also evenly distributed between “congruent” and
-“incongruent” trials. For each trial we have RT data, and are assuming
-that participants were accurate in all trials.
+For this brief example, we will simulate some data for 60 participants,
+who each completed a task with two blocks (A and B) of 80 trials. Trials
+are also evenly distributed between “congruent” and “incongruent”
+trials. For each trial we have RT data, and are assuming that
+participants were accurate in all trials.
 
 ``` r
 n_participants = 60 ## sample size
@@ -259,7 +231,8 @@ sim_data <- data.frame(participant_number = rep(1:n_participants, each = n_block
                        trial_number = rep(1:n_trials, times = n_blocks * n_participants),
                        block_name = rep(c("A","B"), each = n_trials, length.out = n_participants * n_trials * n_blocks),
                        trial_type = rep(c("congruent","incongruent"), length.out = n_participants * n_trials * n_blocks),
-                       RT = rnorm(n_participants * n_trials * n_blocks, 500, 200))
+                       RT = rnorm(n_participants * n_trials * n_blocks, 500, 200),
+                       ACC = 1)
 ```
 
 ### Difference scores
@@ -271,25 +244,35 @@ Our data will be analysed so that we have two ‘bias’ or ‘difference
 score’ outcomes. So, within each block, we will take the average RT in
 congruent trials and subtract the average RT in incongruent trials.
 Calculating the final scores for each participant and for each block
-separately might look a bit like this
+separately could be done as follows:
 
-    # A tibble: 120 x 5
-    # Groups:   participant_number, block_name [120]
-       participant_number block_name congruent incongruent     bias
-                    <int> <fct>          <dbl>       <dbl>    <dbl>
-     1                  1 A               483.        500. -17.4   
-     2                  1 B               519.        481.  38.0   
-     3                  2 A               505.        525. -19.4   
-     4                  2 B               530.        504.  26.3   
-     5                  3 A               502.        422.  80.1   
-     6                  3 B               475.        520. -44.3   
-     7                  4 A               515.        477.  37.9   
-     8                  4 B               482.        487.  -4.64  
-     9                  5 A               496.        497.  -0.0303
-    10                  5 B               532.        554. -21.6   
-    # ... with 110 more rows
+``` r
+library("dplyr")
+library("tidyr")
 
-ok, lets see how reliable our A and B outcome scores (“bias”) are.
+sim_data %>%
+  group_by(participant_number, block_name, trial_type) %>%
+  summarise(average = mean(RT)) %>%
+  spread(trial_type, average) %>%
+  mutate(bias = congruent - incongruent)
+# A tibble: 120 x 5
+# Groups:   participant_number, block_name [120]
+   participant_number block_name congruent incongruent   bias
+                <int> <fct>          <dbl>       <dbl>  <dbl>
+ 1                  1 A               521.        532. -11.5 
+ 2                  1 B               537.        508.  29.1 
+ 3                  2 A               501.        541. -40.3 
+ 4                  2 B               518.        520.  -1.90
+ 5                  3 A               478.        446.  31.8 
+ 6                  3 B               500.        465.  34.8 
+ 7                  4 A               529.        471.  57.9 
+ 8                  4 B               531.        513.  17.3 
+ 9                  5 A               471.        491. -19.8 
+10                  5 B               446.        490. -43.6 
+# ... with 110 more rows
+```
+
+To estimate reliability with *splithalf* we run the following.
 
 ``` r
 library("splithalf")
@@ -306,16 +289,23 @@ difference <- splithalf(data = sim_data,
                         var.compare = "trial_type",
                         compare1 = "congruent",
                         compare2 = "incongruent",
-                        average = "mean")
+                        average = "mean",
+                        plot = TRUE)
 ```
 
 ``` 
   condition  n splithalf 95_low 95_high spearmanbrown SB_low SB_high
-1         A 60      0.01  -0.16     0.2          0.01  -0.28    0.33
-2         B 60      0.00  -0.16     0.2          0.00  -0.28    0.33
+1         A 60     -0.03  -0.21    0.16         -0.06  -0.34    0.27
+2         B 60     -0.04  -0.21    0.15         -0.07  -0.35    0.26
 ```
 
-#### Reading and reporting the output
+Specifying `plot = TRUE` will also allow you to plot the distributions
+of reliability estimates. you can extract the plot from a saved object
+with e.g. `difference$plot`.
+
+![](README-unnamed-chunk-13-1.png)<!-- -->
+
+### Reading and reporting the output
 
 The *splithalf* output gives estimates separately for each condition
 defined (if no condition is defined, the function assumes that you have
@@ -326,40 +316,35 @@ The second column (n) gives the number of participants analysed. If, for
 some reason one participant has too few trials to analyse, or did not
 complete one condition, this will be reflected here. I suggest you
 compare this n to your expected n to check that everything is running
-correctly. If the ns dont match, we have a problem. More likely, it will
-throw an error, but useful to know.
+correctly. If the ns dont match, we have a problem. More likely, R will
+give an error message, but useful to know.
 
 Next are the estimates; the splithalf column and the associated 95%
 percentile intervals, and the Spearman-Brown corrected estimate with its
 own percentile intervals. Unsurprisingly, our simlated random data does
 not yield internally consistant measurements.
 
-*What should I report?* Ideally, report everything. I have included 95%
-percentiles of the estimates to give a picture of the spread of internal
-consistency estimates. Also included is the spearman-brown corrected
-estimates, which take into account that the estimates are drawn from
-half the trials that they could have been. Negative reliabilities are
-near uninterpretable and the spearman-brown formula is not useful in
-this case. For comparibility between studies I recommend reporting both
-the raw and the corrected estimates. Something like the following should
-be sufficient;
+*What should I report?* My preference is to report everything. 95%
+percentiles of the estimates are provided to give a picture of the
+spread of internal consistency estimates. Also included is the
+spearman-brown corrected estimates, which take into account that the
+estimates are drawn from half the trials that they could have been.
+Negative reliabilities are near uninterpretable and the spearman-brown
+formula is not useful in this case.
 
 > We estimated the internal consitency of bias A and B using a
-> permutation-based splithalf approach (Parsons 2020) with 5000 random
+> permutation-based splithalf approach (Parsons 2020a) with 5000 random
 > splits. The (Spearman-Brown corrected) splithalf internal consistency
-> of bias A was were *r*<sub>SB</sub> = 0.01, 95%CI \[-0.28,0.33\].
+> of bias A was were *r*<sub>SB</sub> = -0.06, 95%CI \[-0.34,0.27\].
 > 
-> — Me, reporting reliability, just now
-
-Simples. I hope :)
+> — Parsons, 2020
 
 ### Average scores
 
-OK, lets change things up and look at average scores only. In this case,
-imagine that we have only a single trial type and we can then ignore the
-trial type option. We will want separate outcome scores for each block
-of trials, but this time it is simply the average RT in each block. Lets
-see how that looks within *splithalf*. Note that the main difference is
+For some tasks the outcome measure may simply be the average RT. In this
+case, we will ignore the trial type option. We will extract separate
+outcome scores for each block of trials, but this time it is simply the
+average RT in each block. Note that the main difference in this code is
 that we have omitted the inputs about what trial types to ‘compare’, as
 this is irrelevant for the current task.
 
@@ -380,8 +365,8 @@ var.trialnum will soon be depreciated
 
 ``` 
   condition  n splithalf 95_low 95_high spearmanbrown SB_low SB_high
-1         A 60     -0.13   -0.3    0.05         -0.22  -0.46     0.1
-2         B 60      0.08   -0.1    0.25          0.13  -0.18     0.4
+1         A 60      0.02  -0.15    0.21          0.04  -0.27    0.35
+2         B 60      0.15  -0.02    0.34          0.25  -0.04    0.50
 ```
 
 ### Difference-of-difference scores
@@ -391,12 +376,12 @@ also less common. I programmed this aspect of the package initially
 because I had seen a few papers that used a change in bias score in
 their analysis, and I wondered “I wonder how reliable that is as an
 individual difference measure”. Be warned, difference scores are nearly
-always less reliable than raw averages, and it’s very likely that
-differences-of-differences will be the least reliable amongst the bunch.
+always less reliable than raw averages, and differences-of-differences
+will be less reliable again.
 
-So, lets say our dependant/outcome variable in our task is the
-difference between bias observed in block A and B. So our outcome is
-calculated something like this.
+Our difference-of-difference variable in our task is the difference
+between bias observed in block A and B. So our outcome is calculated
+something like this.
 
 BiasA = incongruent\_A - congruent\_A
 
@@ -406,10 +391,9 @@ Outcome = BiasB - BiasA
 
 In our function, we specify this very similarly as in the difference
 score example. The only change will be changing the score to
-“difference\_of\_difference” (largely because I could not think of a
-better name to use). Note that we will keep the condition list
-consisting of A and B. But, specifying that we are interested in the
-difference of differences will lead the function to calculate the
+“difference\_of\_difference”. Note that we will keep the condition
+list consisting of A and B. But, specifying that we are interested in
+the difference of differences will lead the function to calculate the
 outcome scores apropriately.
 
 ``` r
@@ -433,17 +417,71 @@ Warning in splithalf(data = sim_data, outcome = "RT", score =
 
 ``` 
      condition  n splithalf 95_low 95_high spearmanbrown SB_low SB_high
-1 change score 60      0.05  -0.13    0.23          0.08  -0.22    0.38
+1 change score 60         0  -0.17    0.18             0  -0.29    0.31
 ```
-
-I do not forsee the difference\_of\_difference option being used often,
-but I will continue to maintain it.
 
 ## Multiverse analysis extension
 
-(to be added, see [psyarxiv.com/y6tcz](https://psyarxiv.com/y6tcz))
+This example is simplified from Parsons (2020b). The process takes four
+steps. First, specify a list of data processing decisions. Here, we’ll
+specify only removing trials greater or lower than a specified amount.
+More options are available, such as total accuracy cutoff thresholds for
+participant removals.
 
-## Important considerations
+``` r
+specifications <- list(RT_min = c(0, 100, 200),
+                       RT_max = c(1000, 2000),
+                       averaging_method = c("mean", "median"))
+```
+
+Second, perform `splithalf(...)`. The key difference here is …
+
+``` r
+difference <- splithalf(data = sim_data,
+                        outcome = "RT",
+                        score = "difference",
+                        conditionlist = c("A"),
+                        halftype = "random",
+                        permutations = 5000,
+                        var.RT = "RT",
+                        var.condition = "block_name",
+                        var.participant = "participant_number",
+                        var.compare = "trial_type",
+                        var.ACC = "ACC",
+                        compare1 = "congruent",
+                        compare2 = "incongruent",
+                        average = "mean")
+#> Warning in splithalf(data = sim_data, outcome = "RT", score = "difference", :
+#> var.trialnum will soon be depreciated
+#>   |                                                                              |                                                                      |   0%  |                                                                              |==                                                                    |   3%  |                                                                              |====                                                                  |   5%  |                                                                              |=====                                                                 |   7%  |                                                                              |======                                                                |   8%  |                                                                              |=======                                                               |  10%  |                                                                              |========                                                              |  12%  |                                                                              |=========                                                             |  13%  |                                                                              |==========                                                            |  15%  |                                                                              |============                                                          |  17%  |                                                                              |=============                                                         |  18%  |                                                                              |==============                                                        |  20%  |                                                                              |===============                                                       |  22%  |                                                                              |================                                                      |  23%  |                                                                              |==================                                                    |  25%  |                                                                              |===================                                                   |  27%  |                                                                              |====================                                                  |  28%  |                                                                              |=====================                                                 |  30%  |                                                                              |======================                                                |  32%  |                                                                              |=======================                                               |  33%  |                                                                              |========================                                              |  35%  |                                                                              |==========================                                            |  37%  |                                                                              |===========================                                           |  38%  |                                                                              |============================                                          |  40%  |                                                                              |=============================                                         |  42%  |                                                                              |==============================                                        |  43%  |                                                                              |================================                                      |  45%  |                                                                              |=================================                                     |  47%  |                                                                              |==================================                                    |  48%  |                                                                              |===================================                                   |  50%  |                                                                              |====================================                                  |  52%  |                                                                              |=====================================                                 |  53%  |                                                                              |======================================                                |  55%  |                                                                              |========================================                              |  57%  |                                                                              |=========================================                             |  58%  |                                                                              |==========================================                            |  60%  |                                                                              |===========================================                           |  62%  |                                                                              |============================================                          |  63%  |                                                                              |==============================================                        |  65%  |                                                                              |===============================================                       |  67%  |                                                                              |================================================                      |  68%  |                                                                              |=================================================                     |  70%  |                                                                              |==================================================                    |  72%  |                                                                              |===================================================                   |  73%  |                                                                              |====================================================                  |  75%  |                                                                              |======================================================                |  77%  |                                                                              |=======================================================               |  78%  |                                                                              |========================================================              |  80%  |                                                                              |=========================================================             |  82%  |                                                                              |==========================================================            |  83%  |                                                                              |============================================================          |  85%  |                                                                              |=============================================================         |  87%  |                                                                              |==============================================================        |  88%  |                                                                              |===============================================================       |  90%  |                                                                              |================================================================      |  92%  |                                                                              |=================================================================     |  93%  |                                                                              |==================================================================    |  95%  |                                                                              |====================================================================  |  97%  |                                                                              |===================================================================== |  98%  |                                                                              |======================================================================| 100%[1] "condition A complete"
+#> [1] "Calculating split half estimates"
+#> [1] "split half estimates for 5000 random splits"
+#>   condition  n spearmanbrown SB_low SB_high
+#> 1         A 60         -0.06  -0.35    0.28
+#> [1] "this could be reported as: using 5000 random splits, the spearman-brown corrected reliability  estimate for the A condition was -0.06, 95% CI [-0.35, 0.28]"
+```
+
+Third, perform `splithalf.multiverse` with the specification list and
+splithalf objects as inputs
+
+``` r
+multiverse <- splithalf.multiverse(input = difference,
+                                   specifications = specifications)
+#> [1] "running 12 pre-processing specifications"
+#>   |                                                                              |                                                                      |   0%  |                                                                              |======                                                                |   8%  |                                                                              |============                                                          |  17%  |                                                                              |==================                                                    |  25%  |                                                                              |=======================                                               |  33%  |                                                                              |=============================                                         |  42%  |                                                                              |===================================                                   |  50%  |                                                                              |=========================================                             |  58%  |                                                                              |===============================================                       |  67%  |                                                                              |====================================================                  |  75%  |                                                                              |==========================================================            |  83%  |                                                                              |================================================================      |  92%  |                                                                              |======================================================================| 100%[1] "running reliability estimates"
+#>   |                                                                              |                                                                      |   0%  |                                                                              |======                                                                |   8%  |                                                                              |============                                                          |  17%  |                                                                              |==================                                                    |  25%  |                                                                              |=======================                                               |  33%  |                                                                              |=============================                                         |  42%  |                                                                              |===================================                                   |  50%  |                                                                              |=========================================                             |  58%  |                                                                              |===============================================                       |  67%  |                                                                              |====================================================                  |  75%  |                                                                              |==========================================================            |  83%  |                                                                              |================================================================      |  92%  |                                                                              |======================================================================| 100%
+```
+
+Finally, plot the multiverse with plot.multiverse.
+
+``` r
+multiverse.plot(multiverse = multiverse,
+                title = "README multiverse")
+```
+
+For more information, see Parsons (2020).
+
+## Other considerations
 
 ### how many permutations?
 
@@ -451,77 +489,74 @@ To examine how many random splits are required to provide a precise
 estimate, a short simulation was performed including 20 estimates of the
 spearman-brown reliability estimate, for each of 1, 10, 50, 100, 1000,
 2000, 5000, 10000, and 20000 random splits. This simulation was
-performed on data from one block of \~ 80 trials. Based on this
-simulation, I recommend 5000 (or more) random splits be used to
-calculate split-half reliability. 5000 permutations yielded a standard
-deviation of .002 and a total range of .008, indicating that the
-reliability estimates are stable to two decimal places with this number
-of random splits. Increasing the number of splits improved precision,
-however 20000 splits were required to reduce the standard deviation to
-.001.
+performed on data from one block of 80 trials. Based on this simulation,
+I recommend 5000 (or more) random splits be used to calculate split-half
+reliability. 5000 permutations yielded a standard deviation of .002 and
+a total range of .008, indicating that the reliability estimates are
+stable to two decimal places with this number of random splits.
+Increasing the number of splits improved precision, however 20000 splits
+were required to reduce the standard deviation to .001.
 
-So, 5000 is good. More is better, but will not yield greatly improved
-estimates.
+### *splithalf* runtime?
 
-### how fast is *splithalf*?
-
-The quick answer is, it depends. The biggest factor will be your machine
+The speed of *splithalf* rests entirely on the number of conditions,
+participants, and permutations. The biggest factor will be your machine
 speed. For relative times, I ran a simulation with a range of sample
-sizes, numbers of conditions, numbers of trials, and permutations. I’ll
-analyse this properly at a later date, but hopefully this visualisation
-is a useful demonstration of the relative processing times.
+sizes, numbers of conditions, numbers of trials, and permutations. The
+data is contained within the package as `data/speedtest.csv`
 
-``` r
-speed <- read.csv("data/speedtestdata.csv")
-speed <- speed %>%
-  rename(Sim = X,
-         sample_size = V1,
-         Number_conditions = V2,
-         trials = V3,
-         permutations = V4,
-         runtime = V5)
+![](README-unnamed-chunk-22-1.png)<!-- -->
 
-speed2 <- speed
+## Future development
 
-speed2$sample_size <- as.factor(speed2$sample_size)
-speed2$Number_conditions <- as.factor(speed2$Number_conditions)
-speed2$trials <- as.factor(speed2$trials)
-speed2$permutations <- as.factor(speed2$permutations)
+The *splithalf* package is still under development. If you have
+suggestions for improvements to the package, or bugs to report, please
+raise an issue on github (<https://github.com/sdparsons/splithalf>).
+Currently, I have the following on my immediate to do list:
 
-
-ggplot(data = speed2, 
-       aes(x = permutations, y = runtime, colour = sample_size, shape = trials, group = interaction(trials, sample_size))) +
-  geom_point(size = 3) +
-  geom_line() +
-  facet_grid(. ~ Number_conditions)
-```
-
-![](README-unnamed-chunk-15-1.png)<!-- -->
-
-## Wish list
-
-The biggest task on my wishlist was to combine the six or so functions
-that formed earlier versions of the splithalf package into a single,
-unified, function. This I have achieved, so in no particular order I
-have some things I still want to achieve with this package in future
-versions. If you have any more, please contact me and I will add them to
-my list
-
-  - prettier output
   - error tracking
-      - in testing the function, having little data for one participant,
-        e.g. only two trials in one condition, leads to errors gone
-        wild. So, I’d like to add some checking functionality, perhaps
-        as a separate *splithalf-checker* function in the package.
-
-## References
+      - I plan to develop a function that catches potential issues that
+        could arise with the functions.
+      - I also plan to document common R warnings and errors that arise
+        and why (as sometimes without knowing exactly how the functions
+        work these issues can be harder to trace back).
+  - include other scoring methods:
+      - signal detection, e.g. d prime
+      - potentially customisable methods, e.g. where the outcome is
+        scored in formats similar to A - B / A + B
 
 <div id="refs" class="references">
 
+<div id="ref-allen_raincloud_2019">
+
+Allen, Micah, Davide Poggiali, Kirstie Whitaker, Tom Rhys Marshall, and
+Rogier A. Kievit. 2019. “Raincloud Plots: A Multi-Platform Tool for
+Robust Data Visualization.” *Wellcome Open Research* 4 (April): 63.
+<https://doi.org/10.12688/wellcomeopenres.15191.1>.
+
+</div>
+
+<div id="ref-R-Rcpp">
+
+Eddelbuettel, Dirk, Romain Francois, JJ Allaire, Kevin Ushey, Qiang Kou,
+Nathan Russell, Douglas Bates, and John Chambers. 2018. *Rcpp: Seamless
+R and C++ Integration*. <https://CRAN.R-project.org/package=Rcpp>.
+
+</div>
+
 <div id="ref-R-splithalf">
 
-Parsons, Sam. 2020. *Splithalf: Robust Estimates of Split Half
+Parsons, Sam. 2020a. *Splithalf: Robust Estimates of Split Half
 Reliability.* <https://doi.org/10.6084/m9.figshare.11956746.v4>.
+
+</div>
+
+<div id="ref-parsons_exploring_2020">
+
+———. 2020b. “Exploring Reliability Heterogeneity with Multiverse
+Analyses: Data Processing Decisions Unpredictably Influence Measurement
+Reliability.” Preprint. PsyArXiv.
+<https://doi.org/10.31234/osf.io/y6tcz>.
 
 </div>
 
@@ -535,6 +570,20 @@ Psychological Science.
 
 </div>
 
+<div id="ref-R-patchwork">
+
+Pedersen, Thomas Lin. 2019. *Patchwork: The Composer of Plots*.
+<https://CRAN.R-project.org/package=patchwork>.
+
+</div>
+
+<div id="ref-R-ggplot2">
+
+Wickham, Hadley. 2016. *Ggplot2: Elegant Graphics for Data Analysis*.
+Springer-Verlag New York. <https://ggplot2.tidyverse.org>.
+
+</div>
+
 <div id="ref-R-dplyr">
 
 Wickham, Hadley, Romain François, Lionel Henry, and Kirill Müller. 2018.
@@ -543,10 +592,11 @@ Wickham, Hadley, Romain François, Lionel Henry, and Kirill Müller. 2018.
 
 </div>
 
+<div id="ref-R-tidyr">
+
+Wickham, Hadley, and Lionel Henry. 2019. *Tidyr: Tidy Messy Data*.
+<https://CRAN.R-project.org/package=tidyr>.
+
 </div>
 
-1.  You can also use the package to estimate reliability by splitting
-    the data into odd and even trials, or into the first and last half
-    of trials. In all honesty I’d rather just remove these as it is not
-    the actual purpose of the package. But, it works, and maybe it would
-    be useful to somebody
+</div>

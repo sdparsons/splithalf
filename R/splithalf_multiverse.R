@@ -32,10 +32,6 @@ splithalf.multiverse <- function(input,
     stop("please use a splithalf object as the input")
   }
 
-  ### new
-  subject = input$call$var.participant
-  correct = input$call$var.ACC
-
   ###
 
   # set up the output list ####################################################
@@ -82,12 +78,18 @@ splithalf.multiverse <- function(input,
   var.ACC = input$call$var.ACC
   var.condition = input$call$var.condition
   var.participant = input$call$var.participant
-  var.trialnum = input$call$var.trialnum
   var.compare = input$call$var.compare
   compare1 = input$call$compare1
   compare2 = input$call$compare2
   average = input$call$average
 
+
+  ### ensure that the input$data names match
+  input$data$var.RT = input$data[,var.RT]
+  input$data$var.ACC = input$data[,var.ACC]
+  input$data$var.condition = input$data[,var.condition]
+  input$data$var.participant = input$data[,var.participant]
+  input$data$var.compare = input$data[,var.compare]
 
   # create empty objects for the purposes of binding global variables
   #(and to pass CRAN checks)
@@ -123,8 +125,8 @@ splithalf.multiverse <- function(input,
 
   # calculate accuracy rates
   temp_data <- input$data %>%
-    group_by(subject) %>%
-    mutate(ACC = sum(correct) / n())
+    group_by(var.participant) %>%
+    mutate(ACC = sum(var.ACC) / n())
 
   # make all the datasets
 
@@ -138,36 +140,36 @@ splithalf.multiverse <- function(input,
   for(perm in 1:nS) {
 
     temp <- temp_data %>%
-      dplyr::filter(ACC >= specs[perm, "ACC_cutoff"]) %>%
-      dplyr::group_by(subject) %>%
-      dplyr::filter(correct == 1) %>%
-      dplyr::filter(latency >= specs[perm, "RT_min"],
-             latency <= specs[perm, "RT_max"]) %>%
+      dplyr::filter(var.ACC >= specs[perm, "ACC_cutoff"]) %>%
+      dplyr::group_by(var.participant) %>%
+      dplyr::filter(var.ACC == 1) %>%
+      dplyr::filter(var.RT >= specs[perm, "RT_min"],
+                    var.RT <= specs[perm, "RT_max"]) %>%
       dplyr::ungroup()
 
     if(specs[perm, "split_by"] == "subject")
       temp <- temp %>%
-        group_by(subject)
+        group_by(var.participant)
     if(specs[perm, "split_by"] == "trial")
       temp <- temp %>%
-        group_by(subject, congruency)
+        group_by(var.participant, var.compare)
 
     if(specs[perm, "RT_sd_cutoff"] != 0)
       temp <- temp %>%
-        mutate(high  = mean(latency) + (specs[perm, "RT_sd_cutoff"]*sd(latency)),
-               low   = mean(latency) - (specs[perm, "RT_sd_cutoff"]*sd(latency))) %>%
-        dplyr::filter(latency >= low, latency <= high) %>%
+        mutate(high  = mean(var.RT) + (specs[perm, "RT_sd_cutoff"]*sd(var.RT)),
+               low   = mean(var.RT) - (specs[perm, "RT_sd_cutoff"]*sd(var.RT))) %>%
+        dplyr::filter(var.RT >= low, var.RT <= high) %>%
         ungroup() %>%
         as.data.frame()
 
     perm_out[[perm]] <- temp
 
     SE_out[perm] <- temp %>%
-      group_by(subject, congruency) %>%
-      summarise(meanRT = mean(latency)) %>%
-      spread(congruency, meanRT) %>%
-      mutate(RTdiff = Incongruent - Congruent) %>%
+      group_by(var.participant, var.compare) %>%
+      summarise(meanRT = mean(var.RT)) %>%
+      spread(var.compare, meanRT) %>%
       ungroup() %>%
+      mutate(RTdiff = .[[compare1]] - .[[compare2]]) %>%
       summarise(SE = sd(RTdiff)/sqrt(n())) %>%
       as.double()
 
@@ -183,8 +185,8 @@ splithalf.multiverse <- function(input,
   nTrial <- 1:nS
 
   for(i in 1:nS) {
-    nPar[i]   <- length(unique(perm_out[[i]]$subject))
-    nTrial[i] <- length(perm_out[[i]]$trialnum)
+    nPar[i]   <- length(unique(perm_out[[i]]$var.participant))
+    nTrial[i] <- length(perm_out[[i]]$var.participant)
   }
 
   removals <- specs
@@ -192,8 +194,8 @@ splithalf.multiverse <- function(input,
   removals$nTrial <- nTrial
   removals$nTrialperPar <- removals$nTrial / removals$nPar
 
-  removals$pPar <- removals$nPar / length(unique(input$data$subject))
-  removals$pTrial <- removals$nTrial / length(input$data$trialnum)
+  removals$pPar <- removals$nPar / length(unique(input$data$var.participant))
+  removals$pTrial <- removals$nTrial / length(input$data$var.participant)
 
   outlist$removals <- removals
 
@@ -220,7 +222,6 @@ splithalf.multiverse <- function(input,
                                         var.ACC = input$call$var.ACC,
                                         var.RT = input$call$var.RT,
                                         var.participant = input$call$var.participant,
-                                        var.trialnum = input$call$var.trialnum,
                                         var.compare = input$call$var.compare,
                                         compare1 = input$call$compare1,
                                         compare2 = input$call$compare2,

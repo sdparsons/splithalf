@@ -13,6 +13,14 @@ knitr::opts_chunk$set(
 ```
 
 
+splithalf v0.7.2 (current development version) [unofficial version name: Kitten Mittens]
+==============
+changes:
+* minor updates: reworked documentation and README 
+* added hexlogo
+* bug fixes to splithalf.multiverse
+
+
 splithalf v0.7.1 (current development version) [unofficial version name: Kitten Mittens]
 ==============
 changes:
