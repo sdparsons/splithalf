@@ -258,18 +258,18 @@ sim_data %>%
   mutate(bias = congruent - incongruent)
 # A tibble: 120 x 5
 # Groups:   participant_number, block_name [120]
-   participant_number block_name congruent incongruent    bias
-                <int> <fct>          <dbl>       <dbl>   <dbl>
- 1                  1 A               538.        476.   61.7 
- 2                  1 B               482.        523.  -41.7 
- 3                  2 A               535.        525.   10.3 
- 4                  2 B               515.        524.   -9.33
- 5                  3 A               497.        515.  -18.0 
- 6                  3 B               449.        629. -180.  
- 7                  4 A               489.        504.  -15.1 
- 8                  4 B               468.        541.  -73.7 
- 9                  5 A               520.        559.  -38.7 
-10                  5 B               464.        516.  -52.4 
+   participant_number block_name congruent incongruent   bias
+                <int> <fct>          <dbl>       <dbl>  <dbl>
+ 1                  1 A               502.        506.  -4.61
+ 2                  1 B               561.        504.  56.7 
+ 3                  2 A               521.        479.  42.0 
+ 4                  2 B               515.        517.  -1.93
+ 5                  3 A               471.        484. -12.9 
+ 6                  3 B               522.        517.   4.74
+ 7                  4 A               487.        480.   7.19
+ 8                  4 B               505.        474.  30.4 
+ 9                  5 A               475.        406.  69.7 
+10                  5 B               541.        511.  29.7 
 # ... with 110 more rows
 ```
 
@@ -296,15 +296,15 @@ difference <- splithalf(data = sim_data,
 
 ``` 
   condition  n splithalf 95_low 95_high spearmanbrown SB_low SB_high
-1         A 60      0.06  -0.12    0.25          0.10  -0.21    0.39
-2         B 60      0.05  -0.12    0.24          0.09  -0.22    0.39
+1         A 60      0.01  -0.16    0.19          0.01  -0.28    0.32
+2         B 60     -0.07  -0.25    0.12         -0.13  -0.40    0.21
 ```
 
 Specifying `plot = TRUE` will also allow you to plot the distributions
 of reliability estimates. you can extract the plot from a saved object
 with e.g. `difference$plot`.
 
-![](READMEfigures/plotting%20distribution-1.png)<!-- -->
+![](man/figures/README-plotting_distribution-1.png)<!-- -->
 
 ### Reading and reporting the output
 
@@ -336,7 +336,7 @@ formula is not useful in this case.
 > We estimated the internal consitency of bias A and B using a
 > permutation-based splithalf approach (Parsons 2020a) with 5000 random
 > splits. The (Spearman-Brown corrected) splithalf internal consistency
-> of bias A was were *r*<sub>SB</sub> = 0.1, 95%CI \[-0.21,0.39\].
+> of bias A was were *r*<sub>SB</sub> = 0.01, 95%CI \[-0.28,0.32\].
 > 
 > — Parsons, 2020
 
@@ -366,8 +366,8 @@ var.trialnum will soon be depreciated
 
 ``` 
   condition  n splithalf 95_low 95_high spearmanbrown SB_low SB_high
-1         A 60     -0.06  -0.23    0.13         -0.11  -0.38    0.23
-2         B 60      0.00  -0.17    0.19          0.01  -0.28    0.32
+1         A 60      0.07  -0.11    0.26          0.12  -0.19    0.41
+2         B 60      0.09  -0.08    0.27          0.15  -0.16    0.43
 ```
 
 ### Difference-of-difference scores
@@ -418,7 +418,7 @@ Warning in splithalf(data = sim_data, outcome = "RT", score =
 
 ``` 
      condition  n splithalf 95_low 95_high spearmanbrown SB_low SB_high
-1 change score 60      0.15  -0.02    0.33          0.25  -0.05    0.49
+1 change score 60     -0.18  -0.34       0          -0.3  -0.51       0
 ```
 
 ## Multiverse analysis extension
@@ -471,7 +471,7 @@ multiverse.plot(multiverse = multiverse,
                 title = "README multiverse")
 ```
 
-![](READMEfigures/multiverse_plot-1.png)<!-- -->
+![](man/figures/README-multiverse_plot-1.png)<!-- -->
 
 For more information, see Parsons (2020).
 
@@ -499,7 +499,7 @@ speed. For relative times, I ran a simulation with a range of sample
 sizes, numbers of conditions, numbers of trials, and permutations. The
 data is contained within the package as `data/speedtest.csv`
 
-![](READMEfigures/speedtest-1.png)<!-- -->
+![](man/figures/README-speedtest-1.png)<!-- -->
 
 ## Future development
 

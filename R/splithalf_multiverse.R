@@ -117,6 +117,7 @@ splithalf.multiverse <- function(input,
   Incongruent <- 0
   Congruent <- 0
   RTdiff <- 0
+  . <- 0
 
 
 

@@ -9,7 +9,7 @@ bibliography: inst/book.bib
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "READMEfigures/"
+  fig.path = "man/figures/README-"
 )
 ```
 
@@ -25,13 +25,13 @@ library("ggplot2")
 
 # splithalf: robust estimates of split half reliability
 
-The `R` package *splithalf* provides tools to estimate the internal consistency reliability of cognitive measures. In particular, the tools were developed for application to tasks that use difference scores as the main outcome measure, for instance the Stroop score or dot-probe attention bias index (average RT in incongruent trials minus average RT in congruent trials). 
+The `R` package **splithalf** provides tools to estimate the internal consistency reliability of cognitive measures. In particular, the tools were developed for application to tasks that use difference scores as the main outcome measure, for instance the Stroop score or dot-probe attention bias index (average RT in incongruent trials minus average RT in congruent trials). 
 
-The methods in *splithalf* are built around split half reliability estimation. To increase the robustness of these estimates, the package implements a permutation approach that takes a large number of random (without replacement) split halves of the data. For each permutation the correlation between halves is calculated, with the Spearman-Brown correction applied [@spearman_proof_1904]. This process generates a distribution of reliability estimates from which we can extract summary statistics (e.g. average and 95% HDI).
+The methods in **splithalf** are built around split half reliability estimation. To increase the robustness of these estimates, the package implements a permutation approach that takes a large number of random (without replacement) split halves of the data. For each permutation the correlation between halves is calculated, with the Spearman-Brown correction applied [@spearman_proof_1904]. This process generates a distribution of reliability estimates from which we can extract summary statistics (e.g. average and 95% HDI).
 
 ### Why should I estimate the reliabilty of my task measurement?
 
-while many cognitive tasks yield robust effects (e.g. everybody shows a Stroop effect) they may not yield reliable individual differences [@hedge_reliability_2018]. As these measures are used in questions of individual differences researchers need to have some psychometric information for the outcome measures. Recently, it was proposed that psychological science should set a standard expectation for the reporting of reliability information for cognitive and behavioural measures [-@parsons_kruijt_fox_2019]. *splithalf* was developed to support this proposition by providing a tool to easily extract internal consistency reliability estimates from behavioural measures. 
+while many cognitive tasks yield robust effects (e.g. everybody shows a Stroop effect) they may not yield reliable individual differences [@hedge_reliability_2018]. As these measures are used in questions of individual differences researchers need to have some psychometric information for the outcome measures. Recently, it was proposed that psychological science should set a standard expectation for the reporting of reliability information for cognitive and behavioural measures [-@parsons_kruijt_fox_2019]. **splithalf** was developed to support this proposition by providing a tool to easily extract internal consistency reliability estimates from behavioural measures. 
 ## Installation 
 
 The latest release version (`0.7.1` unofficial version name: Kitten Mittens) can be installed from CRAN:
@@ -46,7 +46,7 @@ The current developmental version can be installed from Github with:
 devtools::install_github("sdparsons/splithalf")
 ```
 
-*splithalf* requires the *tidyr* [@R-tidyr] and *dplyr* [@R-dplyr] packages for data handling within the functions. The *robustbase* package is used to extract median scores when applicable. The computationally heavy tasks (extracting many random half samples of the data) are written in `c++` via the `R` package *Rcpp* [@R-Rcpp]. Figures use the *ggplot* package [@R-ggplot2], raincloud plots use code adapted from Allen et al. [@allen_raincloud_2019], and the *patchwork* package [@R-patchwork] is used for plotting the multiverse analyses. 
+**splithalf** requires the **tidyr** [@R-tidyr] and **dplyr** [@R-dplyr] packages for data handling within the functions. The **robustbase** package is used to extract median scores when applicable. The computationally heavy tasks (extracting many random half samples of the data) are written in `c++` via the `R` package **Rcpp** [@R-Rcpp]. Figures use the **ggplot** package [@R-ggplot2], raincloud plots use code adapted from Allen et al. [@allen_raincloud_2019], and the **patchwork** package [@R-patchwork] is used for plotting the multiverse analyses. 
 
 ```{r eval = FALSE, include = FALSE, echo = FALSE}
 library("tidyr")
@@ -136,12 +136,12 @@ These questions should feed into what settings are appropriate for your need, an
 
 Are you interested in response times, or accuracy rates?
 
-Knowing this, you can set _outcome_ = "RT", or _outcome_ = "accuracy"
+Knowing this, you can set `outcome = "RT"`, or `outcome = "accuracy"`
 
 
 2. **How is your outcome score calculated?**
 
-Say that your response time based task has two trial types; "incongruent" and "congruent". When you analyse your data will you use the average RT in each trial type, or will you create a difference score (or bias) by e.g. subtracting the average RT in congruent trials from the average RT in incongruent trials. The first I call "average" and the second I call "difference". 
+Say that your response time based task has two trial types; "incongruent" and "congruent". When you analyse your data will you use the average RT in each trial type, or will you create a difference score (or bias) by e.g. subtracting the average RT in congruent trials from the average RT in incongruent trials. The first can be called with `score = "average"` and the second with `score = "difference"`. 
 
 
 3. **Which method would you like to use to estimate (split-half) reliability?**
@@ -216,7 +216,7 @@ difference$final_estimates
 
 Specifying `plot = TRUE` will also allow you to plot the distributions of reliability estimates. you can extract the plot from a saved object with e.g. `difference$plot`.
 
-```{r plotting distribution, echo = FALSE, comment = NA}
+```{r plotting_distribution, echo = FALSE, comment = NA}
 difference$plot
 ```
 
@@ -384,7 +384,7 @@ ggplot(data = speed2,
 
 ## Future development
 
-The *splithalf* package is still under development. If you have suggestions for improvements to the package, or bugs to report, please raise an issue on github (https://github.com/sdparsons/splithalf). Currently, I have the following on my immediate to do list:
+The **splithalf** package is still under development. If you have suggestions for improvements to the package, or bugs to report, please raise an issue on github (https://github.com/sdparsons/splithalf). Currently, I have the following on my immediate to do list:
 
 * error tracking
     * I plan to develop a function that catches potential issues that could arise with the functions.
@@ -396,7 +396,7 @@ The *splithalf* package is still under development. If you have suggestions for 
     
 ## Comparison to other software
 
-*splithalf* is the only package to implement all of these tools, in particular reliability multiverse analyses. Some other `R` packages offer a bootstrapped approach to split-half reliability *multicon* [@R-multicon], *psych* [@R-psych], and *splithalfr* [@R-splithalfr]
+**splithalf** is the only package to implement all of these tools, in particular reliability multiverse analyses. Some other `R` packages offer a bootstrapped approach to split-half reliability **multicon** [@R-multicon], **psych** [@R-psych], and **splithalfr** [@R-splithalfr]
 
 
 ## References

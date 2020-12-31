@@ -18,8 +18,6 @@ Imports:
     plyr,
     grid,
     patchwork
-Exports:
-    speedtestdata
 LinkingTo: Rcpp
 Suggests: 
     knitr,
@@ -29,5 +27,5 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.0
-URL: http://github.com/sdparsons/splithalf
-BugReports: http://github.com/sdparsons/splithalf
+URL: https://github.com/sdparsons/splithalf
+BugReports: https://github.com/sdparsons/splithalf
