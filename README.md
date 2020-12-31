@@ -16,26 +16,27 @@ the main outcome measure, for instance the Stroop score or dot-probe
 attention bias index (average RT in incongruent trials minus average RT
 in congruent trials).
 
-As it’s name suggests, the methods are built around split half
-reliability estimation. To increase the robustness of these estimates,
-the package implements a permutation approach that takes a large number
-of random (without replacement) split halves of the data. For each
-permutation the correlation between halves is calculated, with the
-Spearman-Brown correction applied (). This process generates a
+The methods in *splithalf* are built around split half reliability
+estimation. To increase the robustness of these estimates, the package
+implements a permutation approach that takes a large number of random
+(without replacement) split halves of the data. For each permutation the
+correlation between halves is calculated, with the Spearman-Brown
+correction applied (Spearman 1904). This process generates a
 distribution of reliability estimates from which we can extract summary
 statistics (e.g. average and 95% HDI).
 
 ### Why should I estimate the reliabilty of my task measurement?
 
-A full rationale for estimating and reporting the reliability of task
-measurements is outlined in Parsons, Kruijt, and Fox (2019). In short,
 while many cognitive tasks yield robust effects (e.g. everybody shows a
-Stroop effect) they may not yield reliable individual differences. As
-these measures are used in questions of individual differences
-researchers need to have some psychometric information for the outcome
-measures.
-
-## Installation
+Stroop effect) they may not yield reliable individual differences
+(Hedge, Powell, and Sumner 2018). As these measures are used in
+questions of individual differences researchers need to have some
+psychometric information for the outcome measures. Recently, it was
+proposed that psychological science should set a standard expectation
+for the reporting of reliability information for cognitive and
+behavioural measures (2019). *splithalf* was developed to support this
+proposition by providing a tool to easily extract internal consistency
+reliability estimates from behavioural measures. \#\# Installation
 
 The latest release version (`0.7.1` unofficial version name: Kitten
 Mittens) can be installed from CRAN:
@@ -259,16 +260,16 @@ sim_data %>%
 # Groups:   participant_number, block_name [120]
    participant_number block_name congruent incongruent    bias
                 <int> <fct>          <dbl>       <dbl>   <dbl>
- 1                  1 A               512.        462.   49.4 
- 2                  1 B               477.        484.   -6.22
- 3                  2 A               502.        493.    8.83
- 4                  2 B               425.        525. -100.  
- 5                  3 A               501.        524.  -22.1 
- 6                  3 B               526.        551.  -25.7 
- 7                  4 A               498.        420.   78.2 
- 8                  4 B               466.        534.  -67.6 
- 9                  5 A               491.        522.  -31.4 
-10                  5 B               409.        542. -133.  
+ 1                  1 A               538.        476.   61.7 
+ 2                  1 B               482.        523.  -41.7 
+ 3                  2 A               535.        525.   10.3 
+ 4                  2 B               515.        524.   -9.33
+ 5                  3 A               497.        515.  -18.0 
+ 6                  3 B               449.        629. -180.  
+ 7                  4 A               489.        504.  -15.1 
+ 8                  4 B               468.        541.  -73.7 
+ 9                  5 A               520.        559.  -38.7 
+10                  5 B               464.        516.  -52.4 
 # ... with 110 more rows
 ```
 
@@ -295,8 +296,8 @@ difference <- splithalf(data = sim_data,
 
 ``` 
   condition  n splithalf 95_low 95_high spearmanbrown SB_low SB_high
-1         A 60     -0.05  -0.22    0.13         -0.09  -0.37    0.24
-2         B 60      0.08  -0.09    0.26          0.14  -0.17    0.42
+1         A 60      0.06  -0.12    0.25          0.10  -0.21    0.39
+2         B 60      0.05  -0.12    0.24          0.09  -0.22    0.39
 ```
 
 Specifying `plot = TRUE` will also allow you to plot the distributions
@@ -335,7 +336,7 @@ formula is not useful in this case.
 > We estimated the internal consitency of bias A and B using a
 > permutation-based splithalf approach (Parsons 2020a) with 5000 random
 > splits. The (Spearman-Brown corrected) splithalf internal consistency
-> of bias A was were *r*<sub>SB</sub> = -0.09, 95%CI \[-0.37,0.24\].
+> of bias A was were *r*<sub>SB</sub> = 0.1, 95%CI \[-0.21,0.39\].
 > 
 > — Parsons, 2020
 
@@ -365,8 +366,8 @@ var.trialnum will soon be depreciated
 
 ``` 
   condition  n splithalf 95_low 95_high spearmanbrown SB_low SB_high
-1         A 60     -0.02  -0.19    0.18         -0.04  -0.32    0.30
-2         B 60      0.06  -0.12    0.24          0.10  -0.21    0.39
+1         A 60     -0.06  -0.23    0.13         -0.11  -0.38    0.23
+2         B 60      0.00  -0.17    0.19          0.01  -0.28    0.32
 ```
 
 ### Difference-of-difference scores
@@ -417,7 +418,7 @@ Warning in splithalf(data = sim_data, outcome = "RT", score =
 
 ``` 
      condition  n splithalf 95_low 95_high spearmanbrown SB_low SB_high
-1 change score 60      0.09  -0.08    0.28          0.16  -0.15    0.44
+1 change score 60      0.15  -0.02    0.33          0.25  -0.05    0.49
 ```
 
 ## Multiverse analysis extension
@@ -518,6 +519,13 @@ Currently, I have the following on my immediate to do list:
       - potentially customisable methods, e.g. where the outcome is
         scored in formats similar to A - B / A + B
 
+## Comparison to other software
+
+*splithalf* is the only package to implement all of these tools, in
+particular reliability multiverse analyses. Some other `R` packages
+offer a bootstrapped approach to split-half reliability *multicon*
+(Sherman 2015), *psych* (Revelle 2019), and *splithalfr* (Pronk 2020)
+
 ## References
 
 <div id="refs" class="references">
@@ -539,6 +547,15 @@ R and C++ Integration*. <https://CRAN.R-project.org/package=Rcpp>.
 
 </div>
 
+<div id="ref-hedge_reliability_2018">
+
+Hedge, Craig, Georgina Powell, and Petroc Sumner. 2018. “The Reliability
+Paradox: Why Robust Cognitive Tasks Do Not Produce Reliable Individual
+Differences.” *Behavior Research Methods* 50 (3): 1166–86.
+<https://doi.org/10.3758/s13428-017-0935-1>.
+
+</div>
+
 <div id="ref-R-splithalf">
 
 Parsons, Sam. 2020a. *Splithalf: Robust Estimates of Split Half
@@ -550,8 +567,7 @@ Reliability.* <https://doi.org/10.6084/m9.figshare.11956746.v4>.
 
 ———. 2020b. “Exploring Reliability Heterogeneity with Multiverse
 Analyses: Data Processing Decisions Unpredictably Influence Measurement
-Reliability.” Preprint. PsyArXiv.
-<https://doi.org/10.31234/osf.io/y6tcz>.
+Reliability.” Preprint, June. <https://doi.org/10.31234/osf.io/y6tcz>.
 
 </div>
 
@@ -569,6 +585,36 @@ Psychological Science.
 
 Pedersen, Thomas Lin. 2019. *Patchwork: The Composer of Plots*.
 <https://CRAN.R-project.org/package=patchwork>.
+
+</div>
+
+<div id="ref-R-splithalfr">
+
+Pronk, Thomas. 2020. *Splithalfr: Extensible Bootstrapped Split-Half
+Reliabilities*. <https://CRAN.R-project.org/package=splithalfr>.
+
+</div>
+
+<div id="ref-R-psych">
+
+Revelle, William. 2019. *Psych: Procedures for Psychological,
+Psychometric, and Personality Research*. Evanston, Illinois:
+Northwestern University. <https://CRAN.R-project.org/package=psych>.
+
+</div>
+
+<div id="ref-R-multicon">
+
+Sherman, Ryne A. 2015. *Multicon: Multivariate Constructs*.
+<https://CRAN.R-project.org/package=multicon>.
+
+</div>
+
+<div id="ref-spearman_proof_1904">
+
+Spearman, C. 1904. “The Proof and Measurement of Association Between Two
+Things.” *The American Journal of Psychology* 15 (1): 72.
+<https://doi.org/10.2307/1412159>.
 
 </div>
 
