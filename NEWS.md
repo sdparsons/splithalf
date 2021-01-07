@@ -1,7 +1,40 @@
 
 <!-- NEWS.md is generated from NEWS.Rmd. Please edit that file -->
 
-# splithalf v0.5.2 (current development version) \[unofficial version name: Fight Milk - rebrand\]
+# splithalf v0.7.2 (current development version) \[unofficial version name: Kitten Mittens\]
+
+changes: \* minor updates: reworked documentation and README \* added
+hexlogo \* bug fixes to splithalf.multiverse
+
+# splithalf v0.7.1 (current development version) \[unofficial version name: Kitten Mittens\]
+
+changes: \* added multiverse analyses to package. Functions
+*splithalf.multiverse*, *testretest.multiverse*, *plot.multiverse*, and
+*threshold* now available\!
+
+# splithalf v0.6.2 \[unofficial version name: the Golden God\]
+
+changes: \* added “sum” option to the average input. average = “sum” can
+now be used to calculate the sum score for accuracy (binary 0/1 values)
+
+# splithalf v0.6.1 \[unofficial version name: the Golden God\]
+
+changes: \* added DPrime option, this is still under development \* the
+structure of splithalf has changed to include additional elements in the
+output list - intended to make the future reliability multiverse add-on
+easier to use \* added a basic plotting functionality, setting plot =
+TRUE will now give a raincloud plot of all estimates (based on code from
+Allen et al. <https://wellcomeopenresearch.org/articles/4-63/v1>) \*
+added a ‘round.to’ option to specify the number of decimal points to
+round the estimates to
+
+# splithalf v0.5.3 \[unofficial version name: Fight Milk - rebrand\]
+
+changes: \* updated code to allow for estimation of splithalf
+reliability of accuracy rates. (beta testing needed) \* minor bug
+checks, fixed using spearman over pearson correlation.
+
+# splithalf v0.5.2 \[unofficial version name: Fight Milk - rebrand\]
 
 changes: \* a guide to the package can be found here
 <https://sdparsons.github.io/splithalf_documentation/> \* bug fix to the
@@ -17,7 +50,7 @@ Changes: \* all functions compressed into a single function “splithalf”
 requires you use data that has been processed \* added C++ code with
 Rcpp to massively speed up the function.
 
-# splithalf v0.4.1 \[unofficial version name “the nightman commeth”\]
+# splithalf v0.4.1 \[unofficial version name: The nightman commeth\]
 
 I forgot to record changes because I am awful - lots of improvements
 mainly to speed things up
