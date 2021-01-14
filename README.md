@@ -9,14 +9,14 @@ Version](http://www.r-pkg.org/badges/version/splithalf)](https://cran.r-project.
 
 # splithalf: robust estimates of split half reliability
 
-The `R` package *splithalf* provides tools to estimate the internal
+The `R` package **splithalf** provides tools to estimate the internal
 consistency reliability of cognitive measures. In particular, the tools
 were developed for application to tasks that use difference scores as
 the main outcome measure, for instance the Stroop score or dot-probe
 attention bias index (average RT in incongruent trials minus average RT
 in congruent trials).
 
-The methods in *splithalf* are built around split half reliability
+The methods in **splithalf** are built around split half reliability
 estimation. To increase the robustness of these estimates, the package
 implements a permutation approach that takes a large number of random
 (without replacement) split halves of the data. For each permutation the
@@ -34,7 +34,7 @@ questions of individual differences researchers need to have some
 psychometric information for the outcome measures. Recently, it was
 proposed that psychological science should set a standard expectation
 for the reporting of reliability information for cognitive and
-behavioural measures (2019). *splithalf* was developed to support this
+behavioural measures (2019). **splithalf** was developed to support this
 proposition by providing a tool to easily extract internal consistency
 reliability estimates from behavioural measures. \#\# Installation
 
@@ -51,15 +51,15 @@ The current developmental version can be installed from Github with:
 devtools::install_github("sdparsons/splithalf")
 ```
 
-*splithalf* requires the *tidyr* (Wickham and Henry 2019) and *dplyr*
-(Wickham et al. 2018) packages for data handling within the functions.
-The *robustbase* package is used to extract median scores when
-applicable. The computationally heavy tasks (extracting many random half
-samples of the data) are written in `c++` via the `R` package *Rcpp*
-(Eddelbuettel et al. 2018). Figures use the *ggplot* package (Wickham
-2016), raincloud plots use code adapted from Allen et al. (Allen et al.
-2019), and the *patchwork* package (Pedersen 2019) is used for plotting
-the multiverse analyses.
+**splithalf** requires the **tidyr** (Wickham and Henry 2019) and
+**dplyr** (Wickham et al. 2018) packages for data handling within the
+functions. The **robustbase** package is used to extract median scores
+when applicable. The computationally heavy tasks (extracting many random
+half samples of the data) are written in `c++` via the `R` package
+**Rcpp** (Eddelbuettel et al. 2018). Figures use the **ggplot** package
+(Wickham 2016), raincloud plots use code adapted from Allen et
+al. (Allen et al. 2019), and the **patchwork** package (Pedersen 2019)
+is used for plotting the multiverse analyses.
 
 ### Citing the package
 
@@ -195,7 +195,7 @@ need, and are aimed to make the *splithalf* function easy to use.
 
 Are you interested in response times, or accuracy rates?
 
-Knowing this, you can set *outcome* = “RT”, or *outcome* = “accuracy”
+Knowing this, you can set `outcome = "RT"`, or `outcome = "accuracy"`
 
 2.  **How is your outcome score calculated?**
 
@@ -203,8 +203,8 @@ Say that your response time based task has two trial types;
 “incongruent” and “congruent”. When you analyse your data will you
 use the average RT in each trial type, or will you create a difference
 score (or bias) by e.g. subtracting the average RT in congruent trials
-from the average RT in incongruent trials. The first I call “average”
-and the second I call “difference”.
+from the average RT in incongruent trials. The first can be called with
+`score = "average"` and the second with `score = "difference"`.
 
 3.  **Which method would you like to use to estimate (split-half)
     reliability?**
@@ -258,18 +258,18 @@ sim_data %>%
   mutate(bias = congruent - incongruent)
 # A tibble: 120 x 5
 # Groups:   participant_number, block_name [120]
-   participant_number block_name congruent incongruent   bias
-                <int> <fct>          <dbl>       <dbl>  <dbl>
- 1                  1 A               502.        506.  -4.61
- 2                  1 B               561.        504.  56.7 
- 3                  2 A               521.        479.  42.0 
- 4                  2 B               515.        517.  -1.93
- 5                  3 A               471.        484. -12.9 
- 6                  3 B               522.        517.   4.74
- 7                  4 A               487.        480.   7.19
- 8                  4 B               505.        474.  30.4 
- 9                  5 A               475.        406.  69.7 
-10                  5 B               541.        511.  29.7 
+   participant_number block_name congruent incongruent  bias
+                <int> <fct>          <dbl>       <dbl> <dbl>
+ 1                  1 A               462.        452.  10.2
+ 2                  1 B               454.        481. -26.9
+ 3                  2 A               488.        445.  43.4
+ 4                  2 B               504.        522. -18.1
+ 5                  3 A               538.        511.  27.0
+ 6                  3 B               517.        545. -28.2
+ 7                  4 A               488.        467.  21.2
+ 8                  4 B               496.        515. -19.8
+ 9                  5 A               515.        482.  32.7
+10                  5 B               474.        534. -60.0
 # ... with 110 more rows
 ```
 
@@ -296,8 +296,8 @@ difference <- splithalf(data = sim_data,
 
 ``` 
   condition  n splithalf 95_low 95_high spearmanbrown SB_low SB_high
-1         A 60      0.01  -0.16    0.19          0.01  -0.28    0.32
-2         B 60     -0.07  -0.25    0.12         -0.13  -0.40    0.21
+1         A 60      0.01  -0.16    0.20          0.02  -0.27    0.34
+2         B 60      0.10  -0.08    0.28          0.16  -0.15    0.44
 ```
 
 Specifying `plot = TRUE` will also allow you to plot the distributions
@@ -336,7 +336,7 @@ formula is not useful in this case.
 > We estimated the internal consitency of bias A and B using a
 > permutation-based splithalf approach (Parsons 2020a) with 5000 random
 > splits. The (Spearman-Brown corrected) splithalf internal consistency
-> of bias A was were *r*<sub>SB</sub> = 0.01, 95%CI \[-0.28,0.32\].
+> of bias A was were *r*<sub>SB</sub> = 0.02, 95%CI \[-0.27,0.34\].
 > 
 > — Parsons, 2020
 
@@ -366,8 +366,8 @@ var.trialnum will soon be depreciated
 
 ``` 
   condition  n splithalf 95_low 95_high spearmanbrown SB_low SB_high
-1         A 60      0.07  -0.11    0.26          0.12  -0.19    0.41
-2         B 60      0.09  -0.08    0.27          0.15  -0.16    0.43
+1         A 60     -0.01  -0.18    0.18         -0.02  -0.30    0.30
+2         B 60      0.07  -0.10    0.26          0.12  -0.18    0.41
 ```
 
 ### Difference-of-difference scores
@@ -418,7 +418,7 @@ Warning in splithalf(data = sim_data, outcome = "RT", score =
 
 ``` 
      condition  n splithalf 95_low 95_high spearmanbrown SB_low SB_high
-1 change score 60     -0.18  -0.34       0          -0.3  -0.51       0
+1 change score 60      0.15  -0.02    0.34          0.26  -0.03     0.5
 ```
 
 ## Multiverse analysis extension
@@ -503,7 +503,7 @@ data is contained within the package as `data/speedtest.csv`
 
 ## Future development
 
-The *splithalf* package is still under development. If you have
+The **splithalf** package is still under development. If you have
 suggestions for improvements to the package, or bugs to report, please
 raise an issue on github (<https://github.com/sdparsons/splithalf>).
 Currently, I have the following on my immediate to do list:
@@ -521,10 +521,11 @@ Currently, I have the following on my immediate to do list:
 
 ## Comparison to other software
 
-*splithalf* is the only package to implement all of these tools, in
+**splithalf** is the only package to implement all of these tools, in
 particular reliability multiverse analyses. Some other `R` packages
-offer a bootstrapped approach to split-half reliability *multicon*
-(Sherman 2015), *psych* (Revelle 2019), and *splithalfr* (Pronk 2020)
+offer a bootstrapped approach to split-half reliability **multicon**
+(Sherman 2015), **psych** (Revelle 2019), and **splithalfr** (Pronk
+2020)
 
 ## References
 
@@ -577,7 +578,7 @@ Parsons, Sam, Anne-Wil Kruijt, and Elaine Fox. 2019. “Psychological
 Science Needs a Standard Practice of Reporting the Reliability of
 Cognitive Behavioural Measurements.” Advances in Methods; Practices in
 Psychological Science.
-<https://doi.org/https://doi.org/10.1177/2515245919879695>.
+<https://doi.org/doi.org/10.1177/2515245919879695>.
 
 </div>
 
