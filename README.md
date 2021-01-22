@@ -27,7 +27,7 @@ statistics (e.g. average and 95% HDI).
 
 ### Why should I estimate the reliabilty of my task measurement?
 
-while many cognitive tasks yield robust effects (e.g. everybody shows a
+While many cognitive tasks yield robust effects (e.g. everybody shows a
 Stroop effect) they may not yield reliable individual differences
 (Hedge, Powell, and Sumner 2018). As these measures are used in
 questions of individual differences researchers need to have some
