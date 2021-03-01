@@ -32,7 +32,7 @@
 #' @importFrom stats complete.cases cor median na.omit quantile sd
 #' @importFrom robustbase colMedians
 #' @importFrom dplyr select summarise group_by mutate n_distinct
-#' @importFrom plyr arrange
+#' @importFrom plyr arrange colwise
 #' @useDynLib splithalf, .registration = TRUE
 #' @importFrom Rcpp sourceCpp
 #' @importFrom utils setTxtProgressBar txtProgressBar
@@ -239,6 +239,13 @@ splithalf <- function(data,
       ave_fun_basic <- function(val) {
         median(val)
       }
+   } else if (average == "sd") {
+      ave_fun <- function(val) {
+        as.numeric(plyr::colwise(sd)(data.frame(val)))
+      }
+      ave_fun_basic <- function(val) {
+        sd(val)
+      }
     }
   }
   if (outcome == "accuracy") {
@@ -262,6 +269,13 @@ splithalf <- function(data,
       }
       ave_fun_basic <- function(val) {
         sum(val)
+      }
+    } else if (average == "sd") {
+      ave_fun <- function(val) {
+        as.numeric(plyr::colwise(sd)(data.frame(val)))
+      }
+      ave_fun_basic <- function(val) {
+        sd(val)
       }
     }
   }
