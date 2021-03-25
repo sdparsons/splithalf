@@ -34,9 +34,10 @@ questions of individual differences researchers need to have some
 psychometric information for the outcome measures. Recently, it was
 proposed that psychological science should set a standard expectation
 for the reporting of reliability information for cognitive and
-behavioural measures (2019). **splithalf** was developed to support this
-proposition by providing a tool to easily extract internal consistency
-reliability estimates from behavioural measures.
+behavioural measures (Parsons, Kruijt, and Fox 2019). **splithalf** was
+developed to support this proposition by providing a tool to easily
+extract internal consistency reliability estimates from behavioural
+measures.
 
 ## Installation
 
@@ -260,18 +261,18 @@ sim_data %>%
   mutate(bias = congruent - incongruent)
 # A tibble: 120 x 5
 # Groups:   participant_number, block_name [120]
-   participant_number block_name congruent incongruent     bias
-                <int> <fct>          <dbl>       <dbl>    <dbl>
- 1                  1 A               511.        512.   -0.692
- 2                  1 B               470.        493.  -23.7  
- 3                  2 A               535.        471.   63.1  
- 4                  2 B               475.        588. -113.   
- 5                  3 A               538.        497.   40.8  
- 6                  3 B               482.        548.  -66.6  
- 7                  4 A               471.        491.  -20.4  
- 8                  4 B               464.        429.   35.1  
- 9                  5 A               492.        488.    4.48 
-10                  5 B               537.        570.  -33.6  
+   participant_number block_name congruent incongruent  bias
+                <int> <fct>          <dbl>       <dbl> <dbl>
+ 1                  1 A               481.        519. -38.2
+ 2                  1 B               494.        517. -23.0
+ 3                  2 A               555.        541.  13.6
+ 4                  2 B               483.        533. -49.6
+ 5                  3 A               502.        479.  23.6
+ 6                  3 B               521.        465.  56.3
+ 7                  4 A               475.        513. -38.3
+ 8                  4 B               540.        455.  84.7
+ 9                  5 A               496.        551. -54.7
+10                  5 B               529.        484.  45.0
 # ... with 110 more rows
 ```
 
@@ -297,8 +298,8 @@ difference <- splithalf(data = sim_data,
 ```
 
       condition  n splithalf 95_low 95_high spearmanbrown SB_low SB_high
-    1         A 60     -0.04  -0.21    0.15         -0.07  -0.35    0.26
-    2         B 60     -0.05  -0.23    0.13         -0.09  -0.37    0.23
+    1         A 60     -0.08  -0.25    0.12         -0.13  -0.40    0.21
+    2         B 60      0.19   0.02    0.36          0.31   0.04    0.53
 
 Specifying `plot = TRUE` will also allow you to plot the distributions
 of reliability estimates. you can extract the plot from a saved object
@@ -336,7 +337,7 @@ formula is not useful in this case.
 > We estimated the internal consitency of bias A and B using a
 > permutation-based splithalf approach (Parsons 2019) with 5000 random
 > splits. The (Spearman-Brown corrected) splithalf internal consistency
-> of bias A was were *r*<sub>SB</sub> = -0.07, 95%CI \[-0.35,0.26\].
+> of bias A was were *r*<sub>SB</sub> = -0.13, 95%CI \[-0.4,0.21\].
 >
 > — Parsons, 2020
 
@@ -365,8 +366,8 @@ var.trialnum will soon be depreciated
 ```
 
       condition  n splithalf 95_low 95_high spearmanbrown SB_low SB_high
-    1         A 60     -0.15  -0.31    0.04         -0.25  -0.48    0.07
-    2         B 60      0.05  -0.12    0.23          0.08  -0.22    0.38
+    1         A 60     -0.05  -0.22    0.13         -0.10  -0.36    0.24
+    2         B 60      0.00  -0.17    0.18         -0.01  -0.30    0.31
 
 ### Difference-of-difference scores
 
@@ -414,7 +415,7 @@ Warning in splithalf(data = sim_data, outcome = "RT", score =
 ```
 
          condition  n splithalf 95_low 95_high spearmanbrown SB_low SB_high
-    1 change score 60     -0.02   -0.2    0.17         -0.04  -0.33    0.29
+    1 change score 60      0.17      0    0.35          0.28      0    0.52
 
 ## Multiverse analysis extension
 
@@ -492,7 +493,7 @@ The speed of *splithalf* rests entirely on the number of conditions,
 participants, and permutations. The biggest factor will be your machine
 speed. For relative times, I ran a simulation with a range of sample
 sizes, numbers of conditions, numbers of trials, and permutations. The
-data is contained within the package as `data/speedtest.csv`
+data is contained within the package as `data/speedtest.rda`
 
 ![](man/figures/README-speedtest-1.png)<!-- -->
 

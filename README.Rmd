@@ -31,7 +31,7 @@ The methods in **splithalf** are built around split half reliability estimation.
 
 ### Why should I estimate the reliabilty of my task measurement?
 
-while many cognitive tasks yield robust effects (e.g. everybody shows a Stroop effect) they may not yield reliable individual differences [@hedge_reliability_2018]. As these measures are used in questions of individual differences researchers need to have some psychometric information for the outcome measures. Recently, it was proposed that psychological science should set a standard expectation for the reporting of reliability information for cognitive and behavioural measures [-@parsons_kruijt_fox_2019]. **splithalf** was developed to support this proposition by providing a tool to easily extract internal consistency reliability estimates from behavioural measures. 
+While many cognitive tasks yield robust effects (e.g. everybody shows a Stroop effect) they may not yield reliable individual differences [@hedge_reliability_2018]. As these measures are used in questions of individual differences researchers need to have some psychometric information for the outcome measures. Recently, it was proposed that psychological science should set a standard expectation for the reporting of reliability information for cognitive and behavioural measures [@parsons_kruijt_fox_2019]. **splithalf** was developed to support this proposition by providing a tool to easily extract internal consistency reliability estimates from behavioural measures. 
 
 ## Installation 
 
@@ -352,11 +352,11 @@ To examine how many random splits are required to provide a precise estimate, a 
 
 ### *splithalf* runtime?
 
-The speed of *splithalf* rests entirely on the number of conditions, participants, and permutations. The biggest factor will be your machine speed. For relative times, I ran a simulation with a range of sample sizes, numbers of conditions, numbers of trials, and permutations. The data is contained within the package as `data/speedtest.csv`
+The speed of *splithalf* rests entirely on the number of conditions, participants, and permutations. The biggest factor will be your machine speed. For relative times, I ran a simulation with a range of sample sizes, numbers of conditions, numbers of trials, and permutations. The data is contained within the package as `data/speedtest.rda`
 
 ```{r speedtest, message = FALSE, comment = NA, results = 'hide', echo = FALSE}
-speed <- read.csv("data/speedtestdata.csv")
-
+load("data/speedtestdata.rda")
+speed <- speedtestdata
 speed2 <- speed
 
 speed2$sample_size <- as.factor(speed2$sample_size)
