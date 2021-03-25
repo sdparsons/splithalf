@@ -99,9 +99,9 @@ Note == indicates ‘is equal to’, :: indicates that the function uses the pac
 
 ```{r eval = FALSE}
 dataset %>%    
-filter(accuracy == 1) %>%       ## keeps only trials in which participants made an accurate response
-filter(RT >= 100, RT <= 2000)  %>%   ## removes RTs less than 100ms and greater than 2000ms
-filter(participant != c(“p23”, “p45”)    ## removes participants “p23” and “p45”
+  dplyr::filter(accuracy == 1) %>%       ## keeps only trials in which participants made an accurate response
+  dplyr::filter(RT >= 100, RT <= 2000)  %>%   ## removes RTs less than 100ms and greater than 2000ms
+  dplyr::filter(participant != c(“p23”, “p45”)    ## removes participants “p23” and “p45”
 ```
 
 
@@ -181,10 +181,10 @@ library("dplyr")
 library("tidyr")
 
 sim_data %>%
-  group_by(participant_number, block_name, trial_type) %>%
-  summarise(average = mean(RT)) %>%
-  spread(trial_type, average) %>%
-  mutate(bias = congruent - incongruent)
+  dplyr::group_by(participant_number, block_name, trial_type) %>%
+  dplyr::summarise(average = mean(RT)) %>%
+  tidyr::spread(trial_type, average) %>%
+  dplyr::mutate(bias = congruent - incongruent)
 
 ```
 
