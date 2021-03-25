@@ -28,7 +28,7 @@ The methods in **splithalf** are built around split half reliability estimation.
 
 ### Statement of need
 
-While many cognitive tasks yield highly robust effects, the same task may not yield reliable individual differences [@hedge_reliability_2018]. As these measures are used in questions of individual differences researchers need to have some psychometric information for the outcome measures. Recently, it was proposed that psychological science should set a standard expectation for the reporting of reliability information for cognitive and behavioural measures [-@parsons_kruijt_fox_2019]. **splithalf** was developed to support this proposition by providing a tool to easily extract internal consistency reliability estimates from behavioural measures. 
+While many cognitive tasks yield highly robust effects, the same task may not yield reliable individual differences [@hedge_reliability_2018]. As these measures are used in questions of individual differences researchers need to have some psychometric information for the outcome measures. Recently, it was proposed that psychological science should set a standard expectation for the reporting of reliability information for cognitive and behavioural measures [@parsons_kruijt_fox_2019]. **splithalf** was developed to support this proposition by providing a tool to easily extract internal consistency reliability estimates from behavioural measures. 
 
 ## Usage
 

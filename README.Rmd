@@ -32,9 +32,10 @@ The methods in **splithalf** are built around split half reliability estimation.
 ### Why should I estimate the reliabilty of my task measurement?
 
 while many cognitive tasks yield robust effects (e.g. everybody shows a Stroop effect) they may not yield reliable individual differences [@hedge_reliability_2018]. As these measures are used in questions of individual differences researchers need to have some psychometric information for the outcome measures. Recently, it was proposed that psychological science should set a standard expectation for the reporting of reliability information for cognitive and behavioural measures [-@parsons_kruijt_fox_2019]. **splithalf** was developed to support this proposition by providing a tool to easily extract internal consistency reliability estimates from behavioural measures. 
+
 ## Installation 
 
-The latest release version (`0.7.1` unofficial version name: Kitten Mittens) can be installed from CRAN:
+The latest release version (`0.7.2` unofficial version name: Kitten Mittens) can be installed from CRAN:
 
 ```{r eval=FALSE}
 install.packages("splithalf")
@@ -355,13 +356,6 @@ The speed of *splithalf* rests entirely on the number of conditions, participant
 
 ```{r speedtest, message = FALSE, comment = NA, results = 'hide', echo = FALSE}
 speed <- read.csv("data/speedtestdata.csv")
-speed <- speed %>%
-  rename(Sim = X,
-         sample_size = V1,
-         Number_conditions = V2,
-         trials = V3,
-         permutations = V4,
-         runtime = V5)
 
 speed2 <- speed
 
@@ -376,6 +370,8 @@ ggplot(data = speed2,
   geom_point(size = 2) +
   geom_line() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  labs(y = "runtime (seconds)") +
+  guides(colour = guide_legend(reverse = TRUE)) +
   facet_grid(vars(trials), vars(Number_conditions))
 
 ```
