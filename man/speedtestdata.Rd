@@ -15,11 +15,11 @@ This simulation was run to estimate the relative runtimes for different possible
 }
 \details{
 \itemize{
-  \item Sim codes for the simulation number
-  \item sample_size codes for the sample size
-  \item Number_of_conditions codes for the number of conditions run
-  \item trials codes for the number of trials
-  \item permutations codes for the number of permutations
-  \item runtime codes for the runtime in seconds
+  \item{Sim}{codes for the simulation number}
+  \item{sample_size}{codes for the sample size}
+  \item{Number_of_conditions}{codes for the number of conditions run}
+  \item{trials}{codes for the number of trials}
+  \item{permutations}{codes for the number of permutations}
+  \item{runtime}{codes for the runtime in seconds}
 }
 }
