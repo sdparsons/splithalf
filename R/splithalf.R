@@ -966,7 +966,8 @@ splithalf <- function(data,
           n = dplyr::n()
         ) %>%
         tidyr::gather("var", "splithalf", 2:3) %>%
-        dplyr::mutate(spearmanbrown = (2 * splithalf) / ((1 + (2 - 1) * abs(splithalf))))
+        dplyr::mutate(spearmanbrown = (2 * splithalf) / ((1 + (2 - 1) * abs(splithalf)))) %>%
+        dplyr::mutate(condition = "difference_of_difference score")
 
 
       # take the mean estimates per condition
@@ -983,7 +984,7 @@ splithalf <- function(data,
         ) %>%
         as.data.frame()
 
-      out2 <- cbind(condition = "change score", out2)
+      out2 <- cbind(condition = "difference_of_difference score", out2)
 
     }
 
