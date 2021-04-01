@@ -507,14 +507,14 @@ splithalf <- function(data,
         dplyr::group_by(condition) %>%
         dplyr::summarise(
           n = round(sum(!is.na(half1)), 0),
-          splithalf = cor(half1, half2,
-                          use = "pairwise.complete"),
-          spearmanbrown = (2 * cor(half1, half2,
+          splithalf = round(cor(half1, half2,
+                          use = "pairwise.complete"),round.to),
+          spearmanbrown = round((2 * cor(half1, half2,
                                    use = "pairwise.complete")) /
             (1 + (2 - 1) * abs(
               cor(half1, half2,
                   use = "pairwise.complete")
-            ))
+            )), round.to)
         ) %>%
         as.data.frame()
     }
@@ -535,8 +535,8 @@ splithalf <- function(data,
           cor2 = cor(difference2_1, difference2_2, use = "pairwise.complete"),
           n = dplyr::n()
         ) %>%
-        dplyr::mutate(splithalf = (cor1 + cor2) / 2) %>%
-        dplyr::mutate(spearmanbrown = (2 * splithalf) / ((1 + (2 - 1) * abs(splithalf)))) %>%
+        dplyr::mutate(round(splithalf = (cor1 + cor2) / 2),round.to) %>%
+        dplyr::mutate(spearmanbrown = round((2 * splithalf) / ((1 + (2 - 1) * abs(splithalf)))), round.to) %>%
         dplyr::select(-1, -2)
 
     }
