@@ -1,0 +1,736 @@
+---
+title: "sim-validation"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{sim-validation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+
+```
+
+
+```{r setup}
+library("splithalf")
+library("tidyr")
+
+```
+
+# Usage
+
+This script runs _splithalf_ with many possible combinations of the options. Its main use is to ensure that the _splithalf_ function 
+
+We want to run the following:
+
+outcome x score x halftype x average = 3x3x2 = 18
+
+* outcome = "RT"
+* outcome = "accuracy"
+
+* score = "average"
+* score = "difference" (the default option)
+* score = "difference_of_difference"
+
+* halftype = "oddeven"
+* halftype = "halfs"
+* halftype = "random"
+
+* average = "mean"
+* average = "median"
+
+
+```{r generate_data}
+# Thanks to Nathaniel Haines for the suggestion and the starting code (https://github.com/sdparsons/splithalf/issues/9). 
+
+set.seed(01042021)
+
+n_participants <- 60 ## sample size
+n_trials <- 80
+n_blocks <- 2
+
+sim_data <- data.frame(participant_number = rep(1:n_participants, each = n_blocks * n_trials),
+                       trial_number = rep(1:n_trials, times = n_blocks * n_participants),
+                       block_name = rep(c("A","B"), 
+                                        each = n_trials, 
+                                        length.out = n_participants * n_trials * n_blocks),
+                       trial_type = rep(c("congruent","congruent",
+                                          "incongruent","incongruent"),
+                                        length.out = n_participants * n_trials * n_blocks / 2),
+                       RT = rnorm(n_participants * n_trials * n_blocks, 500, 200),
+                       ACC = 1)
+
+sim_data_acc <- data.frame(participant_number = rep(1:n_participants, each = n_blocks * n_trials),
+                       trial_number = rep(1:n_trials, times = n_blocks * n_participants),
+                       block_name = rep(c("A","B"), 
+                                        each = n_trials, 
+                                        length.out = n_participants * n_trials * n_blocks),
+                       trial_type = rep(c("congruent","congruent",
+                                          "incongruent","incongruent"),
+                                        length.out = n_participants * n_trials * n_blocks / 2),
+                       RT = rnorm(n_participants * n_trials * n_blocks, 500, 200),
+                       ACC = c(rbinom(n_participants *
+                                    n_trials *
+                                    n_blocks / 6, 
+                                    1, .5),
+                               rbinom(n_participants *
+                                    n_trials *
+                                    n_blocks / 6, 
+                                    1, .7),
+                               rbinom(n_participants *
+                                    n_trials *
+                                    n_blocks / 6, 
+                                    1, .9),           
+                               rbinom(n_participants *
+                                    n_trials *
+                                    n_blocks / 6, 
+                                    1, .5),
+                               rbinom(n_participants *
+                                    n_trials *
+                                    n_blocks / 6, 
+                                    1, .7),
+                               rbinom(n_participants *
+                                    n_trials *
+                                    n_blocks / 6, 
+                                    1, .9)))
+
+
+
+
+```
+
+
+```{r test_setup}
+params <- list(score = c("average",
+                         "difference",
+                         "difference_of_difference"),
+               halftype = c("oddeven",
+                            "halfs",
+                            "random"),
+               averae = c("mean",
+                          "median") )
+
+expand.grid(params) %>%
+  dplyr::arrange(., score, halftype)
+
+```
+
+# Response times
+
+```{r rt_test1}
+splithalf(data = sim_data,
+          outcome = "RT",
+          score = "average",
+          conditionlist = c("A", "B"),
+          halftype = "oddeven",
+          permutations = 500,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "mean")
+```
+
+```{r rt_test2}
+splithalf(data = sim_data,
+          outcome = "RT",
+          score = "average",
+          conditionlist = c("A", "B"),
+          halftype = "oddeven",
+          permutations = 500,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "median")
+```
+
+```{r rt_test3}
+splithalf(data = sim_data,
+          outcome = "RT",
+          score = "average",
+          conditionlist = c("A", "B"),
+          halftype = "halfs",
+          permutations = 500,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "mean")
+```
+
+```{r rt_test4}
+splithalf(data = sim_data,
+          outcome = "RT",
+          score = "average",
+          conditionlist = c("A", "B"),
+          halftype = "halfs",
+          permutations = 500,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "median")
+```
+
+```{r rt_test5}
+splithalf(data = sim_data,
+          outcome = "RT",
+          score = "average",
+          conditionlist = c("A", "B"),
+          halftype = "random",
+          permutations = 500,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "mean",
+          plot = TRUE)
+```
+
+```{r rt_test6}
+splithalf(data = sim_data,
+          outcome = "RT",
+          score = "average",
+          conditionlist = c("A", "B"),
+          halftype = "random",
+          permutations = 500,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "median",
+          plot = TRUE)
+```
+
+```{r rt_test7}
+splithalf(data = sim_data,
+          outcome = "RT",
+          score = "difference",
+          conditionlist = c("A", "B"),
+          halftype = "oddeven",
+          permutations = 500,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "mean")
+```
+
+```{r rt_test8}
+splithalf(data = sim_data,
+          outcome = "RT",
+          score = "difference",
+          conditionlist = c("A", "B"),
+          halftype = "oddeven",
+          permutations = 500,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "median")
+```
+
+```{r rt_test9}
+splithalf(data = sim_data,
+          outcome = "RT",
+          score = "difference",
+          conditionlist = c("A", "B"),
+          halftype = "halfs",
+          permutations = 500,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "mean")
+```
+
+```{r rt_test10}
+splithalf(data = sim_data,
+          outcome = "RT",
+          score = "difference",
+          conditionlist = c("A", "B"),
+          halftype = "halfs",
+          permutations = 500,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "median")
+```
+
+```{r rt_test11}
+splithalf(data = sim_data,
+          outcome = "RT",
+          score = "difference",
+          conditionlist = c("A", "B"),
+          halftype = "random",
+          permutations = 500,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "mean",
+          plot = TRUE)
+```
+
+```{r rt_test12}
+splithalf(data = sim_data,
+          outcome = "RT",
+          score = "difference",
+          conditionlist = c("A", "B"),
+          halftype = "random",
+          permutations = 500,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "median",
+          plot = TRUE)
+```
+
+```{r rt_test13}
+splithalf(data = sim_data,
+          outcome = "RT",
+          score = "difference_of_difference",
+          conditionlist = c("A", "B"),
+          halftype = "oddeven",
+          permutations = 500,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "mean")
+```
+
+```{r rt_test14}
+splithalf(data = sim_data,
+          outcome = "RT",
+          score = "difference_of_difference",
+          conditionlist = c("A", "B"),
+          halftype = "oddeven",
+          permutations = 500,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "median")
+```
+
+```{r rt_test15}
+splithalf(data = sim_data,
+          outcome = "RT",
+          score = "difference_of_difference",
+          conditionlist = c("A", "B"),
+          halftype = "halfs",
+          permutations = 500,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "mean")
+```
+
+```{r rt_test16}
+splithalf(data = sim_data,
+          outcome = "RT",
+          score = "difference_of_difference",
+          conditionlist = c("A", "B"),
+          halftype = "halfs",
+          permutations = 500,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "median")
+```
+
+```{r rt_test17}
+splithalf(data = sim_data,
+          outcome = "RT",
+          score = "difference_of_difference",
+          conditionlist = c("A", "B"),
+          halftype = "random",
+          permutations = 500,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "mean",
+          plot = TRUE)
+```
+
+```{r rt_test18}
+splithalf(data = sim_data,
+          outcome = "RT",
+          score = "difference_of_difference",
+          conditionlist = c("A", "B"),
+          halftype = "random",
+          permutations = 500,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "median",
+          plot = TRUE)
+```
+
+# Average accuracy rates
+
+```{r acc_test1}
+splithalf(data = sim_data_acc,
+          outcome = "accuracy",
+          score = "average",
+          conditionlist = c("A", "B"),
+          halftype = "oddeven",
+          permutations = 500,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          var.ACC = "ACC",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "mean")
+```
+
+```{r acc_test2}
+splithalf(data = sim_data_acc,
+          outcome = "accuracy",
+          score = "average",
+          conditionlist = c("A", "B"),
+          halftype = "oddeven",
+          permutations = 500,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          var.ACC = "ACC",
+          
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "median")
+```
+
+```{r acc_test3}
+splithalf(data = sim_data_acc,
+          outcome = "accuracy",
+          score = "average",
+          conditionlist = c("A", "B"),
+          halftype = "halfs",
+          permutations = 500,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          var.ACC = "ACC",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "mean")
+```
+
+```{r acc_test4}
+splithalf(data = sim_data_acc,
+          outcome = "accuracy",
+          score = "average",
+          conditionlist = c("A", "B"),
+          halftype = "halfs",
+          permutations = 500,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          var.ACC = "ACC",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "median")
+```
+
+```{r acc_test5}
+splithalf(data = sim_data_acc,
+          outcome = "accuracy",
+          score = "average",
+          conditionlist = c("A", "B"),
+          halftype = "random",
+          permutations = 500,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          var.ACC = "ACC",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "mean",
+          plot = TRUE)
+```
+
+```{r acc_test6}
+splithalf(data = sim_data_acc,
+          outcome = "accuracy",
+          score = "average",
+          conditionlist = c("A", "B"),
+          halftype = "random",
+          permutations = 500,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          var.ACC = "ACC",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "median",
+          plot = TRUE)
+```
+
+```{r acc_test7}
+splithalf(data = sim_data_acc,
+          outcome = "accuracy",
+          score = "difference",
+          conditionlist = c("A", "B"),
+          halftype = "oddeven",
+          permutations = 500,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          var.ACC = "ACC",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "mean")
+```
+
+```{r acc_test8}
+splithalf(data = sim_data_acc,
+          outcome = "accuracy",
+          score = "difference",
+          conditionlist = c("A", "B"),
+          halftype = "oddeven",
+          permutations = 500,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          var.ACC = "ACC",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "median")
+```
+
+```{r acc_test9}
+splithalf(data = sim_data_acc,
+          outcome = "accuracy",
+          score = "difference",
+          conditionlist = c("A", "B"),
+          halftype = "halfs",
+          permutations = 500,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          var.ACC = "ACC",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "mean")
+```
+
+```{r acc_test10}
+splithalf(data = sim_data_acc,
+          outcome = "accuracy",
+          score = "difference",
+          conditionlist = c("A", "B"),
+          halftype = "halfs",
+          permutations = 500,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          var.ACC = "ACC",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "median")
+```
+
+```{r acc_test11}
+splithalf(data = sim_data_acc,
+          outcome = "accuracy",
+          score = "difference",
+          conditionlist = c("A", "B"),
+          halftype = "random",
+          permutations = 500,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          var.ACC = "ACC",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "mean",
+          plot = TRUE)
+```
+
+```{r acc_test12}
+splithalf(data = sim_data_acc,
+          outcome = "accuracy",
+          score = "difference",
+          conditionlist = c("A", "B"),
+          halftype = "random",
+          permutations = 500,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          var.ACC = "ACC",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "median",
+          plot = TRUE)
+```
+
+```{r acc_test13}
+splithalf(data = sim_data_acc,
+          outcome = "accuracy",
+          score = "difference_of_difference",
+          conditionlist = c("A", "B"),
+          halftype = "oddeven",
+          permutations = 500,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          var.ACC = "ACC",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "mean")
+```
+
+```{r acc_test14}
+splithalf(data = sim_data_acc,
+          outcome = "accuracy",
+          score = "difference_of_difference",
+          conditionlist = c("A", "B"),
+          halftype = "oddeven",
+          permutations = 500,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          var.ACC = "ACC",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "median")
+```
+
+```{r acc_test15}
+splithalf(data = sim_data_acc,
+          outcome = "accuracy",
+          score = "difference_of_difference",
+          conditionlist = c("A", "B"),
+          halftype = "halfs",
+          permutations = 500,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          var.ACC = "ACC",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "mean")
+```
+
+```{r acc_test16}
+splithalf(data = sim_data_acc,
+          outcome = "accuracy",
+          score = "difference_of_difference",
+          conditionlist = c("A", "B"),
+          halftype = "halfs",
+          permutations = 500,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          var.ACC = "ACC",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "median")
+```
+
+```{r acc_test17}
+splithalf(data = sim_data_acc,
+          outcome = "accuracy",
+          score = "difference_of_difference",
+          conditionlist = c("A", "B"),
+          halftype = "random",
+          permutations = 500,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          var.ACC = "ACC",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "mean",
+          plot = TRUE)
+```
+
+```{r acc_test18}
+splithalf(data = sim_data_acc,
+          outcome = "accuracy",
+          score = "difference_of_difference",
+          conditionlist = c("A", "B"),
+          halftype = "random",
+          permutations = 500,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          var.ACC = "ACC",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "median",
+          plot = TRUE)
+```
+
