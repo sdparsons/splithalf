@@ -536,7 +536,7 @@ splithalf <- function(data,
           n = dplyr::n()
         ) %>%
         dplyr::mutate(splithalf = round((cor1 + cor2) / 2, round.to)) %>%
-        dplyr::mutate(spearmanbrown = round((2 * splithalf) / ((1 + (2 - 1) * abs(splithalf)))), round.to) %>%
+        dplyr::mutate(spearmanbrown = round((2 * splithalf) / ((1 + (2 - 1) * abs(splithalf))), round.to)) %>%
         dplyr::select(-1, -2)
 
     }
