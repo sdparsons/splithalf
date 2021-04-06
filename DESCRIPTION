@@ -17,7 +17,8 @@ Imports:
     ggplot2,
     plyr,
     grid,
-    patchwork
+    patchwork,
+    psych
 LinkingTo: Rcpp
 Suggests: 
     knitr,

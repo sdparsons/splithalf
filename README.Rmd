@@ -309,7 +309,7 @@ specifications <- list(RT_min = c(0, 100, 200),
                        averaging_method = c("mean", "median"))
 ```
 
-Second, perform `splithalf(...)`. The key difference here is ...
+Second, perform `splithalf(...)`. The key difference here, compared to the earlier examples is that we are no longer assuming that all data processing has already occurred. Instead, the data processing will be performed as part of `splithalf.multiverse`, next.
 
 ```{r message = FALSE, comment = NA, results = 'hide'}
 difference <- splithalf(data = sim_data,

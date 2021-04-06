@@ -33,5 +33,10 @@ Returns a multiverse object containing the reliability estimates and dataframes 
 The (unofficial) function version name is "This function will help you pay the troll toll"
 }
 \examples{
+\dontrun{
 ## see online documentation for examples
+https://github.com/sdparsons/splithalf
+## also see https://psyarxiv.com/y6tcz
+
+}
 }

@@ -90,12 +90,49 @@ sim_data <- data.frame(participant_number = rep(1:n_participants,
                        500,
                        200),
                        ACC = 1)
-sim_data \%>\%
-  dplyr::group_by(participant_number, block_name, trial_type) \%>\%
-  dplyr::summarise(average = mean(RT)) \%>\%
-  tidyr::spread(trial_type, average) \%>\%
-  dplyr::mutate(bias = congruent - incongruent)
 
-##
+## example run of splithalf on a difference score
+splithalf(data = sim_data,
+          outcome = "RT",
+          score = "difference",
+          conditionlist = c("A", "B"),
+          halftype = "random",
+          permutations = 5000,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "mean",
+          plot = TRUE)
+
+## example run of splithalf on an average score
+splithalf(data = sim_data,
+          outcome = "RT",
+          score = "average",
+          conditionlist = c("A", "B"),
+          halftype = "random",
+          permutations = 5000,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          average = "mean")
+
+## example run of splithalf on a difference of differences score
+splithalf(data = sim_data,
+          outcome = "RT",
+          score = "difference_of_difference",
+          conditionlist = c("A", "B"),
+          halftype = "random",
+          permutations = 5000,
+          var.RT = "RT",
+          var.condition = "block_name",
+          var.participant = "participant_number",
+          var.compare = "trial_type",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          average = "mean")
+
 }
 }

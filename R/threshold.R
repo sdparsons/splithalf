@@ -1,5 +1,6 @@
 #' Check proportion of reliability estimates from the multiverse analyses above or below a set threshold
 #'
+#' This function examines the output from splithalf_multiverse or testretest_multiverse to extract the proportions of estimates above or below a set threshold (can be the estimate or the upper or lower CI estimates).
 #' The (unofficial) function version name is "This function will get you up to here with it"
 #'
 #' @param multiverse multiverse object

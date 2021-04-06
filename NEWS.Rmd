@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 UPCOMING: splithalf v0.8.1 (current development version - work in progress) [unofficial version name: Rum Ham]
 ==============
 changes:
+* added examples in the function help and documentation
 * added validation vignette (tests many combinations of options within splithalf)
 * fixed minor bugs in some combinations of options within splithalf (typically within the )
 * fixed some documentation
