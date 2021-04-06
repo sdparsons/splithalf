@@ -23,9 +23,71 @@
 #' @return spearmanbrown is the spearman-brown corrected estimate of the bias index
 #' @return Warning: If there are missing data (e.g one condition data missing for one participant) output will include details of the missing data and return a dataframe containing the NA data. Warnings will be displayed in the console.
 #' @examples
-#' ## see online documentation for full examples https://github.com/sdparsons/splithalf
-#' ##
-#' ##
+#' \dontrun{
+#' ## see online documentation for full examples
+#' https://github.com/sdparsons/splithalf
+#' ## example simulated data
+#' n_participants = 60 ## sample size
+#' n_trials = 80
+#' n_blocks = 2
+#' sim_data <- data.frame(participant_number = rep(1:n_participants,
+#'                        each = n_blocks * n_trials),
+#'                        trial_number = rep(1:n_trials,
+#'                        times = n_blocks * n_participants),
+#'                        block_name = rep(c("A","B"),
+#'                        each = n_trials,
+#'                        length.out = n_participants * n_trials * n_blocks),
+#'                        trial_type = rep(c("congruent","incongruent"),
+#'                        length.out = n_participants * n_trials * n_blocks),
+#'                        RT = rnorm(n_participants * n_trials * n_blocks,
+#'                        500,
+#'                        200),
+#'                        ACC = 1)
+#'
+#' ## example run of splithalf on a difference score
+#' splithalf(data = sim_data,
+#'           outcome = "RT",
+#'           score = "difference",
+#'           conditionlist = c("A", "B"),
+#'           halftype = "random",
+#'           permutations = 5000,
+#'           var.RT = "RT",
+#'           var.condition = "block_name",
+#'           var.participant = "participant_number",
+#'           var.compare = "trial_type",
+#'           compare1 = "congruent",
+#'           compare2 = "incongruent",
+#'           average = "mean",
+#'           plot = TRUE)
+#'
+#' ## example run of splithalf on an average score
+#' splithalf(data = sim_data,
+#'           outcome = "RT",
+#'           score = "average",
+#'           conditionlist = c("A", "B"),
+#'           halftype = "random",
+#'           permutations = 5000,
+#'           var.RT = "RT",
+#'           var.condition = "block_name",
+#'           var.participant = "participant_number",
+#'           average = "mean")
+#'
+#' ## example run of splithalf on a difference of differences score
+#' splithalf(data = sim_data,
+#'           outcome = "RT",
+#'           score = "difference_of_difference",
+#'           conditionlist = c("A", "B"),
+#'           halftype = "random",
+#'           permutations = 5000,
+#'           var.RT = "RT",
+#'           var.condition = "block_name",
+#'           var.participant = "participant_number",
+#'           var.compare = "trial_type",
+#'           compare1 = "congruent",
+#'           compare2 = "incongruent",
+#'           average = "mean")
+#'
+#' }
 #' @import tidyr
 #' @import Rcpp
 #' @import ggplot2

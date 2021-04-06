@@ -9,12 +9,18 @@
 #' @param var.RT set to internal consistency or test-retest
 #' @return Returns a multiverse object containing the reliability estimates and dataframes from all data processing specifications provided
 #' @examples
+#' \dontrun{
 #' ## see online documentation for examples
+#' https://github.com/sdparsons/splithalf
+#' ## also see https://psyarxiv.com/y6tcz
+#'
+#' }
 #' @import tidyr
 #' @import Rcpp
 #' @import ggplot2
 #' @import grid
 #' @import patchwork
+#' @import psych
 #' @importFrom stats complete.cases cor median na.omit quantile sd cor.test
 #' @importFrom robustbase colMedians
 #' @importFrom dplyr select summarise group_by mutate n_distinct filter ungroup

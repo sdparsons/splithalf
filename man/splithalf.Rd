@@ -15,7 +15,6 @@ splithalf(
   var.ACC = "accuracy",
   var.condition = FALSE,
   var.participant = "subject",
-  var.trialnum = "trialnum",
   var.compare = "congruency",
   compare1 = "Congruent",
   compare2 = "Incongruent",
@@ -45,8 +44,6 @@ splithalf(
 
 \item{var.participant}{specifies the subject variable name in data}
 
-\item{var.trialnum}{specifies the trial number variable}
-
 \item{var.compare}{specified the variable that is used to calculate difference scores (e.g. including congruent and incongruent trials)}
 
 \item{compare1}{specifies the first trial type to be compared (e.g. congruent trials)}
@@ -73,5 +70,32 @@ This function calculates split half reliability estimates via a permutation appr
 The (unofficial) version name is "This function gives me the power to fight like a crow"
 }
 \examples{
-## see online documentation for examples
+\dontrun{
+## see online documentation for full examples
+https://github.com/sdparsons/splithalf
+## example simulated data
+n_participants = 60 ## sample size
+n_trials = 80
+n_blocks = 2
+sim_data <- data.frame(participant_number = rep(1:n_participants,
+                       each = n_blocks * n_trials),
+                       trial_number = rep(1:n_trials,
+                       times = n_blocks * n_participants),
+                       block_name = rep(c("A","B"),
+                       each = n_trials,
+                       length.out = n_participants * n_trials * n_blocks),
+                       trial_type = rep(c("congruent","incongruent"),
+                       length.out = n_participants * n_trials * n_blocks),
+                       RT = rnorm(n_participants * n_trials * n_blocks,
+                       500,
+                       200),
+                       ACC = 1)
+sim_data \%>\%
+  dplyr::group_by(participant_number, block_name, trial_type) \%>\%
+  dplyr::summarise(average = mean(RT)) \%>\%
+  tidyr::spread(trial_type, average) \%>\%
+  dplyr::mutate(bias = congruent - incongruent)
+
+##
+}
 }
