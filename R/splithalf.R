@@ -12,7 +12,6 @@
 #' @param var.ACC specifiec the accuracy variable name in data
 #' @param var.condition specifies the condition variable name in data - if not specified then splithalf will treat all trials as one condition
 #' @param var.participant specifies the subject variable name in data
-#' @param var.trialnum specifies the trial number variable
 #' @param var.compare specified the variable that is used to calculate difference scores (e.g. including congruent and incongruent trials)
 #' @param compare1 specifies the first trial type to be compared (e.g. congruent trials)
 #' @param compare2 specifies the first trial type to be compared (e.g. incongruent trials)
@@ -24,7 +23,9 @@
 #' @return spearmanbrown is the spearman-brown corrected estimate of the bias index
 #' @return Warning: If there are missing data (e.g one condition data missing for one participant) output will include details of the missing data and return a dataframe containing the NA data. Warnings will be displayed in the console.
 #' @examples
-#' ## see online documentation for examples
+#' ## see online documentation for full examples https://github.com/sdparsons/splithalf
+#' ##
+#' ##
 #' @import tidyr
 #' @import Rcpp
 #' @import ggplot2
@@ -48,7 +49,6 @@ splithalf <- function(data,
                              var.ACC = "accuracy",
                              var.condition = FALSE,
                              var.participant = "subject",
-                             var.trialnum = "trialnum",
                              var.compare = "congruency",
                              compare1 = "Congruent",
                              compare2 = "Incongruent",
@@ -93,9 +93,6 @@ splithalf <- function(data,
   }
   if (var.participant %in% colnames(data) == FALSE) {
     stop("the participant varible has not been specified")
-  }
-  if (var.trialnum %in% colnames(data) == FALSE) {
-    warning("var.trialnum will soon be depreciated")
   }
   if (score == "difference" | score == "difference_of_difference") {
     if (var.compare %in% colnames(data) == FALSE) {
@@ -142,7 +139,6 @@ splithalf <- function(data,
     var.ACC = var.ACC,
     var.condition = var.condition,
     var.participant = var.participant,
-    var.trialnum = var.trialnum,
     var.compare = var.compare,
     compare1 = compare1,
     compare2 = compare2,

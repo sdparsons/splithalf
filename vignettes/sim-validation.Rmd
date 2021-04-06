@@ -31,7 +31,7 @@ This script runs _splithalf_ with many possible combinations of the options. Its
 
 We want to run the following:
 
-outcome x score x halftype x average = 3x3x2 = 18
+outcome x score x halftype x average = 2x3x3x2 = 36
 
 * outcome = "RT"
 * outcome = "accuracy"
@@ -57,26 +57,34 @@ n_participants <- 60 ## sample size
 n_trials <- 80
 n_blocks <- 2
 
-sim_data <- data.frame(participant_number = rep(1:n_participants, each = n_blocks * n_trials),
-                       trial_number = rep(1:n_trials, times = n_blocks * n_participants),
+sim_data <- data.frame(participant_number = rep(1:n_participants, 
+                                                each = n_blocks * n_trials),
+                       trial_number = rep(1:n_trials, 
+                                          times = n_blocks * n_participants),
                        block_name = rep(c("A","B"), 
                                         each = n_trials, 
                                         length.out = n_participants * n_trials * n_blocks),
                        trial_type = rep(c("congruent","congruent",
                                           "incongruent","incongruent"),
                                         length.out = n_participants * n_trials * n_blocks / 2),
-                       RT = rnorm(n_participants * n_trials * n_blocks, 500, 200),
+                       RT = rnorm(n_participants * n_trials * n_blocks, 
+                                  500, 
+                                  200),
                        ACC = 1)
 
-sim_data_acc <- data.frame(participant_number = rep(1:n_participants, each = n_blocks * n_trials),
-                       trial_number = rep(1:n_trials, times = n_blocks * n_participants),
+sim_data_acc <- data.frame(participant_number = rep(1:n_participants, 
+                                                    each = n_blocks * n_trials),
+                       trial_number = rep(1:n_trials, 
+                                          times = n_blocks * n_participants),
                        block_name = rep(c("A","B"), 
                                         each = n_trials, 
                                         length.out = n_participants * n_trials * n_blocks),
                        trial_type = rep(c("congruent","congruent",
                                           "incongruent","incongruent"),
                                         length.out = n_participants * n_trials * n_blocks / 2),
-                       RT = rnorm(n_participants * n_trials * n_blocks, 500, 200),
+                       RT = rnorm(n_participants * n_trials * n_blocks, 
+                                  500, 
+                                  200),
                        ACC = c(rbinom(n_participants *
                                     n_trials *
                                     n_blocks / 6, 
