@@ -1,7 +1,7 @@
 #' Multiverse of data processing decisions on test retest reliability estimates.
 #'
 #' The (unofficial) function version name is "This function will help you pay the troll toll"
-#' @param input list of two datasets
+#' @param data dataset
 #' @param specifications list of data processing specifications
 #' @param test correlation, ICC2, r ICC3
 #' @param var.participant = "subject",
@@ -20,37 +20,94 @@
 #' @import ggplot2
 #' @import grid
 #' @import patchwork
-#' @import psych
 #' @importFrom stats complete.cases cor median na.omit quantile sd cor.test
 #' @importFrom robustbase colMedians
-#' @importFrom dplyr select summarise group_by mutate n_distinct filter ungroup
+#' @importFrom dplyr select summarise group_by mutate n_distinct filter ungroup n
 #' @importFrom tidyr gather
 #' @importFrom plyr arrange
+#' @importFrom psych ICC
 #' @useDynLib splithalf, .registration = TRUE
 #' @importFrom Rcpp sourceCpp
 #' @importFrom utils setTxtProgressBar txtProgressBar capture.output
 #' @export
 
-testretest.multiverse <- function(input,
-                                  specifications,
-                                  test = "ICC2",
-                                  var.participant = "subject",
-                                  var.ACC = "correct",
-                                  var.RT = "RT") {
+testretest.multiverse <- function(data,
+                                   specifications,
+                                   test = "ICC2",
+
+                                   outcome = "RT",
+                                   score = "difference",
+
+                                   var.participant = "subject",
+                                   var.ACC = "correct",
+                                   var.RT = "RT",
+                                   var.time = "time",
+                                   var.compare = "congruency",
+                                   compare1 = "Congruent",
+                                   compare2 = "Incongruent") {
 
 
-  # you'll need something here to differentiate between internal consistency and test-retest.
+  # check that the dataframe is a data frame
+  if (is.data.frame(data) == FALSE) {
+    stop("a data frame has not been specified in data = ")
+  }
+  # check for missing variables
+  if (outcome != "RT" & outcome != "accuracy") {
+    stop("the outcome has not been specified: select from RT or accuracy")
+  }
+  if (score != "average" &
+      score != "difference" &
+      score != "difference_of_difference") {
+    stop(
+      "the score has not been specified: select from average, difference, or difference_of_difference"
+    )
+  }
+  if(score == "DPrime") {
+    warning("the DPrime score is under development. There are many versions of d prime, please check this is the correct version for your analyses")
+  }
 
-  ### new
-  subject = var.participant
-  correct = var.ACC
+  # check that all of the variables exist in the data frame,
+  # including the trial level components
+  if (var.RT %in% colnames(data) == FALSE & outcome != "accuracy") {
+    stop("the RT varible has not been specified")
+  }
+  if (var.participant %in% colnames(data) == FALSE) {
+    stop("the participant varible has not been specified")
+  }
+  if (score == "difference" | score == "difference_of_difference") {
+    if (var.compare %in% colnames(data) == FALSE) {
+      stop("the compare varible has not been specified")
+    }
+    if (compare1 %in% unique(data[[var.compare]]) == FALSE) {
+      stop("compare1 does not exist in the compare variable")
+    }
+    if (compare2 %in% unique(data[[var.compare]]) == FALSE) {
+      stop("compare2 does not exist in the compare variable")
+    }
+
+  }
+
+
+
+
 
   ###
+
+  data$subject <- data[, var.participant]
+  data$time <- data[, var.time]
+  data$correct <- data[, var.ACC]
+  data$latency <- data[, var.RT]
+  data$congruency <- data[, var.compare]
+
+  data$congruency <- ifelse(data$congruency == compare1, "Congruent",
+                         ifelse(data$congruency == compare2, "Incongruent", NA))
+
+  data$trialnum <- 1:nrow(data)
 
 
   # set up the output list ####################################################
 
-  outlist <- list("input" = input,
+  outlist <- list("data" = data,
                   "specifications" = specifications,
                   "test" = test,
                   "reliability" = "test_retest")
@@ -65,7 +122,7 @@ testretest.multiverse <- function(input,
   congruency <- 0
   low <- 0
   high <- 0
-  RT <- 0
+  latency <- 0
   Incongruent <- 0
   Congruent <- 0
   time <- 0
@@ -111,7 +168,7 @@ testretest.multiverse <- function(input,
   print(paste("running", nS, "pre-processing specifications"))
 
   # calculate accuracy rates
-  temp_data <- input %>%
+  temp_data <- data %>%
     group_by(time, subject) %>%
     mutate(ACC = sum(correct) / n())
 
@@ -135,12 +192,12 @@ testretest.multiverse <- function(input,
     if(specs[perm, "split_by"] == "subject")
       temp <- temp %>%
         group_by(time, subject)
-    if(specs[perm, "split_by"] == "condition")
-      temp <- temp %>%
-        group_by(time, subject, blockcode)
+#    if(specs[perm, "split_by"] == "condition")
+#      temp <- temp %>%
+#        group_by(time, subject, blockcode)
     if(specs[perm, "split_by"] == "trial")
       temp <- temp %>%
-        group_by(time, subject, blockcode, congruency)
+        group_by(time, subject, congruency)
 
     if(specs[perm, "RT_sd_cutoff"] != 0)
       temp <- temp %>%
@@ -174,8 +231,8 @@ testretest.multiverse <- function(input,
   removals$nTrial <- nTrial
   removals$nTrialperPar <- removals$nTrial / removals$nPar
 
-  removals$pPar <- removals$nPar / length(unique(input$subject))
-  removals$pTrial <- removals$nTrial / length(input$trialnum)
+  removals$pPar <- removals$nPar / length(unique(data$subject))
+  removals$pTrial <- removals$nTrial / length(data$trialnum)
 
   outlist$removals <- removals
 
@@ -184,8 +241,6 @@ testretest.multiverse <- function(input,
   print("running reliability estimates")
 
   estimates <- list()
-
-  # internal consistency
 
   # test retest
 
@@ -223,7 +278,7 @@ testretest.multiverse <- function(input,
     for(perm2 in 1:nS) {
       capture.output({
 
-        tmp <<- perm_out[[perm2]] %>%
+        tmp <- perm_out[[perm2]] %>%
           group_by(time, subject, congruency) %>%
           summarise(RT = mean(latency)) %>%
           spread(congruency, RT) %>%

@@ -102,21 +102,21 @@
 #' @export
 
 splithalf <- function(data,
-                             outcome = "RT",
-                             score = "difference",
-                             conditionlist = FALSE,
-                             halftype = "random",
-                             permutations = 5000,
-                             var.RT = "latency",
-                             var.ACC = "accuracy",
-                             var.condition = FALSE,
-                             var.participant = "subject",
-                             var.compare = "congruency",
-                             compare1 = "Congruent",
-                             compare2 = "Incongruent",
-                             average = "mean",
-                             plot = FALSE,
-                             round.to = 2)
+                      outcome = "RT",
+                      score = "difference",
+                      conditionlist = FALSE,
+                      halftype = "random",
+                      permutations = 5000,
+                      var.RT = "latency",
+                      var.ACC = "accuracy",
+                      var.condition = FALSE,
+                      var.participant = "subject",
+                      var.compare = "congruency",
+                      compare1 = "Congruent",
+                      compare2 = "Incongruent",
+                      average = "mean",
+                      plot = FALSE,
+                      round.to = 2)
 
 {
   # check that the dataframe is a data frame

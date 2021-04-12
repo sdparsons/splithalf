@@ -73,7 +73,7 @@
 #' @import patchwork
 #' @importFrom stats complete.cases cor median na.omit quantile sd cor.test
 #' @importFrom robustbase colMedians
-#' @importFrom dplyr select summarise group_by mutate n_distinct filter ungroup
+#' @importFrom dplyr select summarise group_by mutate n_distinct filter ungroup n
 #' @importFrom tidyr gather
 #' @importFrom plyr arrange
 #' @useDynLib splithalf, .registration = TRUE

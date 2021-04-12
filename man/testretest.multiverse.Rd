@@ -5,16 +5,22 @@
 \title{Multiverse of data processing decisions on test retest reliability estimates.}
 \usage{
 testretest.multiverse(
-  input,
+  data,
   specifications,
   test = "ICC2",
+  outcome = "RT",
+  score = "difference",
   var.participant = "subject",
   var.ACC = "correct",
-  var.RT = "RT"
+  var.RT = "RT",
+  var.time = "time",
+  var.compare = "congruency",
+  compare1 = "Congruent",
+  compare2 = "Incongruent"
 )
 }
 \arguments{
-\item{input}{list of two datasets}
+\item{data}{dataset}
 
 \item{specifications}{list of data processing specifications}
 
