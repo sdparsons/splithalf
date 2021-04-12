@@ -15,6 +15,10 @@ knitr::opts_chunk$set(
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(message = FALSE)
 knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(results = "hide")
+knitr::opts_chunk$set(fig.dim = c(6,4))
+
+
 
 ```
 
@@ -794,13 +798,13 @@ specifications <- list(
 
 ## internal consistency
 
-```{r splithalf_for_mv}
+```{r splithalf_for_mv, comment=FALSE, results='hide'}
 mv_splithalf <- splithalf(data = sim_data,
                         outcome = "RT",
                         score = "difference",
                         conditionlist = c("A"),
                         halftype = "random",
-                        permutations = 5000,
+                        permutations = 50,
                         var.RT = "RT",
                         var.condition = "block_name",
                         var.participant = "participant_number",
@@ -812,6 +816,10 @@ mv_splithalf <- splithalf(data = sim_data,
 
 multiverse <- splithalf.multiverse(input = mv_splithalf,
                                    specifications = specifications)
+
+```
+
+```{r splithalf_for_mv_fig}
 
 multiverse.plot(multiverse = multiverse,
                 title = "sim_multiverse")
@@ -825,8 +833,8 @@ multiverse.plot(multiverse = multiverse,
 ## test-retest
 
 
-```{r retest_mv1}
-icc2 <- testretest.multiverse2(data = sim_data_acc,
+```{r retest_mv1, comment=FALSE, results='hide'}
+icc2 <- testretest.multiverse(data = sim_data_acc,
                        specifications,
                        test = "ICC2",
                        
@@ -845,9 +853,9 @@ multiverse.plot(icc2)
 
 ```
 
-```{r retest_mv2}
+```{r retest_mv2, comment=FALSE, results='hide'}
 
-icc3 <- testretest.multiverse2(data = sim_data_acc,
+icc3 <- testretest.multiverse(data = sim_data_acc,
                        specifications,
                        test = "ICC3",
                        
@@ -865,9 +873,9 @@ multiverse.plot(icc3)
 
 ```
 
-```{r retest_mv3}
+```{r retest_mv3, comment=FALSE, results='hide'}
 
-retest_cor <- testretest.multiverse2(data = sim_data_acc,
+retest_cor <- testretest.multiverse(data = sim_data_acc,
                        specifications,
                        test = "cor",
                        

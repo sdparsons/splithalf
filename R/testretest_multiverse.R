@@ -3,10 +3,16 @@
 #' The (unofficial) function version name is "This function will help you pay the troll toll"
 #' @param data dataset
 #' @param specifications list of data processing specifications
+#' @param outcome from splithalf() specifies the RT outcome - only RT available currently
+#' @param score currently only "difference" scores are supported
 #' @param test correlation, ICC2, r ICC3
 #' @param var.participant = "subject",
 #' @param var.ACC = "correct",
-#' @param var.RT set to internal consistency or test-retest
+#' @param var.RT = "RT"
+#' @param var.time codes the time variable (currently only works for 2 timepoints)
+#' @param var.compare = "congruency" trial type used to create difference scores
+#' @param compare1 = "Congruent"
+#' @param compare2 = "Incongruent"
 #' @return Returns a multiverse object containing the reliability estimates and dataframes from all data processing specifications provided
 #' @examples
 #' \dontrun{
@@ -14,12 +20,78 @@
 #' https://github.com/sdparsons/splithalf
 #' ## also see https://psyarxiv.com/y6tcz
 #'
+#' n_participants <- 80 ## sample size
+#' n_trials <- 120
+#' n_blocks <- 2
+#'
+#' sim_data_mv <- data.frame(participant_number = rep(1:n_participants,
+#'                                                    each = n_blocks * n_trials),
+#'                           trial_number = rep(1:n_trials,
+#'                                              times = n_blocks * n_participants),
+#'                           block_name = rep(c(1,2),
+#'                                            each = n_trials,
+#'                                            length.out = n_participants * n_trials * n_blocks),
+#'                           trial_type = rep(c("congruent","congruent",
+#'                                              "incongruent","incongruent"),
+#'                                            length.out = n_participants * n_trials * n_blocks / 2),
+#'                           RT = rnorm(n_participants * n_trials * n_blocks,
+#'                                      500,
+#'                                      200),
+#'                           ACC = c(rbinom(n_participants *
+#'                                            n_trials *
+#'                                            n_blocks / 6,
+#'                                          1, .5),
+#'                                   rbinom(n_participants *
+#'                                            n_trials *
+#'                                            n_blocks / 6,
+#'                                          1, .7),
+#'                                   rbinom(n_participants *
+#'                                            n_trials *
+#'                                            n_blocks / 6,
+#'                                          1, .9),
+#'                                   rbinom(n_participants *
+#'                                            n_trials *
+#'                                            n_blocks / 6,
+#'                                          1, .5),
+#'                                   rbinom(n_participants *
+#'                                            n_trials *
+#'                                            n_blocks / 6,
+#'                                          1, .7),
+#'                                   rbinom(n_participants *
+#'                                            n_trials *
+#'                                            n_blocks / 6,
+#'                                          1, .9)))
+#'
+#' specifications <- list(
+#' ACC_cutoff = c(0, 0.5),
+#' RT_min           = c(0, 200),
+#' RT_max            = c(2000, 3000),
+#' RT_sd_cutoff      = c(0, 2),
+#' split_by          = c("subject", "trial"),
+#' averaging_method  = c("mean")
+#' )
+#'
+#' icc2 <- testretest.multiverse(data = sim_data_acc,
+#' specifications,
+#' test = "ICC2",
+#' score = "difference",
+#' var.participant = "participant_number",
+#' var.ACC = "ACC",
+#' var.RT = "RT",
+#' var.time = "block_name",
+#' var.compare = "trial_type",
+#' compare1 = "congruent",
+#' compare2 = "incongruent")
+#'
+#' multiverse.plot(icc2)
+#'
 #' }
 #' @import tidyr
 #' @import Rcpp
 #' @import ggplot2
 #' @import grid
 #' @import patchwork
+#' @import lme4
 #' @importFrom stats complete.cases cor median na.omit quantile sd cor.test
 #' @importFrom robustbase colMedians
 #' @importFrom dplyr select summarise group_by mutate n_distinct filter ungroup n
@@ -52,18 +124,13 @@ testretest.multiverse <- function(data,
     stop("a data frame has not been specified in data = ")
   }
   # check for missing variables
-  if (outcome != "RT" & outcome != "accuracy") {
-    stop("the outcome has not been specified: select from RT or accuracy")
+  if (outcome != "RT") {
+    stop("only response time outcomes are supported. accuracy rates will be added in a future version")
   }
-  if (score != "average" &
-      score != "difference" &
-      score != "difference_of_difference") {
+  if (score != "difference") {
     stop(
-      "the score has not been specified: select from average, difference, or difference_of_difference"
+      "currently the only score option supported is the difference score. average scores will be added in a future version"
     )
-  }
-  if(score == "DPrime") {
-    warning("the DPrime score is under development. There are many versions of d prime, please check this is the correct version for your analyses")
   }
 
   # check that all of the variables exist in the data frame,
@@ -128,6 +195,10 @@ testretest.multiverse <- function(data,
   time <- 0
   difference <- 0
   ICC <- 0
+  subject <- 0
+  correct <- 0
+  RT <- 0
+
 
   # create the full specificaiton list ########################################
 
@@ -266,7 +337,7 @@ testretest.multiverse <- function(data,
           group_by(time) %>%
           spread(time, difference)
 
-        estimates[[perm2]] <- ICC(tmp[,2:3])$results[icc,]
+        estimates[[perm2]] <- psych::ICC(tmp[,2:3])$results[icc,]
 
       })
       setTxtProgressBar(pb2, perm2)
