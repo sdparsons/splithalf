@@ -1,22 +1,22 @@
 #' Internal consistency of task measures via a permutation split-half reliability approach
 #'
-#' This function calculates split half reliability estimates via a permutation approach for a wide range of tasks
+#' This function calculates split half reliability estimates via a permutation approach for a wide range of tasks. Most of the user inputs relate to the variables in the dataset splithalf needs to read in order to estimate reliability. Currently supports response time and accuracy ourcomes, for several scoring methods: average, difference, difference of difference scores, and a DPrime development.
 #' The (unofficial) version name is "This function gives me the power to fight like a crow"
 #' @param data specifies the raw dataset to be processed
-#' @param outcome indicates the type of data to be processed, e.g. response time or accuracy rates
+#' @param outcome indicates the type of data to be processed, e.g. "RT" or "accuracy"
 #' @param score indicates how the outcome score is calculated, e.g. most commonly the difference score between two trial types. Can be "average", "difference", "difference_of_difference", and "DPrime"
 #' @param conditionlist sets conditions/blocks to be processed
 #' @param halftype specifies the split method; "oddeven", "halfs", or "random"
 #' @param permutations specifies the number of random splits to run - 5000 is good
 #' @param var.RT specifies the RT variable name in data
-#' @param var.ACC specifiec the accuracy variable name in data
+#' @param var.ACC specific the accuracy variable name in data
 #' @param var.condition specifies the condition variable name in data - if not specified then splithalf will treat all trials as one condition
 #' @param var.participant specifies the subject variable name in data
-#' @param var.compare specified the variable that is used to calculate difference scores (e.g. including congruent and incongruent trials)
+#' @param var.compare specifies the variable that is used to calculate difference scores (e.g. including congruent and incongruent trials)
 #' @param compare1 specifies the first trial type to be compared (e.g. congruent trials)
-#' @param compare2 specifies the first trial type to be compared (e.g. incongruent trials)
-#' @param average use mean or median to calculate average scores?
-#' @param plot gives the option to visualise the estimates in a raincloud plot. defaults to FALSE
+#' @param compare2 specifies the second trial type to be compared (e.g. incongruent trials)
+#' @param average use "mean" or "median" to calculate average scores?
+#' @param plot logical value giving the option to visualise the estimates in a raincloud plot. defaults to FALSE
 #' @param round.to sets the number of decimals to round the estimates to defaults to 2
 #' @return Returns a data frame containing permutation based split-half reliability estimates
 #' @return splithalf is the raw estimate of the bias index

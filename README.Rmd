@@ -41,7 +41,7 @@ The latest release version (`0.7.2` unofficial version name: Kitten Mittens) can
 install.packages("splithalf")
 ```
 
-The current developmental version can be installed from Github with:
+The current developmental version (`0.8.1` unofficial version name: Rum Ham) can be installed from Github with:
 
 ```{r eval=FALSE}
 devtools::install_github("sdparsons/splithalf")
@@ -67,6 +67,8 @@ Please use the following reference for the code: Parsons, Sam (2020): splithalf:
 Developing the splithalf package is a labour of love (and occasionally burning hatred). If you have any suggestions for improvement, additional functionality, or anything else, please contact me (sam.parsons\@psy.ox.ac.uk) or raise an issue on github (https://github.com/sdparsons/splithalf). Likewise, if you are having trouble using the package (e.g. scream fits at your computer screen – we’ve all been there) do contact me and I will do my best to help as quickly as possible. These kind of help requests are super welcome. In fact, the package has seen several increases in performance and usability due to people asking for help. 
 
 ## Latest update:
+
+**Version 0.8.2 now out! [unofficial version name: "Kitten Mittens"]** Lots of fixed issues in the multiverse functions, and lots more documentation/examples!
 
 **Now on github and submitted to CRAN: VERSION 0.7.2 [unofficial version name: "Kitten Mittens"]** Featuring reliability multiverse analyses!!!
 

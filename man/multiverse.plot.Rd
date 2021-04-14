@@ -18,19 +18,19 @@ threshold(multiverse, threshold, use = "estimate", dir = "above")
 \arguments{
 \item{multiverse}{multiverse object}
 
-\item{title}{add a title to the plot?}
+\item{title}{string add a title to the plot? default is ""}
 
 \item{vline}{add a vertical line to the plot, e.g. use .5 for the median reliability estimate}
 
-\item{heights}{relative heights of plot panels, defaults to c(4,5)}
+\item{heights}{must be a vector of length 2, relative heights of plot panels. Defaults to c(4,5)}
 
-\item{SE}{set to true to also plot the standard errors of the scores}
+\item{SE}{logical includes an additional panel to plot the standard errors of the scores. Note: the heights parameter must be a vector of length 3, e.g. c(2,2,3). Defaults to FALSE}
 
-\item{threshold}{threshold to look for}
+\item{threshold}{threshold to look for, e.g. 0.7}
 
-\item{use}{set to check the reliability estimates, or the upper or lower CIs}
+\item{use}{set to check the reliability "estimates", or the "upper" or "lower" CIs}
 
-\item{dir}{look above or below the 'use' at the set threshold}
+\item{dir}{look "above" or "below" the 'use' at the set threshold}
 }
 \value{
 Returns a visualistation of a multiverse object
@@ -95,13 +95,6 @@ multiverse <- splithalf.multiverse(input = difference,
 multiverse.plot(multiverse = multiverse,
                 title = "README multiverse")
 
-## the threshold function can be used to return the number of estimates
-## above or below a certain threshold
-
-threshold(multiverse = multiverse,
-          threshold = 0.7,
-          use = "estimate",
-          dir = "above")
 }
 \dontrun{
 ## see online documentation for examples
@@ -151,9 +144,6 @@ difference <- splithalf(data = sim_data,
 multiverse <- splithalf.multiverse(input = difference,
                                    specifications = specifications)
 
-## can be plot with:
-multiverse.plot(multiverse = multiverse,
-                title = "README multiverse")
 
 ## the threshold function can be used to return the number of estimates
 ## above or below a certain threshold

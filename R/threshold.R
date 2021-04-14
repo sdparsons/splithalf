@@ -4,9 +4,9 @@
 #' The (unofficial) function version name is "This function will get you up to here with it"
 #'
 #' @param multiverse multiverse object
-#' @param threshold threshold to look for
-#' @param use set to check the reliability estimates, or the upper or lower CIs
-#' @param dir look above or below the 'use' at the set threshold
+#' @param threshold threshold to look for, e.g. 0.7
+#' @param use set to check the reliability "estimates", or the "upper" or "lower" CIs
+#' @param dir look "above" or "below" the 'use' at the set threshold
 #' @examples
 #' \dontrun{
 #' ## see online documentation for examples
@@ -56,9 +56,6 @@
 #' multiverse <- splithalf.multiverse(input = difference,
 #'                                    specifications = specifications)
 #'
-#' ## can be plot with:
-#' multiverse.plot(multiverse = multiverse,
-#'                 title = "README multiverse")
 #'
 #' ## the threshold function can be used to return the number of estimates
 #' ## above or below a certain threshold

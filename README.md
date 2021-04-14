@@ -48,7 +48,8 @@ Mittens) can be installed from CRAN:
 install.packages("splithalf")
 ```
 
-The current developmental version can be installed from Github with:
+The current developmental version (`0.8.1` unofficial version name: Rum
+Ham) can be installed from Github with:
 
 ``` r
 devtools::install_github("sdparsons/splithalf")
@@ -90,6 +91,10 @@ fact, the package has seen several increases in performance and
 usability due to people asking for help.
 
 ## Latest update:
+
+**Version 0.8.2 now out! \[unofficial version name: “Kitten Mittens”\]**
+Lots of fixed issues in the multiverse functions, and lots more
+documentation/examples!
 
 **Now on github and submitted to CRAN: VERSION 0.7.2 \[unofficial
 version name: “Kitten Mittens”\]** Featuring reliability multiverse
@@ -152,9 +157,9 @@ al. 2018).
 
 ``` r
 dataset %>%    
-filter(accuracy == 1) %>%       ## keeps only trials in which participants made an accurate response
-filter(RT >= 100, RT <= 2000)  %>%   ## removes RTs less than 100ms and greater than 2000ms
-filter(participant != c(“p23”, “p45”)    ## removes participants “p23” and “p45”
+  dplyr::filter(accuracy == 1) %>%       ## keeps only trials in which participants made an accurate response
+  dplyr::filter(RT >= 100, RT <= 2000)  %>%   ## removes RTs less than 100ms and greater than 2000ms
+  dplyr::filter(participant != c(“p23”, “p45”)    ## removes participants “p23” and “p45”
 ```
 
 If following rt trims you also trimmed by SD, use the following as well.
@@ -255,24 +260,24 @@ library("dplyr")
 library("tidyr")
 
 sim_data %>%
-  group_by(participant_number, block_name, trial_type) %>%
-  summarise(average = mean(RT)) %>%
-  spread(trial_type, average) %>%
-  mutate(bias = congruent - incongruent)
+  dplyr::group_by(participant_number, block_name, trial_type) %>%
+  dplyr::summarise(average = mean(RT)) %>%
+  tidyr::spread(trial_type, average) %>%
+  dplyr::mutate(bias = congruent - incongruent)
 # A tibble: 120 x 5
 # Groups:   participant_number, block_name [120]
-   participant_number block_name congruent incongruent  bias
-                <int> <fct>          <dbl>       <dbl> <dbl>
- 1                  1 A               481.        519. -38.2
- 2                  1 B               494.        517. -23.0
- 3                  2 A               555.        541.  13.6
- 4                  2 B               483.        533. -49.6
- 5                  3 A               502.        479.  23.6
- 6                  3 B               521.        465.  56.3
- 7                  4 A               475.        513. -38.3
- 8                  4 B               540.        455.  84.7
- 9                  5 A               496.        551. -54.7
-10                  5 B               529.        484.  45.0
+   participant_number block_name congruent incongruent   bias
+                <int> <fct>          <dbl>       <dbl>  <dbl>
+ 1                  1 A               482.        523. -40.5 
+ 2                  1 B               474.        504. -30.0 
+ 3                  2 A               494.        455.  38.1 
+ 4                  2 B               491.        507. -15.7 
+ 5                  3 A               508.        497.  11.4 
+ 6                  3 B               518.        502.  16.0 
+ 7                  4 A               497.        509. -11.9 
+ 8                  4 B               469.        472.  -2.51
+ 9                  5 A               514.        487.  27.4 
+10                  5 B               513.        518.  -4.25
 # ... with 110 more rows
 ```
 
@@ -298,8 +303,8 @@ difference <- splithalf(data = sim_data,
 ```
 
       condition  n splithalf 95_low 95_high spearmanbrown SB_low SB_high
-    1         A 60     -0.08  -0.25    0.12         -0.13  -0.40    0.21
-    2         B 60      0.19   0.02    0.36          0.31   0.04    0.53
+    1         A 60      0.04  -0.13    0.23          0.07  -0.22    0.37
+    2         B 60     -0.11  -0.27    0.08         -0.18  -0.43    0.14
 
 Specifying `plot = TRUE` will also allow you to plot the distributions
 of reliability estimates. you can extract the plot from a saved object
@@ -337,7 +342,7 @@ formula is not useful in this case.
 > We estimated the internal consitency of bias A and B using a
 > permutation-based splithalf approach (Parsons 2019) with 5000 random
 > splits. The (Spearman-Brown corrected) splithalf internal consistency
-> of bias A was were *r*<sub>SB</sub> = -0.13, 95%CI \[-0.4,0.21\].
+> of bias A was were *r*<sub>SB</sub> = 0.07, 95%CI \[-0.22,0.37\].
 >
 > — Parsons, 2020
 
@@ -361,13 +366,11 @@ average <- splithalf(data = sim_data,
                      var.condition = "block_name",
                      var.participant = "participant_number",
                      average = "mean")
-Warning in splithalf(data = sim_data, outcome = "RT", score = "average", :
-var.trialnum will soon be depreciated
 ```
 
       condition  n splithalf 95_low 95_high spearmanbrown SB_low SB_high
-    1         A 60     -0.05  -0.22    0.13         -0.10  -0.36    0.24
-    2         B 60      0.00  -0.17    0.18         -0.01  -0.30    0.31
+    1         A 60       0.2   0.03    0.37          0.32   0.06    0.54
+    2         B 60       0.1  -0.07    0.28          0.18  -0.13    0.44
 
 ### Difference-of-difference scores
 
@@ -410,12 +413,12 @@ diff_of_diff <- splithalf(data = sim_data,
                         compare1 = "congruent",
                         compare2 = "incongruent",
                         average = "mean")
-Warning in splithalf(data = sim_data, outcome = "RT", score =
-"difference_of_difference", : var.trialnum will soon be depreciated
 ```
 
-         condition  n splithalf 95_low 95_high spearmanbrown SB_low SB_high
-    1 change score 60      0.17      0    0.35          0.28      0    0.52
+                           condition  n splithalf 95_low 95_high spearmanbrown
+    1 difference_of_difference score 60         0  -0.17    0.19             0
+      SB_low SB_high
+    1  -0.29    0.32
 
 ## Multiverse analysis extension
 
@@ -431,7 +434,10 @@ specifications <- list(RT_min = c(0, 100, 200),
                        averaging_method = c("mean", "median"))
 ```
 
-Second, perform `splithalf(...)`. The key difference here is …
+Second, perform `splithalf(...)`. The key difference here, compared to
+the earlier examples is that we are no longer assuming that all data
+processing has already occurred. Instead, the data processing will be
+performed as part of `splithalf.multiverse`, next.
 
 ``` r
 difference <- splithalf(data = sim_data,
@@ -448,8 +454,6 @@ difference <- splithalf(data = sim_data,
                         compare1 = "congruent",
                         compare2 = "incongruent",
                         average = "mean")
-Warning in splithalf(data = sim_data, outcome = "RT", score = "difference", :
-var.trialnum will soon be depreciated
 ```
 
 Third, perform `splithalf.multiverse` with the specification list and

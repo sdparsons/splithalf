@@ -1,12 +1,12 @@
 Package: splithalf
 Type: Package
 Title: Calculate Task Split Half Reliability Estimates
-Version: 0.7.2
+Version: 0.8.1
 Authors@R: person("Sam", "Parsons", email = "sam.parsons@psy.ox.ac.uk",
   role = c("aut", "cre"))
 Maintainer: Sam Parsons <sam.parsons@psy.ox.ac.uk>
 Description: Estimate the internal consistency of your tasks with a permutation based split-half reliability approach.
-    Unofficial release name: "Kitten Mittens".
+    Unofficial release name: "Rum Ham".
 Depends: R (>= 3.3)
 Imports:
     tidyr,

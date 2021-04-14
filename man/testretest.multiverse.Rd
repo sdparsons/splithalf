@@ -24,9 +24,9 @@ testretest.multiverse(
 
 \item{specifications}{list of data processing specifications}
 
-\item{test}{correlation, ICC2, r ICC3}
+\item{test}{test retest statistic, "ICC2", "cor", "ICC3"}
 
-\item{outcome}{from splithalf() specifies the RT outcome - only RT available currently}
+\item{outcome}{from splithalf() specifies the RT outcome - only "RT" available currently}
 
 \item{score}{currently only "difference" scores are supported}
 
@@ -40,14 +40,17 @@ testretest.multiverse(
 
 \item{var.compare}{= "congruency" trial type used to create difference scores}
 
-\item{compare1}{= "Congruent"}
+\item{compare1}{specifies the first trial type to be compared (e.g. "Congruent" trials)}
 
-\item{compare2}{= "Incongruent"}
+\item{compare2}{specifies the second trial type to be compared (e.g. "Incongruent" trials)}
 }
 \value{
 Returns a multiverse object containing the reliability estimates and dataframes from all data processing specifications provided
 }
 \description{
+This function enables the user to run a multiverse of data processing options and extract the resulting test-retest reliability estimates. The user specifies a set of data processing decisions and passes this to the function, along with specifying key variables within several "var." inputs (so that the function knows where to find your participant ids and RTs for example)
+}
+\details{
 The (unofficial) function version name is "This function will help you pay the troll toll"
 }
 \examples{

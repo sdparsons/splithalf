@@ -1,18 +1,20 @@
 #' Multiverse of data processing decisions on test retest reliability estimates.
 #'
+#' This function enables the user to run a multiverse of data processing options and extract the resulting test-retest reliability estimates. The user specifies a set of data processing decisions and passes this to the function, along with specifying key variables within several "var." inputs (so that the function knows where to find your participant ids and RTs for example)
+#'
 #' The (unofficial) function version name is "This function will help you pay the troll toll"
 #' @param data dataset
 #' @param specifications list of data processing specifications
-#' @param outcome from splithalf() specifies the RT outcome - only RT available currently
+#' @param outcome from splithalf() specifies the RT outcome - only "RT" available currently
 #' @param score currently only "difference" scores are supported
-#' @param test correlation, ICC2, r ICC3
+#' @param test test retest statistic, "ICC2", "cor", "ICC3"
 #' @param var.participant = "subject",
 #' @param var.ACC = "correct",
 #' @param var.RT = "RT"
 #' @param var.time codes the time variable (currently only works for 2 timepoints)
 #' @param var.compare = "congruency" trial type used to create difference scores
-#' @param compare1 = "Congruent"
-#' @param compare2 = "Incongruent"
+#' @param compare1 specifies the first trial type to be compared (e.g. "Congruent" trials)
+#' @param compare2 specifies the second trial type to be compared (e.g. "Incongruent" trials)
 #' @return Returns a multiverse object containing the reliability estimates and dataframes from all data processing specifications provided
 #' @examples
 #' \dontrun{

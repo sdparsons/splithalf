@@ -2,11 +2,11 @@
 #'
 #' This function allows the user to plot the output from splithalf_multiverse or testretest_multiverse. The plot includes an upper panel with all reliabilty estimates (and CIs) and a lower panel that indicates the data processing specifications corresponding to that reliability estimate.
 #' The (unofficial) function version name is "This function will make you a master in bird law"
-#' @param multiverse multiverse object or list of multiverse objects
-#' @param title add a title to the plot?
+#' @param multiverse multiverse object or list of multiverse objects from splithalf.multiverse()
+#' @param title string add a title to the plot? default is ""
 #' @param vline add a vertical line to the plot, e.g. use .5 for the median reliability estimate
-#' @param heights relative heights of plot panels, defaults to c(4,5)
-#' @param SE set to true to also plot the standard errors of the scores
+#' @param heights must be a vector of length 2, relative heights of plot panels. Defaults to c(4,5)
+#' @param SE logical includes an additional panel to plot the standard errors of the scores. Note: the heights parameter must be a vector of length 3, e.g. c(2,2,3). Defaults to FALSE
 #' @return Returns a visualistation of a multiverse object
 #' @examples
 #' \dontrun{
@@ -61,13 +61,6 @@
 #' multiverse.plot(multiverse = multiverse,
 #'                 title = "README multiverse")
 #'
-#' ## the threshold function can be used to return the number of estimates
-#' ## above or below a certain threshold
-#'
-#' threshold(multiverse = multiverse,
-#'           threshold = 0.7,
-#'           use = "estimate",
-#'           dir = "above")
 #' }
 #' @import tidyr
 #' @import Rcpp

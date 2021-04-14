@@ -26,7 +26,7 @@ splithalf(
 \arguments{
 \item{data}{specifies the raw dataset to be processed}
 
-\item{outcome}{indicates the type of data to be processed, e.g. response time or accuracy rates}
+\item{outcome}{indicates the type of data to be processed, e.g. "RT" or "accuracy"}
 
 \item{score}{indicates how the outcome score is calculated, e.g. most commonly the difference score between two trial types. Can be "average", "difference", "difference_of_difference", and "DPrime"}
 
@@ -38,21 +38,21 @@ splithalf(
 
 \item{var.RT}{specifies the RT variable name in data}
 
-\item{var.ACC}{specifiec the accuracy variable name in data}
+\item{var.ACC}{specific the accuracy variable name in data}
 
 \item{var.condition}{specifies the condition variable name in data - if not specified then splithalf will treat all trials as one condition}
 
 \item{var.participant}{specifies the subject variable name in data}
 
-\item{var.compare}{specified the variable that is used to calculate difference scores (e.g. including congruent and incongruent trials)}
+\item{var.compare}{specifies the variable that is used to calculate difference scores (e.g. including congruent and incongruent trials)}
 
 \item{compare1}{specifies the first trial type to be compared (e.g. congruent trials)}
 
-\item{compare2}{specifies the first trial type to be compared (e.g. incongruent trials)}
+\item{compare2}{specifies the second trial type to be compared (e.g. incongruent trials)}
 
-\item{average}{use mean or median to calculate average scores?}
+\item{average}{use "mean" or "median" to calculate average scores?}
 
-\item{plot}{gives the option to visualise the estimates in a raincloud plot. defaults to FALSE}
+\item{plot}{logical value giving the option to visualise the estimates in a raincloud plot. defaults to FALSE}
 
 \item{round.to}{sets the number of decimals to round the estimates to defaults to 2}
 }
@@ -66,7 +66,7 @@ spearmanbrown is the spearman-brown corrected estimate of the bias index
 Warning: If there are missing data (e.g one condition data missing for one participant) output will include details of the missing data and return a dataframe containing the NA data. Warnings will be displayed in the console.
 }
 \description{
-This function calculates split half reliability estimates via a permutation approach for a wide range of tasks
+This function calculates split half reliability estimates via a permutation approach for a wide range of tasks. Most of the user inputs relate to the variables in the dataset splithalf needs to read in order to estimate reliability. Currently supports response time and accuracy ourcomes, for several scoring methods: average, difference, difference of difference scores, and a DPrime development.
 The (unofficial) version name is "This function gives me the power to fight like a crow"
 }
 \examples{

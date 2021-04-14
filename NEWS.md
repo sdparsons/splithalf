@@ -1,16 +1,26 @@
 
 <!-- NEWS.md is generated from NEWS.Rmd. Please edit that file -->
 
-# splithalf v0.7.2 (current development version) \[unofficial version name: Kitten Mittens\]
+# UPCOMING: splithalf v0.8.1 (current development version - work in progress) \[unofficial version name: Rum Ham\]
+
+changes: \* added examples in the function help and improved function
+documentation \* added validation vignette (tests many combinations of
+options within splithalf functions, incluing the multiverse functions)
+\* fixed minor bugs in some combinations of options within splithalf
+(typically within the ) \* fixed some documentation \* fixed plotting
+issue with score = “difference\_of\_difference” \* minor improvements to
+documentation
+
+# splithalf v0.7.2 \[unofficial version name: Kitten Mittens\]
 
 changes: \* minor updates: reworked documentation and README \* added
 hexlogo \* bug fixes to splithalf.multiverse
 
-# splithalf v0.7.1 (current development version) \[unofficial version name: Kitten Mittens\]
+# splithalf v0.7.1 \[unofficial version name: Kitten Mittens\]
 
 changes: \* added multiverse analyses to package. Functions
 *splithalf.multiverse*, *testretest.multiverse*, *plot.multiverse*, and
-*threshold* now available\!
+*threshold* now available!
 
 # splithalf v0.6.2 \[unofficial version name: the Golden God\]
 
@@ -64,20 +74,20 @@ accuracy (currently development version)
 
 Changes:
 
-  - reworked the package into three main functions
-  - more options added for flexibility to many RT tasks
-  - progress bars added
+-   reworked the package into three main functions
+-   more options added for flexibility to many RT tasks
+-   progress bars added
 
 # splithalf v0.2.0 (current development version)
 
 Changes:
 
-  - Added the TSTsplithalf function
-  - Some minor bug fixes
-  - Output for all functions now includes two-part alpha
+-   Added the TSTsplithalf function
+-   Some minor bug fixes
+-   Output for all functions now includes two-part alpha
 
 # splithalf v0.2.0 (Release data: 07/04/2017)
 
 Changes:
 
-  - Submitted to CRAN
+-   Submitted to CRAN
