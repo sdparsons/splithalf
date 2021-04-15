@@ -1,13 +1,13 @@
 #' Visualising reliability multiverses
 #'
-#' This function allows the user to plot the output from splithalf_multiverse or testretest_multiverse. The plot includes an upper panel with all reliabilty estimates (and CIs) and a lower panel that indicates the data processing specifications corresponding to that reliability estimate.
+#' This function allows the user to plot the output from splithalf_multiverse or testretest_multiverse. The plot includes an upper panel with all reliability estimates (and CIs) and a lower panel that indicates the data processing specifications corresponding to that reliability estimate.
 #' The (unofficial) function version name is "This function will make you a master in bird law"
 #' @param multiverse multiverse object or list of multiverse objects from splithalf.multiverse()
 #' @param title string add a title to the plot? default is ""
 #' @param vline add a vertical line to the plot, e.g. use .5 for the median reliability estimate
 #' @param heights must be a vector of length 2, relative heights of plot panels. Defaults to c(4,5)
 #' @param SE logical includes an additional panel to plot the standard errors of the scores. Note: the heights parameter must be a vector of length 3, e.g. c(2,2,3). Defaults to FALSE
-#' @return Returns a visualistation of a multiverse object
+#' @return Returns a visualization of a multiverse object
 #' @examples
 #' \dontrun{
 #' ## see online documentation for examples

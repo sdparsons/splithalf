@@ -1,6 +1,6 @@
 #' Internal consistency of task measures via a permutation split-half reliability approach
 #'
-#' This function calculates split half reliability estimates via a permutation approach for a wide range of tasks. Most of the user inputs relate to the variables in the dataset splithalf needs to read in order to estimate reliability. Currently supports response time and accuracy ourcomes, for several scoring methods: average, difference, difference of difference scores, and a DPrime development.
+#' This function calculates split half reliability estimates via a permutation approach for a wide range of tasks. Most of the user inputs relate to the variables in the dataset splithalf needs to read in order to estimate reliability. Currently supports response time and accuracy outcomes, for several scoring methods: average, difference, difference of difference scores, and a DPrime development.
 #' The (unofficial) version name is "This function gives me the power to fight like a crow"
 #' @param data specifies the raw dataset to be processed
 #' @param outcome indicates the type of data to be processed, e.g. "RT" or "accuracy"
