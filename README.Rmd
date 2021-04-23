@@ -61,7 +61,9 @@ library("robustbase")
 
 Citing packages is one way for developers to gain some recognition for the time spent maintaining the work. I would like to keep track of how the package is used so that I can solicit feedback and improve the package more generally.  This would also help me track the uptake of reporting measurement reliability over time. 
 
-Please use the following reference for the code: Parsons, Sam (2020): splithalf: robust estimates of split half reliability. figshare. Software. https://doi.org/10.6084/m9.figshare.11956746.v4
+Please use the following reference for the code: Parsons, S., (2021). splithalf: robust estimates of split half reliability. _Journal of Open Source Software, 6_(60), 3041, https://doi.org/10.21105/joss.03041
+
+
 
 ### User feedback
 
