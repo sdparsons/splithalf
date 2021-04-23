@@ -71,7 +71,7 @@ Developing the splithalf package is a labour of love (and occasionally burning h
 
 ## Latest update:
 
-**Version 0.8.2 now out! [unofficial version name: "Kitten Mittens"]** Lots of fixed issues in the multiverse functions, and lots more documentation/examples!
+**Version 0.8.1 now out! [unofficial version name: "Rum Ham"]** Lots of fixed issues in the multiverse functions, and lots more documentation/examples!
 
 **Now on github and submitted to CRAN: VERSION 0.7.2 [unofficial version name: "Kitten Mittens"]** Featuring reliability multiverse analyses!!!
 

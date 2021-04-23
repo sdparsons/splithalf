@@ -93,8 +93,8 @@ usability due to people asking for help.
 
 ## Latest update:
 
-**Version 0.8.2 now out! \[unofficial version name: “Kitten Mittens”\]**
-Lots of fixed issues in the multiverse functions, and lots more
+**Version 0.8.1 now out! \[unofficial version name: “Rum Ham”\]** Lots
+of fixed issues in the multiverse functions, and lots more
 documentation/examples!
 
 **Now on github and submitted to CRAN: VERSION 0.7.2 \[unofficial
@@ -269,16 +269,16 @@ sim_data %>%
 # Groups:   participant_number, block_name [120]
    participant_number block_name congruent incongruent   bias
                 <int> <fct>          <dbl>       <dbl>  <dbl>
- 1                  1 A               499.        501.  -1.61
- 2                  1 B               512.        485.  27.5 
- 3                  2 A               494.        540. -45.9 
- 4                  2 B               496.        503.  -7.26
- 5                  3 A               518.        492.  26.0 
- 6                  3 B               466.        504. -37.6 
- 7                  4 A               522.        533. -11.0 
- 8                  4 B               495.        503.  -7.98
- 9                  5 A               434.        480. -46.0 
-10                  5 B               458.        511. -52.7 
+ 1                  1 A               538.        516.  21.8 
+ 2                  1 B               502.        559. -57.2 
+ 3                  2 A               521.        528.  -7.03
+ 4                  2 B               487.        509. -21.8 
+ 5                  3 A               468.        537. -69.3 
+ 6                  3 B               487.        542. -55.1 
+ 7                  4 A               428.        514. -86.3 
+ 8                  4 B               441.        505. -64.3 
+ 9                  5 A               510.        505.   5.21
+10                  5 B               474.        556. -82.5 
 # ... with 110 more rows
 ```
 
@@ -304,8 +304,8 @@ difference <- splithalf(data = sim_data,
 ```
 
       condition  n splithalf 95_low 95_high spearmanbrown SB_low SB_high
-    1         A 60     -0.13  -0.30    0.06         -0.22  -0.46    0.11
-    2         B 60      0.04  -0.14    0.22          0.06  -0.24    0.36
+    1         A 60      0.09  -0.08    0.27          0.15  -0.15    0.43
+    2         B 60      0.06  -0.12    0.24          0.10  -0.21    0.39
 
 Specifying `plot = TRUE` will also allow you to plot the distributions
 of reliability estimates. you can extract the plot from a saved object
@@ -343,7 +343,7 @@ formula is not useful in this case.
 > We estimated the internal consitency of bias A and B using a
 > permutation-based splithalf approach (Parsons 2019) with 5000 random
 > splits. The (Spearman-Brown corrected) splithalf internal consistency
-> of bias A was were *r*<sub>SB</sub> = -0.22, 95%CI \[-0.46,0.11\].
+> of bias A was were *r*<sub>SB</sub> = 0.15, 95%CI \[-0.15,0.43\].
 >
 > — Parsons, 2020
 
@@ -370,8 +370,8 @@ average <- splithalf(data = sim_data,
 ```
 
       condition  n splithalf 95_low 95_high spearmanbrown SB_low SB_high
-    1         A 60     -0.03  -0.20    0.16         -0.04  -0.33    0.28
-    2         B 60     -0.14  -0.31    0.04         -0.24  -0.48    0.09
+    1         A 60     -0.12  -0.29    0.07         -0.21  -0.45    0.13
+    2         B 60     -0.07  -0.24    0.12         -0.12  -0.39    0.21
 
 ### Difference-of-difference scores
 
@@ -417,9 +417,9 @@ diff_of_diff <- splithalf(data = sim_data,
 ```
 
                            condition  n splithalf 95_low 95_high spearmanbrown
-    1 difference_of_difference score 60     -0.04  -0.22    0.15         -0.08
+    1 difference_of_difference score 60     -0.08  -0.25    0.11         -0.14
       SB_low SB_high
-    1  -0.36    0.26
+    1   -0.4    0.19
 
 ## Multiverse analysis extension
 
