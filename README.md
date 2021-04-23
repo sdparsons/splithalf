@@ -3,6 +3,7 @@
 
 <img src="inst/hexlogo/splithalf_logo.png" height="300"/>
 
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.03041/status.svg)](https://doi.org/10.21105/joss.03041)
 [![CRAN
 Version](http://www.r-pkg.org/badges/version/splithalf)](https://cran.r-project.org/package=splithalf)
 [![Downloads](https://cranlogs.r-pkg.org/badges/splithalf)](https://cran.r-project.org/package=splithalf)
@@ -268,16 +269,16 @@ sim_data %>%
 # Groups:   participant_number, block_name [120]
    participant_number block_name congruent incongruent   bias
                 <int> <fct>          <dbl>       <dbl>  <dbl>
- 1                  1 A               482.        523. -40.5 
- 2                  1 B               474.        504. -30.0 
- 3                  2 A               494.        455.  38.1 
- 4                  2 B               491.        507. -15.7 
- 5                  3 A               508.        497.  11.4 
- 6                  3 B               518.        502.  16.0 
- 7                  4 A               497.        509. -11.9 
- 8                  4 B               469.        472.  -2.51
- 9                  5 A               514.        487.  27.4 
-10                  5 B               513.        518.  -4.25
+ 1                  1 A               488.        505. -17.4 
+ 2                  1 B               473.        544. -70.6 
+ 3                  2 A               539.        528.  10.9 
+ 4                  2 B               479.        522. -43.4 
+ 5                  3 A               485.        490.  -4.88
+ 6                  3 B               471.        498. -27.7 
+ 7                  4 A               537.        508.  29.7 
+ 8                  4 B               525.        507.  17.7 
+ 9                  5 A               502.        464.  37.6 
+10                  5 B               515.        488.  27.6 
 # ... with 110 more rows
 ```
 
@@ -303,8 +304,8 @@ difference <- splithalf(data = sim_data,
 ```
 
       condition  n splithalf 95_low 95_high spearmanbrown SB_low SB_high
-    1         A 60      0.04  -0.13    0.23          0.07  -0.22    0.37
-    2         B 60     -0.11  -0.27    0.08         -0.18  -0.43    0.14
+    1         A 60     -0.14  -0.31    0.05         -0.24  -0.48    0.09
+    2         B 60      0.02  -0.16    0.21          0.04  -0.27    0.35
 
 Specifying `plot = TRUE` will also allow you to plot the distributions
 of reliability estimates. you can extract the plot from a saved object
@@ -342,7 +343,7 @@ formula is not useful in this case.
 > We estimated the internal consitency of bias A and B using a
 > permutation-based splithalf approach (Parsons 2019) with 5000 random
 > splits. The (Spearman-Brown corrected) splithalf internal consistency
-> of bias A was were *r*<sub>SB</sub> = 0.07, 95%CI \[-0.22,0.37\].
+> of bias A was were *r*<sub>SB</sub> = -0.24, 95%CI \[-0.48,0.09\].
 >
 > — Parsons, 2020
 
@@ -369,8 +370,8 @@ average <- splithalf(data = sim_data,
 ```
 
       condition  n splithalf 95_low 95_high spearmanbrown SB_low SB_high
-    1         A 60       0.2   0.03    0.37          0.32   0.06    0.54
-    2         B 60       0.1  -0.07    0.28          0.18  -0.13    0.44
+    1         A 60      0.15  -0.02    0.32          0.25  -0.05    0.49
+    2         B 60     -0.07  -0.24    0.13         -0.12  -0.39    0.22
 
 ### Difference-of-difference scores
 
@@ -416,9 +417,9 @@ diff_of_diff <- splithalf(data = sim_data,
 ```
 
                            condition  n splithalf 95_low 95_high spearmanbrown
-    1 difference_of_difference score 60         0  -0.17    0.19             0
+    1 difference_of_difference score 60      0.06  -0.12    0.24           0.1
       SB_low SB_high
-    1  -0.29    0.32
+    1  -0.21    0.39
 
 ## Multiverse analysis extension
 

@@ -20,6 +20,7 @@ library("ggplot2")
 
 <img src="inst/hexlogo/splithalf_logo.png" height="300"/>
 
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.03041/status.svg)](https://doi.org/10.21105/joss.03041)
 [![CRAN Version](http://www.r-pkg.org/badges/version/splithalf)](https://cran.r-project.org/package=splithalf)
 [![Downloads](https://cranlogs.r-pkg.org/badges/splithalf)](https://cran.r-project.org/package=splithalf)
 
