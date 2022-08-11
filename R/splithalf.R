@@ -275,11 +275,23 @@ splithalf <- function(data,
 
 if(check == TRUE) {
 
-  check1 <- data %>%
-    dplyr::group_by(participant, condition, compare) %>%
-    dplyr::count() %>%
-    dplyr::ungroup() %>%
-    tidyr::complete(participant, condition, compare)
+  if(score == "average") {
+    check1 <- data %>%
+      dplyr::group_by(participant, condition) %>%
+      dplyr::count() %>%
+      dplyr::ungroup() %>%
+      tidyr::complete(participant, condition)
+  }
+
+  if(score != "average") {
+    check1 <- data %>%
+      dplyr::group_by(participant, condition, compare) %>%
+      dplyr::count() %>%
+      dplyr::ungroup() %>%
+      tidyr::complete(participant, condition, compare)
+  }
+
+
 
   # check for missing conditions and comparisons
 

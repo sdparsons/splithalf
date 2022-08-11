@@ -42,7 +42,7 @@ The latest release version (`0.7.2` unofficial version name: Kitten Mittens) can
 install.packages("splithalf")
 ```
 
-The current developmental version (`0.8.1` unofficial version name: Rum Ham) can be installed from Github with:
+The current developmental version (`0.8.2` unofficial version name: I eat stickers all the time, dude!) can be installed from Github with:
 
 ```{r eval=FALSE}
 devtools::install_github("sdparsons/splithalf")

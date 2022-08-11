@@ -1,7 +1,7 @@
 Package: splithalf
 Type: Package
 Title: Calculate Task Split Half Reliability Estimates
-Version: 0.8.1
+Version: 0.8.2
 Authors@R: person("Sam", "Parsons", email = "sam.parsons@radboudumc.nl",
   role = c("aut", "cre"))
 Maintainer: Sam Parsons <sam.parsons@radboudumc.nl>

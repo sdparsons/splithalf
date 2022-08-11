@@ -79,7 +79,7 @@ splithalf.multiverse <- function(input,
                                  specifications) {
 
 
-  if(class(input) != "splithalf") {
+  if(!is(input, "splithalf")) {
     stop("please use a splithalf object as the input")
   }
 

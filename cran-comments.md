@@ -1,23 +1,28 @@
-## Test environments
-* local OS X install, R 3.3.3
-* ubuntu 12.04 (on travis-ci), R 3.3.3
-* win-builder (devel and release)
+Comments on cran checks:
 
-## R CMD check results
 
-0 errors | 0 warnings | 0 note
+1. I have moved institutions and so my email has changed
 
-There were no ERRORs or WARNINGs
 
-## Reverse dependencies
-
-Reverse dependencies have been checked.
-
----
-
-* I have run R CMD check on the NUMBER downstream dependencies.
-  (Summary at ...). 
+2. I received the following note:
+checking compiled code ... NOTE
+  Note: information on .o files for i386 is not available
+  Note: information on .o files for x64 is not available
+  File 'C:/Users/samdp/AppData/Local/Temp/RtmpAdYuSM/splithalf.Rcheck/splithalf/libs/i386/splithalf.dll':
+    Found 'abort', possibly from 'abort' (C), 'runtime' (Fortran)
+    Found 'exit', possibly from 'exit' (C), 'stop' (Fortran)
+    Found 'printf', possibly from 'printf' (C)
+  File 'C:/Users/samdp/AppData/Local/Temp/RtmpAdYuSM/splithalf.Rcheck/splithalf/libs/x64/splithalf.dll':
+    Found 'abort', possibly from 'abort' (C), 'runtime' (Fortran)
+    Found 'exit', possibly from 'exit' (C), 'stop' (Fortran)
+    Found 'printf', possibly from 'printf' (C)
   
-* FAILURE SUMMARY
+  Compiled code should not call entry points which might terminate R nor
+  write to stdout/stderr instead of to the console, nor use Fortran I/O
+  nor system RNGs. The detected symbols are linked into the code but
+  might come from libraries and not actually be called.
+  
+  See 'Writing portable packages' in the 'Writing R Extensions' manual.
 
-* All revdep maintainers were notified of the release on RELEASE DATE.
+
+I believe this is a false-positive ref https://stackoverflow.com/questions/64402688/information-on-o-files-for-x64-is-not-available-note-on-r-package-checks-using
