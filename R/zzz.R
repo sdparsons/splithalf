@@ -7,7 +7,7 @@
                       fields="Version")
   packageStartupMessage("This is ",paste(pkgname, version))
   packageStartupMessage(pkgname, " is BETA software! Please report any bugs.")
-  packageStartupMessage("The (unofficial) version name is: Rum Ham")
+  packageStartupMessage("The (unofficial) version name is: 'I eat stickers all the time, dude!'")
   packageStartupMessage("For documentation, questions, and issues, please see github.com/sdparsons/splithalf")
-  packageStartupMessage("or email sam.parsons@psy.ox.ac.uk")
+  packageStartupMessage("or find my email at https://sdparsons.github.io/")
 }

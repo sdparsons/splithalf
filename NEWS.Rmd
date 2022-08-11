@@ -13,12 +13,18 @@ knitr::opts_chunk$set(
 ```
 
 
-UPCOMING: splithalf v0.8.1 (current development version - work in progress) [unofficial version name: Rum Ham]
+UPCOMING: splithalf v0.8.2 [Unofficial version name: I eat stickers all the time, dude!]
+==============
+changes:
+* 
+
+
+splithalf v0.8.1 [unofficial version name: Rum Ham]
 ==============
 changes:
 * added examples in the function help and improved function documentation
 * added validation vignette (tests many combinations of options within splithalf functions, incluing the multiverse functions)
-* fixed minor bugs in some combinations of options within splithalf (typically within the )
+* fixed minor bugs in some combinations of options within splithalf (typically within the difference_of_difference or multiverse functions)
 * fixed some documentation
 * fixed plotting issue with score = "difference_of_difference"
 * minor improvements to documentation

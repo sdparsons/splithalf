@@ -2,12 +2,12 @@ Package: splithalf
 Type: Package
 Title: Calculate Task Split Half Reliability Estimates
 Version: 0.8.1
-Authors@R: person("Sam", "Parsons", email = "sam.parsons@psy.ox.ac.uk",
+Authors@R: person("Sam", "Parsons", email = "sam.parsons@radboudumc.nl",
   role = c("aut", "cre"))
-Maintainer: Sam Parsons <sam.parsons@psy.ox.ac.uk>
+Maintainer: Sam Parsons <sam.parsons@radboudumc.nl>
 Description: Estimate the internal consistency of your tasks with a permutation based split-half reliability approach.
-    Unofficial release name: "Rum Ham".
-Depends: R (>= 3.3)
+    Unofficial release name: "I eat stickers all the time, dude!".
+Depends: R (>= 3.5)
 Imports:
     tidyr,
     dplyr,
@@ -19,7 +19,8 @@ Imports:
     grid,
     patchwork,
     psych,
-    lme4
+    lme4,
+    methods
 LinkingTo: Rcpp
 Suggests: 
     knitr,

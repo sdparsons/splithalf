@@ -20,7 +20,8 @@ splithalf(
   compare2 = "Incongruent",
   average = "mean",
   plot = FALSE,
-  round.to = 2
+  round.to = 2,
+  check = TRUE
 )
 }
 \arguments{
@@ -55,6 +56,8 @@ splithalf(
 \item{plot}{logical value giving the option to visualise the estimates in a raincloud plot. defaults to FALSE}
 
 \item{round.to}{sets the number of decimals to round the estimates to defaults to 2}
+
+\item{check}{runs several checks of the data to detect participants/conditions/trialtypes with too few trials to run splithalf}
 }
 \value{
 Returns a data frame containing permutation based split-half reliability estimates
@@ -66,7 +69,7 @@ spearmanbrown is the spearman-brown corrected estimate of the bias index
 Warning: If there are missing data (e.g one condition data missing for one participant) output will include details of the missing data and return a dataframe containing the NA data. Warnings will be displayed in the console.
 }
 \description{
-This function calculates split half reliability estimates via a permutation approach for a wide range of tasks. Most of the user inputs relate to the variables in the dataset splithalf needs to read in order to estimate reliability. Currently supports response time and accuracy ourcomes, for several scoring methods: average, difference, difference of difference scores, and a DPrime development.
+This function calculates split half reliability estimates via a permutation approach for a wide range of tasks. Most of the user inputs relate to the variables in the dataset splithalf needs to read in order to estimate reliability. Currently supports response time and accuracy outcomes, for several scoring methods: average, difference, difference of difference scores, and a DPrime development.
 The (unofficial) version name is "This function gives me the power to fight like a crow"
 }
 \examples{

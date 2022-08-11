@@ -61,7 +61,7 @@ library("robustbase")
 
 Citing packages is one way for developers to gain some recognition for the time spent maintaining the work. I would like to keep track of how the package is used so that I can solicit feedback and improve the package more generally.  This would also help me track the uptake of reporting measurement reliability over time. 
 
-Please use the following reference for the code: Parsons, S., (2021). splithalf: robust estimates of split half reliability. _Journal of Open Source Software, 6_(60), 3041, https://doi.org/10.21105/joss.03041
+Please use the following reference for the code: Parsons, S., (2021). splithalf: robust estimates of split half reliability. _Journal of Open Source Software, 6_(60), 3041, <https://doi.org/10.21105/joss.03041>
 
 
 
@@ -69,7 +69,7 @@ Please use the following reference for the code: Parsons, S., (2021). splithalf:
 
 Developing the splithalf package is a labour of love (and occasionally burning hatred). If you have any suggestions for improvement, additional functionality, or anything else, please contact me (sam.parsons\@psy.ox.ac.uk) or raise an issue on github (https://github.com/sdparsons/splithalf). Likewise, if you are having trouble using the package (e.g. scream fits at your computer screen – we’ve all been there) do contact me and I will do my best to help as quickly as possible. These kind of help requests are super welcome. In fact, the package has seen several increases in performance and usability due to people asking for help. 
 
-## Latest update:
+## Latest updates:
 
 **Version 0.8.1 now out! [unofficial version name: "Rum Ham"]** Lots of fixed issues in the multiverse functions, and lots more documentation/examples!
 

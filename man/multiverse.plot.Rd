@@ -33,10 +33,10 @@ threshold(multiverse, threshold, use = "estimate", dir = "above")
 \item{dir}{look "above" or "below" the 'use' at the set threshold}
 }
 \value{
-Returns a visualistation of a multiverse object
+Returns a visualization of a multiverse object
 }
 \description{
-This function allows the user to plot the output from splithalf_multiverse or testretest_multiverse. The plot includes an upper panel with all reliabilty estimates (and CIs) and a lower panel that indicates the data processing specifications corresponding to that reliability estimate.
+This function allows the user to plot the output from splithalf_multiverse or testretest_multiverse. The plot includes an upper panel with all reliability estimates (and CIs) and a lower panel that indicates the data processing specifications corresponding to that reliability estimate.
 The (unofficial) function version name is "This function will make you a master in bird law"
 
 This function examines the output from splithalf_multiverse or testretest_multiverse to extract the proportions of estimates above or below a set threshold (can be the estimate or the upper or lower CI estimates).

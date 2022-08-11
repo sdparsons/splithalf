@@ -18,6 +18,7 @@
 #' @param average use "mean" or "median" to calculate average scores?
 #' @param plot logical value giving the option to visualise the estimates in a raincloud plot. defaults to FALSE
 #' @param round.to sets the number of decimals to round the estimates to defaults to 2
+#' @param check runs several checks of the data to detect participants/conditions/trialtypes with too few trials to run splithalf
 #' @return Returns a data frame containing permutation based split-half reliability estimates
 #' @return splithalf is the raw estimate of the bias index
 #' @return spearmanbrown is the spearman-brown corrected estimate of the bias index
@@ -94,7 +95,8 @@
 #' @import grid
 #' @importFrom stats complete.cases cor median na.omit quantile sd
 #' @importFrom robustbase colMedians
-#' @importFrom dplyr select summarise group_by mutate n_distinct
+#' @importFrom dplyr select summarise group_by mutate n_distinct count
+#' @importFrom tidyr complete
 #' @importFrom plyr arrange
 #' @useDynLib splithalf, .registration = TRUE
 #' @importFrom Rcpp sourceCpp
@@ -116,7 +118,8 @@ splithalf <- function(data,
                       compare2 = "Incongruent",
                       average = "mean",
                       plot = FALSE,
-                      round.to = 2)
+                      round.to = 2,
+                      check = TRUE)
 
 {
   # check that the dataframe is a data frame
@@ -267,6 +270,49 @@ splithalf <- function(data,
     data$accuracy <- data[, var.ACC]
   }
 
+
+  # check data for cases that will likely result in errors
+
+if(check == TRUE) {
+
+  check1 <- data %>%
+    dplyr::group_by(participant, condition, compare) %>%
+    dplyr::count() %>%
+    dplyr::ungroup() %>%
+    tidyr::complete(participant, condition, compare)
+
+  # check for missing conditions and comparisons
+
+  check_missing <- check1 %>%
+    dplyr::filter(is.na(n))
+
+
+  # check for cases where there are not enough trials
+
+  check_lown <- check1 %>%
+    dplyr::filter(n < 4)
+
+  ## to be included: check for whether there is sufficient variance
+  # check_variance <- data %>%
+  #   dplyr::group_by(condition, compare) %>%
+  #   dplyr::summarise(var = var(RT))
+
+
+  if(nrow(check_missing) > 0) {
+    print(check_missing)
+    stop("splithalf unlikely to run: at least one participant is missing data from at least one condition or trial type - see above tibble for missing data")
+  }
+
+
+  if(nrow(check_lown) > 0) {
+    print(check_lown)
+    stop("splithalf unlikely to run: at least one participant has too few trials in at least one condition or trial type - see above tibble for participant in question")
+  }
+
+
+}
+
+
   # for randdom samples, the number of samples drawn
   iterations <- 1:permutations
 
@@ -274,7 +320,7 @@ splithalf <- function(data,
   dataset <- data
 
   # how many participants?
-  n_par <- n_distinct(dataset$participant)
+  n_par <- dplyr::n_distinct(dataset$participant)
 
   # creates a list of participants
   plist <- sort(unique(dataset$participant))

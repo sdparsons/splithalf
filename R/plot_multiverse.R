@@ -73,6 +73,7 @@
 #' @importFrom tidyr gather
 #' @importFrom plyr arrange
 #' @useDynLib splithalf, .registration = TRUE
+#' @importFrom methods is
 #' @importFrom Rcpp sourceCpp
 #' @importFrom utils setTxtProgressBar txtProgressBar capture.output
 #' @rdname multiverse.plot
@@ -89,11 +90,11 @@ multiverse.plot <- function(multiverse,
     stop("heights must be length 3 is SE = TRUE")
   }
 
-  if(class(multiverse) == "list") {
+  if(is(multiverse, "list")) {
     x <- length(multiverse)
 
     for(i in 1:x){
-      if(class(multiverse[[i]]) != "multiverse")
+      if(!is(multiverse[[i]], "multiverse"))
         stop("not all list objects are of class multiverse")
     }
 
@@ -134,7 +135,7 @@ multiverse.plot <- function(multiverse,
   }
 
 
-  if(class(multiverse) == "multiverse"){
+  if(is(multiverse, "multiverse")){
     final2 <- multiverse$estimates
     final2 <- final2[order(final2[,"estimate"]),]
     final2$SE <- multiverse$SE
@@ -142,7 +143,7 @@ multiverse.plot <- function(multiverse,
 
   suppressWarnings({
 
-    if(class(multiverse) == "multiverse"){
+    if(is(multiverse, "multiverse")){
       final2$ns <- 1:multiverse$nS
 
       reliability_plot <- ggplot(data = final2,
@@ -165,7 +166,7 @@ multiverse.plot <- function(multiverse,
         theme(plot.title = element_text(hjust = 0.5, face = "bold"))
     }
 
-    if(class(multiverse) == "list"){
+    if(is(multiverse, "list")){
       reliability_plot <- ggplot(data = final2,
                                  aes(x = ns, y = estimate, fill = time)) +
         geom_ribbon(aes(ymin = low, ymax = high, fill = time), alpha = .1)  +
@@ -189,7 +190,7 @@ multiverse.plot <- function(multiverse,
 
   suppressWarnings({
 
-    if(class(multiverse) == "multiverse"){
+    if(is(multiverse, "multiverse")){
 
       final2$ns <- 1:multiverse$nS
 
@@ -201,7 +202,7 @@ multiverse.plot <- function(multiverse,
 
     }
 
-    if(class(multiverse) == "list"){
+    if(is(multiverse, "list")){
       final3 <- final2 %>%
         dplyr::filter(time == 1) %>%
         tidyr::gather(key = "Bigdecision",
@@ -219,7 +220,7 @@ multiverse.plot <- function(multiverse,
                                                               "averaging_method"))
 
   suppressWarnings({
-    if(class(multiverse) == "multiverse"){
+    if(is(multiverse, "multiverse")){
       dashboard <- ggplot(data = subset(final3, Bigdecision %in% multiverse$cols),
                           aes(x = ns, y = Decision, colour = Bigdecision)) +
         facet_grid(Bigdecision ~ ., scales = "free", space = "free", drop = ) +
@@ -234,7 +235,7 @@ multiverse.plot <- function(multiverse,
               text = element_text(size=10))
     }
 
-    if(class(multiverse) == "list"){
+    if(is(multiverse, "list")){
       dashboard <- ggplot(data = subset(final3, Bigdecision %in% multiverse[[1]]$cols),
                           aes(x = ns, y = Decision, colour = Bigdecision)) +
         facet_grid(Bigdecision ~ ., scales = "free", space = "free", drop = ) +

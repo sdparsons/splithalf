@@ -1,6 +1,8 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+    #> Warning: package 'ggplot2' was built under R version 4.1.2
+
 <img src="inst/hexlogo/splithalf_logo.png" height="300"/>
 
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.03041/status.svg)](https://doi.org/10.21105/joss.03041)
@@ -91,7 +93,7 @@ quickly as possible. These kind of help requests are super welcome. In
 fact, the package has seen several increases in performance and
 usability due to people asking for help.
 
-## Latest update:
+## Latest updates:
 
 **Version 0.8.1 now out! \[unofficial version name: “Rum Ham”\]** Lots
 of fixed issues in the multiverse functions, and lots more
@@ -268,17 +270,17 @@ sim_data %>%
 # A tibble: 120 x 5
 # Groups:   participant_number, block_name [120]
    participant_number block_name congruent incongruent   bias
-                <int> <fct>          <dbl>       <dbl>  <dbl>
- 1                  1 A               538.        516.  21.8 
- 2                  1 B               502.        559. -57.2 
- 3                  2 A               521.        528.  -7.03
- 4                  2 B               487.        509. -21.8 
- 5                  3 A               468.        537. -69.3 
- 6                  3 B               487.        542. -55.1 
- 7                  4 A               428.        514. -86.3 
- 8                  4 B               441.        505. -64.3 
- 9                  5 A               510.        505.   5.21
-10                  5 B               474.        556. -82.5 
+                <int> <chr>          <dbl>       <dbl>  <dbl>
+ 1                  1 A               550.        430. 120.  
+ 2                  1 B               512.        433.  78.9 
+ 3                  2 A               525.        496.  28.6 
+ 4                  2 B               488.        523. -35.2 
+ 5                  3 A               457.        500. -43.6 
+ 6                  3 B               478.        518. -39.3 
+ 7                  4 A               492.        479.  13.1 
+ 8                  4 B               593.        458. 135.  
+ 9                  5 A               568.        565.   2.72
+10                  5 B               485.        555. -70.3 
 # ... with 110 more rows
 ```
 
@@ -304,8 +306,8 @@ difference <- splithalf(data = sim_data,
 ```
 
       condition  n splithalf 95_low 95_high spearmanbrown SB_low SB_high
-    1         A 60      0.09  -0.08    0.27          0.15  -0.15    0.43
-    2         B 60      0.06  -0.12    0.24          0.10  -0.21    0.39
+    1         A 60     -0.06  -0.23    0.13         -0.10  -0.37    0.23
+    2         B 60     -0.13  -0.30    0.06         -0.22  -0.46    0.10
 
 Specifying `plot = TRUE` will also allow you to plot the distributions
 of reliability estimates. you can extract the plot from a saved object
@@ -343,7 +345,7 @@ formula is not useful in this case.
 > We estimated the internal consitency of bias A and B using a
 > permutation-based splithalf approach (Parsons 2019) with 5000 random
 > splits. The (Spearman-Brown corrected) splithalf internal consistency
-> of bias A was were *r*<sub>SB</sub> = 0.15, 95%CI \[-0.15,0.43\].
+> of bias A was were *r*<sub>SB</sub> = -0.1, 95%CI \[-0.37,0.23\].
 >
 > — Parsons, 2020
 
@@ -370,8 +372,8 @@ average <- splithalf(data = sim_data,
 ```
 
       condition  n splithalf 95_low 95_high spearmanbrown SB_low SB_high
-    1         A 60     -0.12  -0.29    0.07         -0.21  -0.45    0.13
-    2         B 60     -0.07  -0.24    0.12         -0.12  -0.39    0.21
+    1         A 60      0.16  -0.02    0.34          0.26  -0.03    0.51
+    2         B 60      0.05  -0.13    0.24          0.09  -0.23    0.39
 
 ### Difference-of-difference scores
 
@@ -417,9 +419,9 @@ diff_of_diff <- splithalf(data = sim_data,
 ```
 
                            condition  n splithalf 95_low 95_high spearmanbrown
-    1 difference_of_difference score 60     -0.08  -0.25    0.11         -0.14
+    1 difference_of_difference score 60     -0.12  -0.29    0.07         -0.21
       SB_low SB_high
-    1   -0.4    0.19
+    1  -0.45    0.13
 
 ## Multiverse analysis extension
 
@@ -578,8 +580,7 @@ Reliability.” Preprint, June. <https://doi.org/10.31234/osf.io/y6tcz>.
 Parsons, Sam, Anne-Wil Kruijt, and Elaine Fox. 2019. “Psychological
 Science Needs a Standard Practice of Reporting the Reliability of
 Cognitive Behavioural Measurements.” Advances in Methods; Practices in
-Psychological Science.
-<https://doi.org/doi.org/10.1177/2515245919879695>.
+Psychological Science. https://doi.org/10.1177/2515245919879695.
 
 </div>
 
@@ -616,7 +617,7 @@ Sherman, Ryne A. 2015. *Multicon: Multivariate Constructs*.
 
 Spearman, C. 1904. “The Proof and Measurement of Association Between Two
 Things.” *The American Journal of Psychology* 15 (1): 72.
-<https://doi.org/10.2307/1412159>.
+https://doi.org/10.2307/1412159.
 
 </div>
 
