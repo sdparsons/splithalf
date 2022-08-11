@@ -1,7 +1,12 @@
 
 <!-- NEWS.md is generated from NEWS.Rmd. Please edit that file -->
 
-# UPCOMING: splithalf v0.8.1 (current development version - work in progress) \[unofficial version name: Rum Ham\]
+# UPCOMING: splithalf v0.8.2 \[Unofficial version name: I eat stickers all the time, dude!\]
+
+changes: \*added error checks for common issues - too few trials and missing conditions
+
+
+# UPCOMING: splithalf v0.8.1 \[unofficial version name: Rum Ham\]
 
 changes: \* added examples in the function help and improved function
 documentation \* added validation vignette (tests many combinations of

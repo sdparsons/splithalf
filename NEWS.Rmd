@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 UPCOMING: splithalf v0.8.2 [Unofficial version name: I eat stickers all the time, dude!]
 ==============
 changes:
-* 
+* added error checks for common issues - too few trials and missing conditions
 
 
 splithalf v0.8.1 [unofficial version name: Rum Ham]
